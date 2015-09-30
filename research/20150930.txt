@@ -1,0 +1,28 @@
+30/09/2015
+
+The following are some key points that were raised during our Rough Requirements Gathering at the Plan C teacher hub at Hyndland Secondary School:
+
+Version Control:
+Reluctant to edit other peoples work in case they mess it up.
+It feels somewhat cheeky to co-opt other peoples work
+Many online sources of materials end up as a large pile of stuff; not all of it is useful.
+The teachers felt as if the original should not be overwritten, and that new versions should come with a reasoning for the update (fixing/adapting).
+
+Finding Resources:
+Not many people at the Plan C hub had used the materials held on the Plan C website, some used glow (inaccessible to non teachers)
+Not many people had used resources from the Plan C site, more likely to use the materials demonstrated at the hub.
+Hard to search through the existing repositories for good material.  It would be easier if there were tags for different units/levels, or tags for different types of resources (homework, workshop, presentation), or tags for different languages english/gaelic, visualbasic/python.
+
+Participation:
+The barrier to entry has to be low to not discourage people from uploading their own resources.
+Also, the review section must also be quick and easy, otherwise people may not bother to complete it.
+
+Content:
+Not only presentations and homework sheets as youtube videos are also used as teaching resources.
+It is helpful to see the material in action, such as in a video, before using the material to get an idea of how it works.
+
+Tracking:
+Currently, each local authority has their own system from tracking professional update.
+They have 3 targets a year to reach and they must record any research they do towards them.
+Our site could be useful if the teacher's goals were compatible with it.
+It is all done through gtcs.org.uk (general teaching council of Scotland)
