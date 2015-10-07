@@ -1,0 +1,30 @@
+07/10/2015
+
+The following are notes taken from the meeting after creating our initial user stories:
+Initial user stories can be found at research/img/UserStory1.jpg
+
+Tracking:
+	- Users could have quantifiable scores for the different forms of participation on the site.
+	- Maybe the users could be given badges at certain levels of participation to encourage them to use the website.
+	- Limited number of downloads could be used but that may discourage users from the site.
+	- They could be given points for particpation in discussions of the materials.  The leader/organiser of the discussion could receive more points than those simply participating.
+
+Versioning:
+	- When visualising different versions, users should be able to see the different ways in which the material has evolved.
+	- Not all teachers may know what a version control sysytem is so a different way to describe it may be needed.  Maybe as an evolving library or something?  More thought needed.
+Design:
+	- When designing a website we discussed two ways of proceeding.
+	- One way was to create a lot of different ideas, and take the best parts from each.  This way forces the creative aspect of design to come out as you have to think of a lot of different ways to show the same thing.
+	- The other way is to sit down and think about why we have to design the website and who it is catered to.  This forces you to think about why it is necessary to design first and focuses the design on the areas which need to most thought when designing. 
+
+Other Things:
+	- Users may belong to more than one teaching hub.
+	- Substitute teachers may not belong to any school or more than one.
+	- The basic hierarchy of the use of the website can be seen as: downloaded -> used -> discussed -> contributed.
+
+Additional User Stories:
+	- As a User, I Want to be able to add materials to a reading/short list, So That I can look at them later.
+
+Questions to ask teachers:
+	- Should users be able to remain anonymous or should you be made to show your name?
+	- Should users be required to show what school they teach at?
