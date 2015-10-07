@@ -28,3 +28,4 @@ Additional User Stories:
 Questions to ask teachers:
 	- Should users be able to remain anonymous or should you be made to show your name?
 	- Should users be required to show what school they teach at?
+	- Is it better to search through materials based on level then content or content then level?
