@@ -18,3 +18,6 @@ The current aim of this project is to have the following functionalities:
 - A tracking system for the materials to see how they spread
 - The ability to evolve new versions of existing materials, either to improve them in some way or adapt them to suit the user's needs.  These new resources could then be added to the repository and used by others.
 - A way to allow the users opportunities to interact and assist each other when adapting or using the materials.
+
+Test sites can be viewed at:
+http://dkiker.github.io/TReaSURe/
