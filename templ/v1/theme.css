@@ -1,0 +1,25 @@
+/*minimum width */
+body {
+   min-width:250px;
+   width: auto !important;
+}
+
+
+
+/*header styles */
+#head{
+	background-color:blue;
+}
+a.home{
+	color:white;
+}
+
+
+
+/*footer styles */
+.footer{
+	background-color:blue;
+}
+a.versions{
+	color:white;
+}
