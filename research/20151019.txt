@@ -1,0 +1,14 @@
+19/10/2015
+
+The following are the main points of conversation taken from this weeks meeting:
+
+We mainly discussed the design of the database this week.
+
+We have to think if we need the parent and/or the children for the version control.
+It may be a good idea to have a children table instead of the current recursive plan of looking up parents, then parents, then parents, ...
+
+We discussed django login protocols, maybe we should use 'eldop' external autherntication.
+Gerrie has already looked into it, we can ask him if we can't find anything.
+
+For next week: a web template that hints towards the basic functionality, and a slighly improved db design
+

@@ -1,0 +1,24 @@
+14/10/2015
+
+The following are the main points of conversation taken from this weeks meeting:
+
+Remember to write up the critique of the other sites we looked at .
+
+An interesting way of looking at the split of these projects is:
+Scott 	- evolve content, involves creators.
+Dimitris- track content,  involves users.
+
+This project will hopefully build upon Emilias's work.
+We can all share the data, but use it in different ways.
+
+We could define an api to split jobs:
+maybe we could use dummy data / stub methods.
+
+We could use separate branches but we would need to be wary of merge conflicts.
+
+We should now be starting to think of separation, and imaging how our own pieces will look / funcion.
+We should also begin to think about how we can encourage use.
+
+When writing the dissertation, we should aknowledge each others work.
+
+For next week: html templates and db design
