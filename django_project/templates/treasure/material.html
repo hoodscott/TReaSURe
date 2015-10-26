@@ -1,0 +1,17 @@
+{% extends 'treasure/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    {{ material_name }}
+{% endblock %}
+
+{% block body_block %}
+<div class="hero-unit">
+    <h1>{{ material_name }}</h1>
+    
+    <div class="row-fluid">
+        <p>Material fields go here</p>
+    </div>
+</div>
+{% endblock %}
