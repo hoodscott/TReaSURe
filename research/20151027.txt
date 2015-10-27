@@ -1,0 +1,18 @@
+27/10/2015
+
+The following are the main points of conversation taken from this weeks meeting:
+
+Authentication wise, we may need two ways to access the site, one via LDAP for Glow and one way that we create for the website.
+
+We should be having a discussion either this week or next with Quintin and Emilia about her website.  It will be an evening after university, preferably not Tuesday.
+
+Patrick Prosser says that we are okay to wrk on the base of this project together.  He says that it may be a more realistic project as it relies on cooperation.
+
+
+For (thursay):
+  create Html templates for each of our separate parts of the project.  Scott - versions, Dimitris - tracking.
+  look into django disussion forums that we can plug into our project.
+  
+  
+An interesting thing that came up after the meeting was the idea of generating the thumbnails based on the content instead of letting users submit their own.
+Maybe the level of the material could determine the colour and the topic could determine the icon.
