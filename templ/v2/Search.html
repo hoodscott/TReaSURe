@@ -43,13 +43,94 @@
         
         <div class="container-fluid">
             
-<div class="hero-unit"><p>Search Resources</p>
-	<div class="btn-group">
-	  <button class="btn">Slides</button>
-	  <button class="btn">Homework</button>
-	  <button class="btn">Workshops</button>
-	</div></div>
+<div class="hero-unit">
+    <h1>Search Resources</h1>
+	<div class="container">
+        <form class="fluid-row" id="page_form" ><!--method="post" action="./Rango - Add Page_files/Rango - Add Page.html"-->            
+            <div class="span12">
+            
+                <h4>Enter search terms:</h4>
+                <input id="id_seach" maxlength="128" name="terms" type="text"><br>
+            </div>
+                <div class="span4">
+                <h4>Levels:</h4>
+                <div class="checkbox">
+                    <label><input type="checkbox" value="All" checked>All</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" value="Nat4">National 4</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" value="Nat5">National 5</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" value="H">Higher</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" value="AH">Advanced Higher</label>
+                </div>
+                </div>
+                
+                <div class="span4">
+                <h4>Topics:</h4>
+                <div class="checkbox">
+                    <label><input type="checkbox" value="All" checked>All</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" value="PL">Programming Languages</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" value="PL1">- Languages</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" value="PL2">- Concepts</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" value="IS">Information Systems</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" value="IS1">- Databases</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" value="IS2">- Informatics</label>
+                </div>
+                </div>
+                
+                <div class="span3">
+                <h4>Material Types:</h4>
+                <div class="checkbox">
+                    <label><input type="checkbox" value="All" checked>All</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" value="wrks">Workshop</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" value="hmwk">Homework</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" value="prst">Presentation</label>
+                </div>
+                </div>
+                
+               
+                
+              
+          
+                    <div class="btn-group span6">
+                     <br>
+                    <button class="btn btn-primary" type="submit" name="submit">Search for Plans</button>
+                    <button class="btn btn-primary" type="submit" name="submitmats">Search for Materials</button>
+                    </div>
+                </div>
+                
+       
+                
+            
+
+            </form>
         </div>
+        <hr>
+        
 
 
 		<div class="bs-docs-example">

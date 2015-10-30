@@ -47,53 +47,68 @@
     
     
     <div class="container">
-        <h1>Upload a Resource</h1><br>
+        <h1>Evolve a Resource</h1><br>
         <form class="fluid-row" id="page_form" ><!--method="post" action="./Rango - Add Page_files/Rango - Add Page.html"-->            
-            <div class="span5">
+            <div class="span4">
+            
                 Enter Title:<br>
                 <input id="id_title" maxlength="128" name="title" type="text"><br>
             
-                
                 Enter Description.<br>
                 <input id="id_desc" maxlength="10000" name="url" type="text"><br>
                 
                 Add Tags<br>
-                <input id="id_tags" maxlength="200" name="tags" type="text"><br>
+                <input id="id_tags" maxlength="200" name="tags" type="text" value="Python, Object Oriented Programming"><br>
                 
                 Upload File<br>
                 <input id="id_tags" maxlength="200" name="file" type="file"><br>
                </div>
                
                
-               <div class="span5">
+               <div class="span4">
                 Select level:<br>
                 <select name="Levels">
-                    <option disabled selected> -- select an option -- </option>
+                    <option disabled> -- select an option -- </option>
                     <option value="nat4">National 4</option>
                     <option value="nat5">National 5</option>
                     <option value="higher">Higher</option>
-                    <option value="advhigher">Advanced Higher</option>
+                    <option value="advhigher" selected>Advanced Higher</option>
                 </select><br>
                 
                 Select topic:<br>
-                <select name="Levels">
-                    <option disabled selected> -- select an option -- </option>
+                <select name="Topics">
+                    <option disabled> -- select an option -- </option>
                     <option value="infos">Info Systems</option>
                     <option value="infos1">--- Databases</option>
                     <option value="infos2">--- Informatics</option>
                     <option disabled> -- -- -- -- -- </option>
                     <option value="prog">Programming</option>
                     <option value="prog1">--- Languages</option>
-                    <option value="prog2">--- Concepts</option>
+                    <option value="prog2" selected>--- Concepts</option>
+                </select><br>
+                
+                How have you evolved this resource?<br>
+                <select name="Evolutions">
+                    <option disabled selected> -- select an option -- </option>
+                    <option value="evo1">Amendment</option>
+                    <option value="evo2">Presentation</option>
+                    <option value="evo2">Reduce Difficulty</option>
+                    <option value="evo2">Increase DIfficulty</option>
+                    <option value="evo2">Language Change</option>
+                    <option value="evo2">Different Examples</option>
+                    <option value="evo2">Change in Format</option>
+
+
+
                 </select><br>
                 
                
                 
                 </div>
                 
-                <div class="span5">
+                <div class="span3">
                     <br>
-                    <button class="btn btn-primary" type="submit" name="submit">Submit Resource</button>
+                    <button class="btn btn-primary" type="submit" name="submit">Evolve Resource</button>
                 </div>
                 
        
