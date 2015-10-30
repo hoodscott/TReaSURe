@@ -44,14 +44,71 @@
         <div class="container-fluid">
             
 <div class="hero-unit">
-    <h1>Welcome to Treasure</h1>
-    <p>Track teaching resources.</p>
-    
-    <div class="row-fluid">
-        <p>body of text</p>
-        
-        <a href="Material.html">Example Material</a></li>
-    </div>
+	<div class="row-fluid">
+		<div class="span8">
+		    <h1>Learning OOP with Python</h1>
+		    <h3>by Scott</h3>
+		    <p><strong>Description:</strong> A resource to teach objected oriented programming using python to advanced higher students</p>
+		    <br>
+		    <p><strong>Tags</strong> <em>Python, Object Oriented Programming, Advanced Higher, programming</em></p>
+		</div>
+		<div class="span3">
+			<div style="height:150px;width:150px;background-color:blue"></div>
+			<hr>
+			<ul>
+				<li>Download</li>
+				<li>Evolve</li>
+			</ul>
+			<hr>
+			<ul>
+	    			<li>Track</li>
+	    			<li>View Versions</li>
+	    		</ul>
+	    	</div>
+	   </div>
+	   <br><br><br>
+	   <div class="row-fluid">
+		<div class="span6">
+			<h4> Author Recommended Prerequisites</h3>
+			<ul>
+				<li style="color:blue;text-decoration:underline">Intro to Python</li>
+	    			<li style="color:blue;text-decoration:underline">Programming Concepts</li>
+	    		</ul>
+	    	</div>
+	    		   <br><br><br>
+		<div class="span6">
+			<h4> User Recommended Prerequisites</h3>
+			<ul>
+				<li style="color:blue;text-decoration:underline">How to Python</li>
+	    			<li style="color:blue;text-decoration:underline">Lessons on IDLE</li>
+	    			<li style="color:blue;text-decoration:underline">Procedural Programming</li>
+	    		</ul>
+	    	</div>
+	    	
+	   </div>
+	   <br><br><br>
+	   <div class="row-fluid">
+	    	<div class="span6">
+			<h4> User Recommended Followups</h3>
+			<ul>
+				<li style="color:blue;text-decoration:underline">Using Object Orientation</li>
+	    		</ul>
+	    	</div>
+	    		   <br><br><br>
+	    	<div class="span6">
+	    	<h4>Member of These Lessons</h4>
+	   	<ul>
+				<li style="color:blue;text-decoration:underline">Teaching Programming in Python</li>
+	    			<li style="color:blue;text-decoration:underline">Introduction to Software Development</li>
+	    			<li style="color:blue;text-decoration:underline">Programming Paradigms</li>
+	    	</ul>
+	    	</div>
+	    	
+	   </div>
+			   <br><br><br>
+	   <div>
+	   	<h2>Forum</h2>
+	   	<p>Forum goes here</p>
 </div>
 
         </div>
