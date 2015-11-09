@@ -3,15 +3,15 @@
 {% load static %}
 
 {% block title %}
-    Upload
+    {{ resource_name }}
 {% endblock %}
 
 {% block body_block %}
 <div class="hero-unit">
-    <h1>Upload</h1>
+    <h1>{{ resource_name }}</h1>
     
     <div class="row-fluid">
-        <p>form for materials goes here</p>
+        <p>resource fields go here</p>
     </div>
 </div>
 {% endblock %}

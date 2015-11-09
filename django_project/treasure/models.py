@@ -23,8 +23,8 @@ class School(models.Model):
 
 # relationship between teachers and schools
 class TeacherSchool(models.Model):
-    teacher = models.ForeignKey(Teacher)
-    school = models.ForeignKey(School)
+    #teacher = models.ForeignKey(Teacher)
+    #school = models.ForeignKey(School)
 
     def __unicode__(self):
         return self.teacher.username, self.school.schoolname        
@@ -41,8 +41,8 @@ class Hub(models.Model):
         
 # relationship between teachers and hubs
 class TeacherHub(models.Model):
-    teacher = models.ForeignKey(Teacher)
-    hub = models.ForeignKey(Hub)
+    #teacher = models.ForeignKey(Teacher)
+    #hub = models.ForeignKey(Hub)
 
     def __unicode__(self):
         return self.teacher.username, self.hub.hubname
@@ -54,16 +54,17 @@ class TeacherHub(models.Model):
 class Resource(models.Model):
     resourcename = models.CharField(max_length=128)
     # comma separated tree for viewing evolution
-    tree = models.CharField(max_length=128)
-    author = models.ForeignKey(Teacher)
-    
+    '''
+    #trees = models.CharField(max_length=128)
+    #author = models.ForeignKey(Teacher)
+    '''
     def __unicode__(self):
         return self.resourcename
         
 # resource extensions go here
 class FilesResource(models.Model):
     # one to one relationship
-    resource = models.OneToOneField(Resource)
+    #resource = models.OneToOneField(Resource)
 
     path = models.CharField(max_length=128)
 
@@ -72,7 +73,7 @@ class FilesResource(models.Model):
         
 class WebResource(models.Model):
     # one to one relationship
-    resource = models.OneToOneField(Resource)
+    #resource = models.OneToOneField(Resource)
 
     url = models.URLField()
 
@@ -80,14 +81,14 @@ class WebResource(models.Model):
         return self.resource.resourcename
     
 class Tag(models.Model):
-    tagname = models.CharField(max_length=128)
+    #tagname = models.CharField(max_length=128)
     
     def __unicode__(self):
         return self.tagname
     
 class ResourceTag(models.Model):
-    resource = models.ForeignKey(Resource)
-    tag = models.ForeignKey(Tag)
+    #resource = models.ForeignKey(Resource)
+    #tag = models.ForeignKey(Tag)
 
     def __unicode__(self):
         return self.resource.resourceusername, self.tag.tagname   
