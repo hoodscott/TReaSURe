@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response, redirect
-from treasure.forms import ResourceForm
+from treasure.forms import ResourceForm, TeacherForm
 from treasure.models import *
 
 # view for the homepage
@@ -86,7 +86,38 @@ def add_resource(request):
     # Bad form (or form details), no form supplied...
     # Render the form with error messages (if any).
     return render_to_response('treasure/add_resource.html', context_dict, context)
+
+# view for the add users page
+def add_teacher(request):
+    # get context of request
+    context = RequestContext(request)
+
     
+    # A HTTP POST?
+    if request.method == 'POST':
+        form = TeacherForm(request.POST)
+
+        # Have we been provided with a valid form?
+        if form.is_valid():
+            # Save the new category to the database.
+            form.save(commit=True)     
+            
+            # Now call the index() view.
+            # The user will be shown the homepage.
+            return index(request)
+        else:
+            # The supplied form contained errors - just print them to the terminal.
+            print form.errors
+    else:
+        # If the request was not a POST, display the form to enter details.
+        form = TeacherForm()
+    
+    # create dictionary to pass data to templates
+    context_dict = {'form': form}
+    
+    # Bad form (or form details), no form supplied...
+    # Render the form with error messages (if any).
+    return render_to_response('treasure/add_teacher.html', context_dict, context)
     
 # view for the user's profile page
 def profile(request):
