@@ -2,17 +2,15 @@
 
 {% load static %}
 
-{% block title %}
-    Upload
-{% endblock %}
+{% block title %}Add Hub{% endblock %}
 
 {% block body_block %}
 
 <div class="hero-unit">
-    <h1>Upload a Resource</h1>
+    <h1>Add a Hub</h1>
     <br/>
     <div class="container">
-        <form class="span6" id="upload_form" method="post" action="/treasure/add_resource/">
+        <form class="span6" id="upload_form" method="post" action="/treasure/add_hub/">
 	
 	    {% csrf_token %}
 	    
@@ -27,7 +25,7 @@
             {% endfor %}
 
             <br/>
-            <button class="btn btn-primary" type="submit" name="submit">Upload Resource</button>
+            <button class="btn btn-primary" type="submit" name="submit">Add Hub</button>
         </form>
     </div>
 </div>

@@ -1,5 +1,5 @@
 from django import forms
-from treasure.models import Resource, Teacher
+from treasure.models import Resource, Teacher, Hub, School
 #from django.contrib.auth.models import User
 
 class ResourceForm(forms.ModelForm):
@@ -21,3 +21,23 @@ class TeacherForm(forms.ModelForm):
     class Meta:
         # Provide an association between the ModelForm and a model
         model = Teacher
+
+class SchoolForm(forms.ModelForm):
+    schoolname = forms.CharField(max_length=128, help_text="Please enter the name of the school.")
+    location = forms.CharField(max_length=128, help_text="Please enter the school's location.")
+    address = forms.CharField(max_length=128, help_text="Please enter the school's address.")
+
+    # An inline class to provide additional information on the form.
+    class Meta:
+        # Provide an association between the ModelForm and a model
+        model = School
+        
+class HubForm(forms.ModelForm):
+    hubname = forms.CharField(max_length=128, help_text="Please enter the name of the hub.")
+    location = forms.CharField(max_length=128, help_text="Please enter the hub's location.")
+    address = forms.CharField(max_length=128, help_text="Please enter the hub's address.")
+
+    # An inline class to provide additional information on the form.
+    class Meta:
+        # Provide an association between the ModelForm and a model
+        model = Hub
