@@ -56,18 +56,20 @@ class TeacherHub(models.Model):
 
 class Resource(models.Model):
     resourcename = models.CharField(max_length=128)
+    #description = models.TextField()
+    
     # comma separated tree for viewing evolution
-    '''
     #trees = models.CharField(max_length=128)
+    
     #author = models.ForeignKey(Teacher)
-    '''
+    
     def __unicode__(self):
         return self.resourcename
         
-# resource extensions go here
+        
 class FilesResource(models.Model):
     # one to one relationship
-    #resource = models.OneToOneField(Resource)
+    resource = models.OneToOneField(Resource)
 
     path = models.CharField(max_length=128)
 
@@ -76,7 +78,7 @@ class FilesResource(models.Model):
         
 class WebResource(models.Model):
     # one to one relationship
-    #resource = models.OneToOneField(Resource)
+    resource = models.OneToOneField(Resource)
 
     url = models.URLField()
 
@@ -94,7 +96,7 @@ class ResourceTag(models.Model):
     #tag = models.ForeignKey(Tag)
 
     def __unicode__(self):
-        return self.resource.resourceusername, self.tag.tagname   
+        return self.resource.resourcname, self.tag.tagname   
     
 ''' end of material models '''
 

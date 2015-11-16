@@ -1,0 +1,44 @@
+{% extends 'treasure/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Upload
+{% endblock %}
+
+{% block body_block %}
+
+<div class="hero-unit">
+    <h1>Upload a File Resource</h1>
+    <br/>
+    <div class="container">
+        <form class="span6" id="upload_form" method="post" action="/treasure/add_file_resource/">
+	
+	    {% csrf_token %}
+	    
+            {% for hidden in resource_form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+
+            {% for field in resource_form.visible_fields %}
+                {{ field.errors }}
+                {{ field.help_text }}<br/>
+                {{ field }}<br/>
+            {% endfor %}
+            
+            {% for hidden in file_form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+
+            {% for field in file_form.visible_fields %}
+                {{ field.errors }}
+                {{ field.help_text }}<br/>
+                {{ field }}<br/>
+            {% endfor %}
+
+            <br/>
+            <button class="btn btn-primary" type="submit" name="submit">Upload Resource</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

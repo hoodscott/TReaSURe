@@ -1,16 +1,30 @@
 from django import forms
-from treasure.models import Resource, Teacher, Hub, School
+from treasure.models import *
 from django.contrib.auth.models import User
 
 class ResourceForm(forms.ModelForm):
     resourcename = forms.CharField(max_length=128, help_text="Please enter the resource name.")
     #tree = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
-    #author = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
 
     # An inline class to provide additional information on the form.
     class Meta:
         # Provide an association between the ModelForm and a model
         model = Resource
+        fields = ('resourcename',)
+        
+class FileForm(forms.ModelForm):
+    path = forms.CharField(max_length=128, help_text="Please pretend to upload a file.")
+    
+    class Meta:
+        model = FilesResource
+        fields = ('path',)
+        
+class WebForm(forms.ModelForm):
+    url = forms.URLField(max_length=128, help_text="Please enter the url of the resource.")
+    
+    class Meta:
+        model = WebResource
+        fields = ('url',)
         
         
 class UserForm(forms.ModelForm):

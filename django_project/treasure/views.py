@@ -53,38 +53,6 @@ def resource(request):
     # return response object
     return render_to_response('treasure/resource.html', context_dict, context)
     
-    
-# view for the add materials page
-def add_resource(request):
-    # get context of request
-    context = RequestContext(request)
-    
-    # A HTTP POST?
-    if request.method == 'POST':
-        form = ResourceForm(request.POST)
-
-        # Have we been provided with a valid form?
-        if form.is_valid():
-            # Save the new category to the database.
-            form.save(commit=True)     
-            
-            # Now call the index() view.
-            # The user will be shown the homepage.
-            return index(request)
-        else:
-            # The supplied form contained errors - just print them to the terminal.
-            print form.errors
-    else:
-        # If the request was not a POST, display the form to enter details.
-        form = ResourceForm()
-    
-    # create dictionary to pass data to templates
-    context_dict = {'form': form}
-    
-    # Bad form (or form details), no form supplied...
-    # Render the form with error messages (if any).
-    return render_to_response('treasure/add_resource.html', context_dict, context)
-    
 # view for the user's profile page
 def profile(request):
     # get context of request
@@ -223,13 +191,13 @@ def register(request):
     else:
         user_form = UserForm()
         teacher_form = TeacherForm()
-        
+    
+    
+    # create context dictionary
+    contexct_dict = {'user_form': user_form, 'teacher_form': teacher_form, 'registered': registered}
 
     # Render the template depending on the context.
-    return render_to_response(
-            'treasure/register.html',
-            {'user_form': user_form, 'teacher_form': teacher_form, 'registered': registered},
-            context)
+    return render_to_response('treasure/register.html', context_dict, context)
             
          
 def user_login(request):
@@ -277,3 +245,88 @@ def user_logout(request):
 
     # Take the user back to the homepage.
     return HttpResponseRedirect('/treasure/')
+    
+    
+# view for the add materials page
+@login_required
+def add_web_resource(request):
+    # get context of request
+    context = RequestContext(request)
+    
+    # A HTTP POST?
+    if request.method == 'POST':
+        resource_form = ResourceForm(request.POST)
+        web_form = WebForm(request.POST)
+
+        # Have we been provided with a valid form?
+        if resource_form.is_valid() and web_form.is_valid():
+            # Save the new category to the database.
+            resource = resource_form.save()
+            
+            # delay saving the model until we're ready to avoid integrity problems
+            web = web_form.save(commit=False)
+            web.resource = resource
+            
+            # save the instance
+            web.save()     
+            
+            # Now call the index() view.
+            # The user will be shown the homepage.
+            # //todo show the new materials page
+            return index(request)
+        else:
+            # The supplied form contained errors - just print them to the terminal.
+            print form.errors
+    else:
+        # If the request was not a POST, display the form to enter details.
+        resource_form = ResourceForm()
+        web_form = WebForm()
+    
+    # create dictionary to pass data to templates
+    context_dict = {'resource_form': resource_form, 'web_form': web_form}
+    
+    # Bad form (or form details), no form supplied...
+    # Render the form with error messages (if any).
+    return render_to_response('treasure/add_web_resource.html', context_dict, context)
+    
+# view for the add materials page
+@login_required
+def add_file_resource(request):
+    # get context of request
+    context = RequestContext(request)
+    
+    # A HTTP POST?
+    if request.method == 'POST':
+        resource_form = ResourceForm(request.POST)
+        file_form = FileForm(request.POST)
+
+        # Have we been provided with a valid form?
+        if resource_form.is_valid() and file_form.is_valid():
+            # Save the new category to the database.
+            resource = resource_form.save()
+            
+            # delay saving the model until we're ready to avoid integrity problems
+            filer = file_form.save(commit=False)
+            filer.resource = resource
+            
+            # save the instance
+            filer.save()     
+            
+            # Now call the index() view.
+            # The user will be shown the homepage.
+            # //todo show the new materials page
+            return index(request)
+        else:
+            # The supplied form contained errors - just print them to the terminal.
+            print form.errors
+    else:
+        # If the request was not a POST, display the form to enter details.
+        resource_form = ResourceForm()
+        file_form = FileForm()
+    
+    # create dictionary to pass data to templates
+    context_dict = {'resource_form': resource_form, 'file_form': file_form}
+    
+    # Bad form (or form details), no form supplied...
+    # Render the form with error messages (if any).
+    return render_to_response('treasure/add_file_resource.html', context_dict, context)
