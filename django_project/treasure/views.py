@@ -82,7 +82,6 @@ def add_hub(request):
     # get context of request
     context = RequestContext(request)
 
-    
     # A HTTP POST?
     if request.method == 'POST':
         form = HubForm(request.POST)
@@ -94,6 +93,7 @@ def add_hub(request):
             
             # Now call the index() view.
             # The user will be shown the homepage.
+            # //todo show hub page
             return index(request)
         else:
             # The supplied form contained errors - just print them to the terminal.
@@ -105,8 +105,7 @@ def add_hub(request):
     # create dictionary to pass data to templates
     context_dict = {'form': form}
     
-    # Bad form (or form details), no form supplied...
-    # Render the form with error messages (if any).
+    # Render the form depending on context
     return render_to_response('treasure/add_hub.html', context_dict, context)
     
 # view for the add users page
@@ -115,7 +114,6 @@ def add_school(request):
     # get context of request
     context = RequestContext(request)
 
-    
     # A HTTP POST?
     if request.method == 'POST':
         form = SchoolForm(request.POST)
@@ -127,6 +125,7 @@ def add_school(request):
             
             # Now call the index() view.
             # The user will be shown the homepage.
+            # //todo show school page
             return index(request)
         else:
             # The supplied form contained errors - just print them to the terminal.
@@ -138,23 +137,19 @@ def add_school(request):
     # create dictionary to pass data to templates
     context_dict = {'form': form}
     
-    # Bad form (or form details), no form supplied...
-    # Render the form with error messages (if any).
+    # Render the form to template with context
     return render_to_response('treasure/add_school.html', context_dict, context)
     
 # register user
 def register(request):
-    # Like before, get the request's context.
+    # get the context of request
     context = RequestContext(request)
 
-    # A boolean value for telling the template whether the registration was successful.
-    # Set to False initially. Code changes value to True when registration succeeds.
     registered = False
 
     # If it's a HTTP POST, we're interested in processing form data.
     if request.method == 'POST':
         # Attempt to grab information from the raw form information.
-        # Note that we make use of both UserForm and teacherForm.
         user_form = UserForm(data=request.POST)
         teacher_form = TeacherForm(data=request.POST)
 
@@ -167,8 +162,7 @@ def register(request):
             # Once hashed, we can update the user object.
             user.set_password(user.password)
             user.save()
-
-            # Now sort out the UserProfile instance.
+            
             # Since we need to set the user attribute ourselves, we set commit=False.
             # This delays saving the model until we're ready to avoid integrity problems.
             teacher = teacher_form.save(commit=False)
@@ -180,18 +174,14 @@ def register(request):
             # Update our variable to tell the template registration was successful.
             registered = True
 
-        # Invalid form or forms - mistakes or something else?
-        # Print problems to the terminal.
-        # They'll also be shown to the user.
+        # Invalid form or forms print problems to the terminal.
         else:
             print user_form.errors, teacher_form.errors
 
     # Not a HTTP POST, so we render our form using two ModelForm instances.
-    # These forms will be blank, ready for user input.
     else:
         user_form = UserForm()
         teacher_form = TeacherForm()
-    
     
     # create context dictionary
     contexct_dict = {'user_form': user_form, 'teacher_form': teacher_form, 'registered': registered}
@@ -201,7 +191,7 @@ def register(request):
             
          
 def user_login(request):
-    # Like before, obtain the context for the user's request.
+    # get the context of request
     context = RequestContext(request)
 
     # If the request is a HTTP POST, try to pull out the relevant information.

@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 # model for the users / teachers
 class Teacher(models.Model):
-    # This line is required. Links Teacher to a User model instance.
+    # Links Teacher to a User model instance.
     user = models.OneToOneField(User)
     
     firstname = models.CharField(max_length=128)
@@ -17,8 +17,7 @@ class Teacher(models.Model):
 # model for schools
 class School(models.Model):
     schoolname = models.CharField(max_length=128)
-    #lat long?
-    location = models.CharField(max_length=128)
+    location = models.CharField(max_length=128) #lat long?
     address = models.CharField(max_length=128)
 
     def __unicode__(self):
@@ -26,6 +25,7 @@ class School(models.Model):
 
 # relationship between teachers and schools
 class TeacherSchool(models.Model):
+	# //todo foreignkeys
     #teacher = models.ForeignKey(Teacher)
     #school = models.ForeignKey(School)
 
@@ -35,8 +35,7 @@ class TeacherSchool(models.Model):
 # model for hubs        
 class Hub(models.Model):
     hubname = models.CharField(max_length=128)
-    #lat long?
-    location = models.CharField(max_length=128)
+    location = models.CharField(max_length=128) #lat long?
     address = models.CharField(max_length=128)
 
     def __unicode__(self):
@@ -44,6 +43,7 @@ class Hub(models.Model):
         
 # relationship between teachers and hubs
 class TeacherHub(models.Model):
+	# //todo foreignkeys
     #teacher = models.ForeignKey(Teacher)
     #hub = models.ForeignKey(Hub)
 
@@ -56,11 +56,12 @@ class TeacherHub(models.Model):
 
 class Resource(models.Model):
     resourcename = models.CharField(max_length=128)
-    #description = models.TextField()
+    description = models.TextField()
     
-    # comma separated tree for viewing evolution
+    # //todo comma separated tree for viewing evolution
     #trees = models.CharField(max_length=128)
     
+	# //todo foreignkeys
     #author = models.ForeignKey(Teacher)
     
     def __unicode__(self):
@@ -86,12 +87,14 @@ class WebResource(models.Model):
         return self.resource.resourcename
     
 class Tag(models.Model):
+	# //todo implement tags
     #tagname = models.CharField(max_length=128)
     
     def __unicode__(self):
         return self.tagname
     
 class ResourceTag(models.Model):
+	# //todo foreignkeys
     #resource = models.ForeignKey(Resource)
     #tag = models.ForeignKey(Tag)
 
@@ -102,6 +105,6 @@ class ResourceTag(models.Model):
 
 ''' start of material relationship models '''
 
-# enter teacher to resource reltionships here
+# //todo enter teacher to resource reltionships here
 
 ''' end of material realtionship models '''     
