@@ -13,7 +13,7 @@
         {% if resources %}
         <ul>
             {% for resource in resources %}
-            <li>{{ resource.resourcename }}</li>
+            <li><a href="../resource/{{ resource.id }}">{{ resource.resourcename }}</a></li>
             {% endfor %}
         </ul>
         {% else %}

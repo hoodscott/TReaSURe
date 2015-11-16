@@ -22,7 +22,9 @@ urlpatterns = patterns('',
         url(r'^hubs/$', views.hubs, name='hubs'),
         url(r'^schools/$', views.schools, name='schools'),
        
-        url(r'^resource/(?P<resource_id>\w+)/$', views.resource, name='resource'),
+        url(r'^resource/(?P<resource_id>\w+)/$', views.resource_view, name='resource_view'),
+        url(r'^hub/(?P<hub_id>\w+)/$', views.hub_view, name='hub_view'),
+        url(r'^school/(?P<school_id>\w+)/$', views.school_view, name='school_view'),
         
         url(r'^search/$', views.search, name='search'),
         )

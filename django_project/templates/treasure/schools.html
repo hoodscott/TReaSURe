@@ -9,15 +9,15 @@
 {% block body_block %}
 <div class="hero-unit">
     <div class="row-fluid">
-        <h2>Schoold</h2>
+        <h2>Schools</h2>
         {% if schools %}
         <ul>
             {% for school in schools %}
-            <li>{{ school.schoolname }}</li>
+            <li><a href="../school/{{ school.id }}">{{ school.schoolname }}</a></li>
             {% endfor %}
         </ul>
         {% else %}
-            <strong>No schoold present.</strong>
+            <strong>No schools present.</strong>
         {% endif %}
     </div>
 </div>

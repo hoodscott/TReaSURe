@@ -9,7 +9,7 @@ class ResourceForm(forms.ModelForm):
 
     class Meta:
         model = Resource
-        fields = ('resourcename',)
+        fields = ('resourcename','description')
         
 class FileForm(forms.ModelForm):
     path = forms.CharField(max_length=128, help_text="Please pretend to upload a file.")

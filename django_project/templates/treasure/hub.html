@@ -1,0 +1,23 @@
+{% extends 'treasure/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    {{ hub_name }}
+{% endblock %}
+
+{% block body_block %}
+<div class="hero-unit">
+    <div class="row-fluid">
+        {% if hub %}
+            <h1>{{ hub_name }}</h1>
+            <h3>Location:</h3>
+            <p>{{ location }}</p>
+            <h3>Address:</h3>
+            <p>{{ address }}</p>          
+        {% else %}
+            No hub at this url.<br>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -41,18 +41,6 @@ def search(request):
     # return response object
     return render_to_response('treasure/search.html', context_dict, context)
     
-    
-# view for the page for each resource
-def resource(request):
-    # get context of request
-    context = RequestContext(request)
-    
-    # create dictionary to pass data to templates
-    context_dict = {}
-    
-    # return response object
-    return render_to_response('treasure/resource.html', context_dict, context)
-    
 # view for the user's profile page
 def profile(request):
     # get context of request
@@ -75,70 +63,6 @@ def user_history(request):
     
     # return response object
     return render_to_response('treasure/user_history.html', context_dict, context)
-    
-# view for the add hub page
-@login_required
-def add_hub(request):
-    # get context of request
-    context = RequestContext(request)
-
-    # A HTTP POST?
-    if request.method == 'POST':
-        form = HubForm(request.POST)
-
-        # Have we been provided with a valid form?
-        if form.is_valid():
-            # Save the new category to the database.
-            form.save(commit=True)     
-            
-            # Now call the index() view.
-            # The user will be shown the homepage.
-            # //todo show hub page
-            return index(request)
-        else:
-            # The supplied form contained errors - just print them to the terminal.
-            print form.errors
-    else:
-        # If the request was not a POST, display the form to enter details.
-        form = HubForm()
-    
-    # create dictionary to pass data to templates
-    context_dict = {'form': form}
-    
-    # Render the form depending on context
-    return render_to_response('treasure/add_hub.html', context_dict, context)
-    
-# view for the add users page
-@login_required
-def add_school(request):
-    # get context of request
-    context = RequestContext(request)
-
-    # A HTTP POST?
-    if request.method == 'POST':
-        form = SchoolForm(request.POST)
-
-        # Have we been provided with a valid form?
-        if form.is_valid():
-            # Save the new category to the database.
-            form.save(commit=True)     
-            
-            # Now call the index() view.
-            # The user will be shown the homepage.
-            # //todo show school page
-            return index(request)
-        else:
-            # The supplied form contained errors - just print them to the terminal.
-            print form.errors
-    else:
-        # If the request was not a POST, display the form to enter details.
-        form = SchoolForm()
-    
-    # create dictionary to pass data to templates
-    context_dict = {'form': form}
-    
-    # Render the form to template with context
-    return render_to_response('treasure/add_school.html', context_dict, context)
     
 # register user
 def register(request):
@@ -252,7 +176,7 @@ def add_web_resource(request):
         if resource_form.is_valid() and web_form.is_valid():
             # Save the new category to the database.
             resource = resource_form.save()
-            
+                        
             # delay saving the model until we're ready to avoid integrity problems
             web = web_form.save(commit=False)
             web.resource = resource
@@ -263,7 +187,7 @@ def add_web_resource(request):
             # Now call the index() view.
             # The user will be shown the homepage.
             # //todo show the new materials page
-            return index(request)
+            return resource_view(request, resource.id)
         else:
             # The supplied form contained errors - just print them to the terminal.
             print form.errors
@@ -294,18 +218,16 @@ def add_file_resource(request):
         if resource_form.is_valid() and file_form.is_valid():
             # Save the new category to the database.
             resource = resource_form.save()
-            
+                                    
             # delay saving the model until we're ready to avoid integrity problems
-            filer = file_form.save(commit=False)
-            filer.resource = resource
+            files = file_form.save(commit=False)
+            files.resource = resource
             
             # save the instance
-            filer.save()     
+            files.save()     
             
-            # Now call the index() view.
-            # The user will be shown the homepage.
-            # //todo show the new materials page
-            return index(request)
+            # show user the new materials page
+            return resource_view(request, resource.id)
         else:
             # The supplied form contained errors - just print them to the terminal.
             print form.errors
@@ -320,6 +242,66 @@ def add_file_resource(request):
     # Bad form (or form details), no form supplied...
     # Render the form with error messages (if any).
     return render_to_response('treasure/add_file_resource.html', context_dict, context)
+    
+# view for the add hub page
+@login_required
+def add_hub(request):
+    # get context of request
+    context = RequestContext(request)
+
+    # A HTTP POST?
+    if request.method == 'POST':
+        form = HubForm(request.POST)
+
+        # Have we been provided with a valid form?
+        if form.is_valid():
+            # Save the new category to the database.
+            hub = form.save(commit=True)     
+            
+            # show user the new hub page
+            return hub_view(request, hub.id)
+        else:
+            # The supplied form contained errors - just print them to the terminal.
+            print form.errors
+    else:
+        # If the request was not a POST, display the form to enter details.
+        form = HubForm()
+    
+    # create dictionary to pass data to templates
+    context_dict = {'form': form}
+    
+    # Render the form depending on context
+    return render_to_response('treasure/add_hub.html', context_dict, context)
+    
+# view for the add users page
+@login_required
+def add_school(request):
+    # get context of request
+    context = RequestContext(request)
+
+    # A HTTP POST?
+    if request.method == 'POST':
+        form = SchoolForm(request.POST)
+
+        # Have we been provided with a valid form?
+        if form.is_valid():
+            # Save the new category to the database.
+            school = form.save(commit=True)     
+            
+            # show user new school page
+            return school_view(request, school.id)
+        else:
+            # The supplied form contained errors - just print them to the terminal.
+            print form.errors
+    else:
+        # If the request was not a POST, display the form to enter details.
+        form = SchoolForm()
+    
+    # create dictionary to pass data to templates
+    context_dict = {'form': form}
+    
+    # Render the form to template with context
+    return render_to_response('treasure/add_school.html', context_dict, context)
 
 def resources(request):
     # Request the context of the request.
@@ -353,3 +335,105 @@ def hubs(request):
     
     # Render the template depending on the context.
     return render_to_response('treasure/hubs.html', context_dict, context)
+    
+# view for the page for each resource
+def resource_view(request, resource_id):
+    # get context of request
+    context = RequestContext(request)
+    
+    # create dictionary to pass data to templates
+    context_dict = {}
+    
+    try:
+        # Can we find a resource with the given id?
+        this_resource = Resource.objects.get(id=resource_id)
+        
+        # get fields
+        context_dict['resource_name'] = this_resource.resourcename
+        context_dict['description'] = this_resource.description
+        
+        try:
+            # can we find a web resource with the given resource?
+            web_resource = WebResource.objects.get(resource = this_resource)
+            
+            # add fields to dict
+            context_dict['web_resource'] = web_resource.url
+            
+        except WebResource.DoesNotExist:
+            # do nothing
+            pass
+            
+        try:
+            # can we find a web resource with the given resource?
+            files_resource = FilesResource.objects.get(resource = this_resource)
+            
+            # add fields to dict
+            context_dict['files_resource'] = files_resource.path
+            
+        except FilesResource.DoesNotExist:
+            # do nothing
+            pass
+
+        # used to verify it exists
+        context_dict['resource'] = this_resource
+    except Resource.DoesNotExist:
+        # We get here if we didn't find the specified resource.
+        # Don't do anything - the template displays the "no resource" message for us.
+        pass
+    
+    # return response object
+    return render_to_response('treasure/resource.html', context_dict, context)
+    
+# view for the page for each hub
+def hub_view(request, hub_id):
+    # get context of request
+    context = RequestContext(request)
+    
+    # create dictionary to pass data to templates
+    context_dict = {}
+    
+    try:
+        # Can we find a hub with the given id?
+        this_hub = Hub.objects.get(id=hub_id)
+        
+        # get fields
+        context_dict['hub_name'] = this_hub.hubname
+        context_dict['location'] = this_hub.location
+        context_dict['address'] = this_hub.address
+
+        # used to verify it exists
+        context_dict['hub'] = this_hub
+    except Hub.DoesNotExist:
+        # We get here if we didn't find the specified hub.
+        # Don't do anything - the template displays the "no hub" message for us.
+        pass
+    
+    # return response object
+    return render_to_response('treasure/hub.html', context_dict, context)
+    
+# view for the page for each hub
+def school_view(request, hub_id):
+    # get context of request
+    context = RequestContext(request)
+    
+    # create dictionary to pass data to templates
+    context_dict = {}
+    
+    try:
+        # Can we find a school with the given id?
+        this_school = School.objects.get(id=hub_id)
+        
+        # get fields
+        context_dict['school_name'] = this_school.schoolname
+        context_dict['location'] = this_school.location
+        context_dict['address'] = this_school.address
+
+        # used to verify it exists
+        context_dict['school'] = this_school
+    except School.DoesNotExist:
+        # We get here if we didn't find the specified school.
+        # Don't do anything - the template displays the "no school" message for us.
+        pass
+    
+    # return response object
+    return render_to_response('treasure/school.html', context_dict, context)

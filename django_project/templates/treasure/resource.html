@@ -8,10 +8,25 @@
 
 {% block body_block %}
 <div class="hero-unit">
-    <h1>{{ resource_name }}</h1>
-    
     <div class="row-fluid">
-        <p>resource fields go here</p>
+        {% if resource %}
+            <h1>{{ resource_name }}</h1>
+            <h3>Description:</h3>
+            <p>{{ description }}</p>
+            
+            {% if web_resource %}
+                <h3>Url to Resource</h3>
+                <p>{{ web_resource }}</p>
+            {% endif %}
+            
+            {% if files_resource %}
+                <h3>Download Resource:</h3>
+                <p>{{ files_resource }}</p>
+            {% endif %}
+            
+        {% else %}
+            No Resource at this url.<br>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

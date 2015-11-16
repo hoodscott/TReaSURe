@@ -13,7 +13,7 @@
         {% if hubs %}
         <ul>
             {% for hub in hubs %}
-            <li>{{ hub.hubname }}</li>
+            <li><a href="../hub/{{ hub.id }}">{{ hub.hubname }}</a></li>
             {% endfor %}
         </ul>
         {% else %}
