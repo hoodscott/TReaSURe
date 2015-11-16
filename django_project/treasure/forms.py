@@ -1,6 +1,6 @@
 from django import forms
 from treasure.models import Resource, Teacher, Hub, School
-#from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 
 class ResourceForm(forms.ModelForm):
     resourcename = forms.CharField(max_length=128, help_text="Please enter the resource name.")
@@ -12,15 +12,26 @@ class ResourceForm(forms.ModelForm):
         # Provide an association between the ModelForm and a model
         model = Resource
         
-class TeacherForm(forms.ModelForm):
-    username = forms.CharField(max_length=128, help_text="Please enter a username.")
-    firstname = forms.CharField(max_length=128, help_text="Please enter your first name.")
-    surname = forms.CharField(max_length=128, help_text="Please enter your surname.")
+        
+class UserForm(forms.ModelForm):
+    username = forms.CharField(help_text="Please enter a username.")
+    email = forms.CharField(help_text="Please enter your email.")
+    password = forms.CharField(widget=forms.PasswordInput(), help_text="Please enter a password.")
 
-    # An inline class to provide additional information on the form.
     class Meta:
-        # Provide an association between the ModelForm and a model
-        model = Teacher
+        model = User
+        fields = ('username', 'email', 'password')
+        
+class TeacherForm(forms.ModelForm):
+
+	firstname = forms.CharField(max_length=128, help_text="Please enter your first name.")
+	surname = forms.CharField(max_length=128, help_text="Please enter your surname.")
+
+	# An inline class to provide additional information on the form.
+	class Meta:
+		# Provide an association between the ModelForm and a model
+		model = Teacher
+		fields = ('firstname', 'surname')
 
 class SchoolForm(forms.ModelForm):
     schoolname = forms.CharField(max_length=128, help_text="Please enter the name of the school.")

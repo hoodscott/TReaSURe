@@ -1,15 +1,18 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 ''' start of user models '''
 
 # model for the users / teachers
 class Teacher(models.Model):
-    username = models.CharField(max_length=128, unique=True)
+    # This line is required. Links Teacher to a User model instance.
+    user = models.OneToOneField(User)
+    
     firstname = models.CharField(max_length=128)
     surname = models.CharField(max_length=128)
 	
     def __unicode__(self):
-        return self.username
+        return self.user.username
         
 # model for schools
 class School(models.Model):
@@ -27,7 +30,7 @@ class TeacherSchool(models.Model):
     #school = models.ForeignKey(School)
 
     def __unicode__(self):
-        return self.teacher.username, self.school.schoolname        
+        return self.teacher.user.username, self.school.schoolname        
 
 # model for hubs        
 class Hub(models.Model):
@@ -45,7 +48,7 @@ class TeacherHub(models.Model):
     #hub = models.ForeignKey(Hub)
 
     def __unicode__(self):
-        return self.teacher.username, self.hub.hubname
+        return self.teacher.user.username, self.hub.hubname
 
 '''  end of user models '''
 

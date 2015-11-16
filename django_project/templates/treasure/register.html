@@ -1,0 +1,50 @@
+{% extends 'treasure/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block body_block %}
+
+<div class="hero-unit">
+    <h1>Add a Teacher</h1>
+    <br/>
+    <div class="container">
+        <form class="span6" id="register_teacher_form" method="post" action="/treasure/register/" enctype="multipart/form-data">
+        {% if registered %}
+            <p>Thank you for registering.</p>
+            <p><a href="/rango/login/">Login</a> when you are ready to rango.</p>
+        {% else %}
+	
+	    {% csrf_token %}
+	    
+            {% for hidden in user_form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+
+            {% for field in user_form.visible_fields %}
+                {{ field.errors }}
+                {{ field.help_text }}<br/>
+                {{ field }}<br/>
+            {% endfor %}
+            
+            {% for hidden in teacher_form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+
+            {% for field in teacher_form.visible_fields %}
+                {{ field.errors }}
+                {{ field.help_text }}<br/>
+                {{ field }}<br/>
+            {% endfor %}
+	{% endif %}
+
+
+            <br/>
+            <button class="btn btn-primary" type="submit" name="submit">Add Teacher</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
