@@ -28,7 +28,13 @@
 
                    <div class="nav-collapse collapse">
                        <ul class="nav pull-right">
-                            <li><a href="/treasure/profile">Profile</a></li>                          
+                            <li><a href="/treasure/profile">Profile</a></li> 
+                            {% if user.is_authenticated %}
+                            	<li><a href="/treasure/logout">Logout</a></li>
+                            {% else %}
+                            	<li><a href="/treasure/login">Login</a></li>
+                            	<li><a href="/treasure/register">Register</a></li>      
+                            {% endif %}                   
                        </ul>
                        <ul class="nav">
                            <li><a href="/treasure/search" >Search</a></li> 
