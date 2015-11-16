@@ -320,3 +320,36 @@ def add_file_resource(request):
     # Bad form (or form details), no form supplied...
     # Render the form with error messages (if any).
     return render_to_response('treasure/add_file_resource.html', context_dict, context)
+
+def resources(request):
+    # Request the context of the request.
+    context = RequestContext(request)
+    
+    # get list of all resources
+    resource_list = Resource.objects.all()
+    context_dict = {'resources': resource_list}
+    
+    # Render the template depending on the context.
+    return render_to_response('treasure/resources.html', context_dict, context)
+
+def schools(request):
+    # Request the context of the request.
+    context = RequestContext(request)
+    
+    # get list of all schools
+    school_list = School.objects.all()
+    context_dict = {'schools': school_list}
+    
+    # Render the template depending on the context.
+    return render_to_response('treasure/schools.html', context_dict, context)
+    
+def hubs(request):
+    # Request the context of the request.
+    context = RequestContext(request)
+    
+    # get list of all resources
+    hub_list = Hub.objects.all()
+    context_dict = {'hubs': hub_list}
+    
+    # Render the template depending on the context.
+    return render_to_response('treasure/hubs.html', context_dict, context)

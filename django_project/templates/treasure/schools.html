@@ -1,0 +1,24 @@
+{% extends 'treasure/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Schools
+{% endblock %}
+
+{% block body_block %}
+<div class="hero-unit">
+    <div class="row-fluid">
+        <h2>Schoold</h2>
+        {% if schools %}
+        <ul>
+            {% for school in schools %}
+            <li>{{ school.schoolname }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <strong>No schoold present.</strong>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

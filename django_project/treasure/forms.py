@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 class ResourceForm(forms.ModelForm):
     resourcename = forms.CharField(max_length=128, help_text="Please enter the resource name.")
+    description = forms.CharField(widget = forms.Textarea, help_text="Please enter a description.")
     #tree = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
 
     class Meta:

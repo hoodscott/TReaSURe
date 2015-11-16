@@ -1,0 +1,24 @@
+{% extends 'treasure/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Resources
+{% endblock %}
+
+{% block body_block %}
+<div class="hero-unit">
+    <div class="row-fluid">
+        <h2>Resources</h2>
+        {% if resources %}
+        <ul>
+            {% for resource in resources %}
+            <li>{{ resource.resourcename }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <strong>No resources present.</strong>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
