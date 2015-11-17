@@ -190,7 +190,8 @@ def add_web_resource(request):
             return resource_view(request, resource.id)
         else:
             # The supplied form contained errors - just print them to the terminal.
-            print form.errors
+            '''print resource_form.errors
+            print web_form.errors'''
     else:
         # If the request was not a POST, display the form to enter details.
         resource_form = ResourceForm()
@@ -230,7 +231,8 @@ def add_file_resource(request):
             return resource_view(request, resource.id)
         else:
             # The supplied form contained errors - just print them to the terminal.
-            print form.errors
+            '''print resource_form.errors
+            print file_form.errors'''
     else:
         # If the request was not a POST, display the form to enter details.
         resource_form = ResourceForm()
