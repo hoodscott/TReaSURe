@@ -12,6 +12,7 @@
     <p>Track teaching resources.</p>
     
     <div class="row-fluid">
+    {% if user.is_authenticated %}
         <p>Test links</p>
         <ul>
             <li><a href="/treasure/add_web_resource">Add a Web Resource</a></li>
@@ -24,6 +25,9 @@
             <li><a href="/treasure/schools">View Schools</a></li>
             <li><a href="/treasure/hubs">View Hubs</a></li>
         </ul>
+    {% else %}
+        <h3>Please <a href="/treasure/login">Login</a> or <a href="/treasure/register">Register</a></li>.</h3>
+    {% endif %}
     </div>
 </div>
 {% endblock %}
