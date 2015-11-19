@@ -7,13 +7,17 @@
 {% endblock %}
 
 {% block body_block %}
+
+<p/>
+<!--The following are just placeholders-->
+<p><a href="/treasure/add_file_resource">[Add File Resource]</a>  <a href="/treasure/add_web_resource">[Add Web Resource]</a></p>
 <div class="hero-unit">
     <div class="row-fluid">
-        <h2>Resources</h2>
+        <h3>Latest Resources</h3>
         {% if resources %}
         <ul>
             {% for resource in resources %}
-            <li><a href="../resource/{{ resource.id }}">{{ resource.resourcename }}</a></li>
+            <li><a href="/treasure/resource/{{ resource.id }}">{{ resource.resourcename }}</a></li>
             {% endfor %}
         </ul>
         {% else %}
