@@ -10,9 +10,12 @@
 <div class="hero-unit">
     <div class="row-fluid">
         {% if resource %}
+        
             <h1>{{ resource_name }}</h1>
             <h3>Description:</h3>
             <p>{{ description }}</p>
+            <h3>Level:</h3>
+            <p>{{ level }}</p>   
             
             {% if web_resource %}
                 <h3>Url to Resource</h3>

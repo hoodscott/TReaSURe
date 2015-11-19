@@ -11,10 +11,15 @@
     <div class="row-fluid">
         {% if school %}
             <h1>{{ school_name }}</h1>
-            <h3>Location:</h3>
-            <p>{{ location }}</p>
+            
+            <h3>Town:</h3>
+            <p>{{ town }}</p>
             <h3>Address:</h3>
-            <p>{{ address }}</p>          
+            <p>{{ address }}</p>
+            <h3>Latitude:</h3>
+            <p>{{ lat }}</p> 
+            <h3>Longitude:</h3>
+            <p>{{ lon }}</p>           
         {% else %}
             No school at this url.<br>
         {% endif %}

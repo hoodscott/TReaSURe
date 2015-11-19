@@ -353,6 +353,7 @@ def resource_view(request, resource_id):
         # get fields
         context_dict['resource_name'] = this_resource.name
         context_dict['description'] = this_resource.description
+        context_dict['level'] = this_resource.level
         
         try:
             # can we find a web resource with the given resource?
@@ -400,8 +401,9 @@ def hub_view(request, hub_id):
         
         # get fields
         context_dict['hub_name'] = this_hub.name
-        context_dict['location'] = this_hub.location
         context_dict['address'] = this_hub.address
+        context_dict['lat'] = this_hub.latitude
+        context_dict['lon'] = this_hub.longitude
 
         # used to verify it exists
         context_dict['hub'] = this_hub
@@ -414,7 +416,7 @@ def hub_view(request, hub_id):
     return render_to_response('treasure/hub.html', context_dict, context)
     
 # view for the page for each hub
-def school_view(request, hub_id):
+def school_view(request, school_id):
     # get context of request
     context = RequestContext(request)
     
@@ -423,12 +425,14 @@ def school_view(request, hub_id):
     
     try:
         # Can we find a school with the given id?
-        this_school = School.objects.get(id=hub_id)
+        this_school = School.objects.get(id=school_id)
         
         # get fields
         context_dict['school_name'] = this_school.name
-        context_dict['location'] = this_school.location
+        context_dict['town'] = this_school.town
         context_dict['address'] = this_school.address
+        context_dict['lat'] = this_school.latitude
+        context_dict['lon'] = this_school.longitude
 
         # used to verify it exists
         context_dict['school'] = this_school
