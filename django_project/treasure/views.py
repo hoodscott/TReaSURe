@@ -108,7 +108,7 @@ def register(request):
         teacher_form = TeacherForm()
     
     # create context dictionary
-    contexct_dict = {'user_form': user_form, 'teacher_form': teacher_form, 'registered': registered}
+    context_dict = {'user_form': user_form, 'teacher_form': teacher_form, 'registered': registered}
 
     # Render the template depending on the context.
     return render_to_response('treasure/register.html', context_dict, context)
