@@ -17,7 +17,7 @@
         {% if resources %}
         <ul>
             {% for resource in resources %}
-            <li><a href="/treasure/resource/{{ resource.id }}">{{ resource.resourcename }}</a></li>
+            <li><a href="/treasure/resource/{{ resource.id }}">{{ resource.name }}</a></li>
             {% endfor %}
         </ul>
         {% else %}
