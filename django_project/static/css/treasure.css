@@ -1,0 +1,28 @@
+/* underline links */
+a{
+    text-decoration:underline;
+}
+
+/* do not underline logo*/
+.brand{
+    text-decoration:none;
+}
+
+/* centrally align reminder text */
+#top{
+    text-align:center !important;
+}
+
+/* set height of input boxes */
+form input[type="text"], form input[type="email"], form input[type="password"], form select, form textarea{
+    height: auto !important;
+}
+
+/* set error message colour */
+.errorlist{
+    color:firebrick !important;
+}
+
+.hidden {
+    display:none;
+}
