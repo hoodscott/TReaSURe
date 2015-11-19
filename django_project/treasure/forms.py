@@ -6,11 +6,12 @@ class ResourceForm(forms.ModelForm):
     name = forms.CharField(max_length=128, help_text="Please enter the resource name.")
     description = forms.CharField(widget = forms.Textarea, help_text="Please enter a description.")
     tree = forms.CharField(widget = forms.HiddenInput(), required=False)
+    user = forms.CharField(widget = forms.HiddenInput(), required=False)
     level = forms.IntegerField(initial=0, help_text="Please enter the level of this resource.")
     
     class Meta:
         model = Resource
-        fields = ('name','description', 'tree', 'level')
+        fields = ('name','description', 'tree', 'user', 'level')
         exclude = []
         
 class FileForm(forms.ModelForm):

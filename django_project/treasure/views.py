@@ -174,8 +174,14 @@ def add_web_resource(request):
 
         # Have we been provided with a valid form?
         if resource_form.is_valid() and web_form.is_valid():
-            # Save the new category to the database.
-            resource = resource_form.save()
+            # delay saving the model until we're ready to avoid integrity problems
+            resource = resource_form.save(commit=False)
+            
+            # set foreign key of the author of the resource
+            userid = request.user.id
+            teacher = Teacher.objects.get(user = userid)
+            resource.author = Teacher.objects.get(id = teacher.id)
+            resource.save()
                         
             # delay saving the model until we're ready to avoid integrity problems
             web = web_form.save(commit=False)
