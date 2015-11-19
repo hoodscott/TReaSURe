@@ -48,7 +48,7 @@ class Resource(models.Model):
     name = models.CharField(max_length=128)
     
     # comma separated field for easier tree searching
-    tree = models.TextField(null=True)
+    tree = models.TextField(null=True)#todo {properly implement tree generation}
   
     # creates foreign key to teacher
     author = models.ForeignKey(Teacher, null=True)#todo {properly implement foreign key}

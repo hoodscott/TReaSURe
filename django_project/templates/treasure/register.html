@@ -15,7 +15,7 @@
         <form class="span6" id="register_teacher_form" method="post" action="/treasure/register/" enctype="multipart/form-data">
         {% if registered %}
             <p>Thank you for registering.</p>
-            <p><a href="/rango/login/">Login</a> when you are ready to rango.</p>
+            <p>Please <a href="/treasure/login/">Login</a></p>
         {% else %}
 	
 	    {% csrf_token %}

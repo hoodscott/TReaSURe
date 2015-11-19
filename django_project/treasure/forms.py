@@ -3,13 +3,14 @@ from treasure.models import *
 from django.contrib.auth.models import User
 
 class ResourceForm(forms.ModelForm):
-    resourcename = forms.CharField(max_length=128, help_text="Please enter the resource name.")
+    name = forms.CharField(max_length=128, help_text="Please enter the resource name.")
     description = forms.CharField(widget = forms.Textarea, help_text="Please enter a description.")
-    #tree = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
-
+    tree = forms.CharField(widget = forms.HiddenInput(), required=False)
+    level = forms.IntegerField(initial=0, help_text="Please enter the level of this resource.")
+    
     class Meta:
         model = Resource
-        fields = ('resourcename','description')
+        fields = ('name','description', 'tree', 'level')
         exclude = []
         
 class FileForm(forms.ModelForm):
@@ -46,22 +47,27 @@ class TeacherForm(forms.ModelForm):
 	class Meta:
 		model = Teacher
 		fields = ('firstname', 'surname')
-                exclude = []
+        exclude = []
 
 class SchoolForm(forms.ModelForm):
-    schoolname = forms.CharField(max_length=128, help_text="Please enter the name of the school.")
-    location = forms.CharField(max_length=128, help_text="Please enter the school's location.")
-    address = forms.CharField(max_length=128, help_text="Please enter the school's address.")
+    name = forms.CharField(max_length=128, help_text="Please enter the name of the school.")
+    town = forms.CharField(max_length=128, help_text="Please enter the town the school is in.")
+    address = forms.CharField( widget = forms.Textarea, help_text="Please enter the address of the school.")
+    latitude = forms.FloatField(help_text="Please enter the latitude of the school.")
+    longitude = forms.FloatField(help_text="Please enter the longitude of the school.")
 
     class Meta:
         model = School
+        fields = ('name', 'town', 'address', 'latitude', 'longitude')
         exclude = []
         
 class HubForm(forms.ModelForm):
-    hubname = forms.CharField(max_length=128, help_text="Please enter the name of the hub.")
-    location = forms.CharField(max_length=128, help_text="Please enter the hub's location.")
-    address = forms.CharField(max_length=128, help_text="Please enter the hub's address.")
+    name = forms.CharField(max_length=128, help_text="Please enter the name of the hub.")
+    address = forms.CharField( widget = forms.Textarea, help_text="Please enter the address of the hub.")
+    latitude = forms.FloatField(help_text="Please enter the latitude of the hub.")
+    longitude = forms.FloatField(help_text="Please enter the longitude of the hub.")
 
     class Meta:
         model = Hub
+        fields = ('name', 'address', 'latitude', 'longitude')
         exclude = []

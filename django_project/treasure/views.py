@@ -190,8 +190,8 @@ def add_web_resource(request):
             return resource_view(request, resource.id)
         else:
             # The supplied form contained errors - just print them to the terminal.
-            '''print resource_form.errors
-            print web_form.errors'''
+            print resource_form.errors
+            print web_form.errors
     else:
         # If the request was not a POST, display the form to enter details.
         resource_form = ResourceForm()
@@ -231,8 +231,8 @@ def add_file_resource(request):
             return resource_view(request, resource.id)
         else:
             # The supplied form contained errors - just print them to the terminal.
-            '''print resource_form.errors
-            print file_form.errors'''
+            print resource_form.errors
+            print file_form.errors
     else:
         # If the request was not a POST, display the form to enter details.
         resource_form = ResourceForm()
@@ -351,7 +351,7 @@ def resource_view(request, resource_id):
         this_resource = Resource.objects.get(id=resource_id)
         
         # get fields
-        context_dict['resource_name'] = this_resource.resourcename
+        context_dict['resource_name'] = this_resource.name
         context_dict['description'] = this_resource.description
         
         try:
@@ -399,7 +399,7 @@ def hub_view(request, hub_id):
         this_hub = Hub.objects.get(id=hub_id)
         
         # get fields
-        context_dict['hub_name'] = this_hub.hubname
+        context_dict['hub_name'] = this_hub.name
         context_dict['location'] = this_hub.location
         context_dict['address'] = this_hub.address
 
@@ -426,7 +426,7 @@ def school_view(request, hub_id):
         this_school = School.objects.get(id=hub_id)
         
         # get fields
-        context_dict['school_name'] = this_school.schoolname
+        context_dict['school_name'] = this_school.name
         context_dict['location'] = this_school.location
         context_dict['address'] = this_school.address
 
