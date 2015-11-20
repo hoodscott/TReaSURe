@@ -18,10 +18,11 @@ def sidebar(request):
         context_dict['user_firstname'] = teacher.firstname
         context_dict['user_surname'] = teacher.surname
         
-        # get a school from the user
+        # get a school from the user, if they have any
         if len(teacher.schools.all()) < 1:
             context_dict['school'] = ""
         else:
+            # choose first school in list for now
             context_dict['user_school'] = teacher.schools.all()[0]
             
     except Teacher.DoesNotExist:
@@ -49,7 +50,7 @@ def about(request):
     context = RequestContext(request)
     
     # create dictionary to pass data to templates
-    context_dict = {}
+    context_dict = sidebar(request)
     
     # return response object
     return render_to_response('treasure/about.html', context_dict, context)
@@ -61,7 +62,7 @@ def search(request):
     context = RequestContext(request)
     
     # create dictionary to pass data to templates
-    context_dict = {}
+    context_dict = sidebar(request)
     
     # return response object
     return render_to_response('treasure/search.html', context_dict, context)
@@ -72,7 +73,7 @@ def profile(request):
     context = RequestContext(request)
     
     # create dictionary to pass data to templates
-    context_dict = {}
+    context_dict = sidebar(request)
     
     # return response object
     return render_to_response('treasure/profile.html', context_dict, context)
@@ -84,7 +85,7 @@ def user_history(request):
     context = RequestContext(request)
     
     # create dictionary to pass data to templates
-    context_dict = {}
+    context_dict = sidebar(request)
     
     # return response object
     return render_to_response('treasure/user_history.html', context_dict, context)
@@ -145,7 +146,10 @@ def register(request):
         teacher_form = TeacherForm()
     
     # create context dictionary
-    context_dict = {'user_form': user_form, 'teacher_form': teacher_form, 'registered': registered}
+    context_dict = sidebar(request)
+    context_dict['user_form'] = user_form
+    context_dict['teacher_form'] = teacher_form
+    context_dict['registered'] = registered
 
     # Render the template depending on the context.
     return render_to_response('treasure/register.html', context_dict, context)
@@ -154,6 +158,8 @@ def register(request):
 def user_login(request):
     # get the context of request
     context = RequestContext(request)
+    
+    context_dict = sidebar(request)
 
     # If the request is a HTTP POST, try to pull out the relevant information.
     if request.method == 'POST':
@@ -187,7 +193,7 @@ def user_login(request):
     # The request is not a HTTP POST, so display the login form.
     # This scenario would most likely be a HTTP GET.
     else:
-        return render_to_response('treasure/login.html', {}, context)
+        return render_to_response('treasure/login.html', context_dict, context)
 
 @login_required
 def user_logout(request):
@@ -241,7 +247,9 @@ def add_web_resource(request):
         web_form = WebForm()
     
     # create dictionary to pass data to templates
-    context_dict = {'resource_form': resource_form, 'web_form': web_form}
+    context_dict = sidebar(request)
+    context_dict['resource_form'] = resource_form
+    context_dict['web_form'] = web_form
     
     # Bad form (or form details), no form supplied...
     # Render the form with error messages (if any).
@@ -288,7 +296,9 @@ def add_file_resource(request):
         file_form = FileForm()
     
     # create dictionary to pass data to templates
-    context_dict = {'resource_form': resource_form, 'file_form': file_form}
+    context_dict = sidebar(request)
+    context_dict['resource_form'] = resource_form
+    context_dict['file_form'] = file_form
     
     # Bad form (or form details), no form supplied...
     # Render the form with error messages (if any).
@@ -319,7 +329,8 @@ def add_hub(request):
         form = HubForm()
     
     # create dictionary to pass data to templates
-    context_dict = {'form': form}
+    context_dict = sidebar(request)
+    context_dict['form']  = form
     
     # Render the form depending on context
     return render_to_response('treasure/add_hub.html', context_dict, context)
@@ -349,7 +360,8 @@ def add_school(request):
         form = SchoolForm()
     
     # create dictionary to pass data to templates
-    context_dict = {'form': form}
+    context_dict = sidebar(request)
+    context_dict['form'] = form
     
     # Render the form to template with context
     return render_to_response('treasure/add_school.html', context_dict, context)
@@ -358,9 +370,11 @@ def resources(request):
     # Request the context of the request.
     context = RequestContext(request)
     
+    context_dict = sidebar(request)
+    
     # get list of all resources
     resource_list = Resource.objects.all()
-    context_dict = {'resources': resource_list}
+    context_dict['resources'] = resource_list
     
     # Render the template depending on the context.
     return render_to_response('treasure/resources.html', context_dict, context)
@@ -369,9 +383,11 @@ def schools(request):
     # Request the context of the request.
     context = RequestContext(request)
     
+    context_dict = sidebar(request)
+    
     # get list of all schools
     school_list = School.objects.all()
-    context_dict = {'schools': school_list}
+    context_dict['schools'] = school_list
     
     # Render the template depending on the context.
     return render_to_response('treasure/schools.html', context_dict, context)
@@ -380,9 +396,11 @@ def hubs(request):
     # Request the context of the request.
     context = RequestContext(request)
     
+    context_dict = sidebar(request)
+
     # get list of all resources
     hub_list = Hub.objects.all()
-    context_dict = {'hubs': hub_list}
+    context_dict['hubs'] = hub_list
     
     # Render the template depending on the context.
     return render_to_response('treasure/hubs.html', context_dict, context)
@@ -393,7 +411,7 @@ def resource_view(request, resource_id):
     context = RequestContext(request)
     
     # create dictionary to pass data to templates
-    context_dict = {}
+    context_dict = sidebar(request)
     
     try:
         # Can we find a resource with the given id?
@@ -445,7 +463,7 @@ def hub_view(request, hub_id):
     context = RequestContext(request)
     
     # create dictionary to pass data to templates
-    context_dict = {}
+    context_dict = sidebar(request)
     
     try:
         # Can we find a hub with the given id?
@@ -473,7 +491,7 @@ def school_view(request, school_id):
     context = RequestContext(request)
     
     # create dictionary to pass data to templates
-    context_dict = {}
+    context_dict = sidebar(request)
     
     try:
         # Can we find a school with the given id?
