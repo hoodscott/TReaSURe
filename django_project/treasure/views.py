@@ -223,8 +223,14 @@ def add_file_resource(request):
 
         # Have we been provided with a valid form?
         if resource_form.is_valid() and file_form.is_valid():
-            # Save the new category to the database.
-            resource = resource_form.save()
+            # delay saving the model until we're ready to avoid integrity problems
+            resource = resource_form.save(commit=False)
+            
+            # set foreign key of the author of the resource
+            userid = request.user.id
+            teacher = Teacher.objects.get(user = userid)
+            resource.author = Teacher.objects.get(id = teacher.id)
+            resource.save()
                                     
             # delay saving the model until we're ready to avoid integrity problems
             files = file_form.save(commit=False)
@@ -360,6 +366,9 @@ def resource_view(request, resource_id):
         context_dict['resource_name'] = this_resource.name
         context_dict['description'] = this_resource.description
         context_dict['level'] = this_resource.level
+        
+        # get authors name
+        context_dict['author'] = this_resource.author.firstname + " " + this_resource.author.surname
         
         try:
             # can we find a web resource with the given resource?

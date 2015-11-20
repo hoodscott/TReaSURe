@@ -8,28 +8,86 @@
 
 {% block body_block %}
 <div class="hero-unit">
-    <div class="row-fluid">
-        {% if resource %}
-        
-            <h1>{{ resource_name }}</h1>
-            <h3>Description:</h3>
-            <p>{{ description }}</p>
-            <h3>Level:</h3>
-            <p>{{ level }}</p>   
-            
-            {% if web_resource %}
-                <h3>Url to Resource</h3>
-                <p>{{ web_resource }}</p>
-            {% endif %}
-            
-            {% if files_resource %}
-                <h3>Download Resource:</h3>
-                <p>{{ files_resource }}</p>
-            {% endif %}
-            
-        {% else %}
-            No Resource at this url.<br>
-        {% endif %}
-    </div>
+    {% if resource %}
+        <div class="row-fluid">
+            <div class="span8">
+                <h1>{{ resource_name}}</h1>
+                <h3>by {{ author }}</h3>
+                <h4><strong>Description:</strong></h4>
+                <p>{{ description }}</p>
+                <h4><strong>Tags:</strong></h4>
+                <p><em>Tags go here when they are implemented</em></p>
+                <br>
+            </div>
+            <div class="span3">
+                <div style="height:120px;width:120px;background-color:blue"></div>
+                <hr>
+                <h4><strong>Level:</strong></h4>
+                <p>{{ level }}</p>
+                <h4><strong>Topic?:</strong></h4>
+                <p>Should this be stored, or is it a tag?</p>
+                <hr>
+                <ul>
+                {% if web_resource %}
+                    <li><a href="{{ web_resource }}">Link to Resource</a></li>
+                {% endif %}
+                {% if files_resource %}
+                    <li><a href="{{ files_resource }}">Download Resource</a></li>
+                {% endif %}
+                    <li><a href="Evolve.html">Evolve</a></li>
+                </ul>
+                <hr>
+                <ul>
+                    <li>Track</li>
+                    <li>View Versions</li>
+                </ul>
+                <hr>
+           </div>
+        </div>
+       <!-- uncomment when packs are working
+       <br><br><br>
+       <div class="row-fluid">
+            <div class="span6">
+                <h4> Author Recommended Prerequisites</h3>
+                <ul>
+                    <li style="color:blue;text-decoration:underline">Intro to Python</li>
+                        <li style="color:blue;text-decoration:underline">Programming Concepts</li>
+                </ul>
+            </div>
+            <div class="span6">
+                <h4> User Recommended Prerequisites</h3>
+                <ul>
+                    <li style="color:blue;text-decoration:underline">How to Python</li>
+                    <li style="color:blue;text-decoration:underline">Lessons on IDLE</li>
+                    <li style="color:blue;text-decoration:underline">Procedural Programming</li>
+                </ul>
+            </div>	
+       </div>
+       <br><br><br>
+       <div class="row-fluid">
+            <div class="span6">
+                <h4> User Recommended Followups</h3>
+                <ul>
+                    <li style="color:blue;text-decoration:underline">Using Object Orientation</li>
+                </ul>
+            </div>
+            <div class="span6">
+                <h4>Member of These Lessons</h4>
+                <ul>
+                    <li style="color:blue;text-decoration:underline">Teaching Programming in Python</li>
+                    <li style="color:blue;text-decoration:underline">Introduction to Software Development</li>
+                    <li style="color:blue;text-decoration:underline">Programming Paradigms</li>
+                </ul>
+            </div>
+        </div>
+        <br><br><br>
+        --- end comment -->
+        <div>
+            <h2>Forum</h2>
+            <p>Forum goes here</p>
+        </div>
+    {% else %}
+        <h2>No Resource At This URL.</h2>
+    {% endif %}
 </div>
 {% endblock %}

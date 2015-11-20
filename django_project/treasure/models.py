@@ -12,7 +12,7 @@ class Teacher(models.Model):
     surname = models.CharField(max_length=128)
 	
     def __unicode__(self):
-        return self.user.username
+        return self.firstname, self.surname
         
 # model for schools
 class School(models.Model):
@@ -51,7 +51,7 @@ class Resource(models.Model):
     tree = models.TextField(null=True)#todo {properly implement tree generation}
   
     # creates foreign key to teacher
-    author = models.ForeignKey(Teacher, null=True)#todo {properly implement foreign key}
+    author = models.ForeignKey(Teacher)
     
     level = models.IntegerField()
     description = models.TextField()
@@ -156,7 +156,6 @@ class TeacherUsesResource(models.Model):
 # model to store a users rating of a resource        
 class TeacherRatesResource(models.Model):
     teacher = models.ForeignKey(Teacher)
-    teacher = models.ForeignKey(Teacher)
     resource = models.ForeignKey(Resource)
     # rating measures
     measure1 = models.CharField(max_length=128)
@@ -166,7 +165,7 @@ class TeacherRatesResource(models.Model):
     comment = models.TextField()
     
     def __unicode__(self):
-        return self.teacher.name, self.resource.name
+        return self.teacher, self.resource.name
         
 # model to indicate if users want to talk about a resource        
 class TeacherWantstoTalkResource(models.Model):
