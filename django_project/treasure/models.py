@@ -3,17 +3,6 @@ from django.contrib.auth.models import User
 
 ''' start of user models '''
 
-# model for the users / teachers
-class Teacher(models.Model):
-    # Links Teacher to a User model instance.
-    user = models.OneToOneField(User)
-    
-    firstname = models.CharField(max_length=128)
-    surname = models.CharField(max_length=128)
-	
-    def __unicode__(self):
-        return self.firstname, self.surname
-        
 # model for schools
 class School(models.Model):
     name = models.CharField(max_length=128)
@@ -21,8 +10,6 @@ class School(models.Model):
     address = models.TextField()
     latitude = models.FloatField()
     longitude = models.FloatField()
-    # creates a many to many relationship with teachers
-    teachers = models.ManyToManyField(Teacher)
 
     def __unicode__(self):
         return self.name       
@@ -33,11 +20,25 @@ class Hub(models.Model):
     address = models.TextField()
     latitude = models.FloatField()
     longitude = models.FloatField()
-    # creates a many to many relationship with teachers
-    teachers = models.ManyToManyField(Teacher)
 
     def __unicode__(self):
         return self.name
+        
+# model for the users / teachers
+class Teacher(models.Model):
+    # Links Teacher to a User model instance.
+    user = models.OneToOneField(User)
+    
+    firstname = models.CharField(max_length=128)
+    surname = models.CharField(max_length=128)
+    
+    # creates a many to many relationship with schools
+    schools = models.ManyToManyField(School, null=True)
+    # creates a many to many relationship with hubs
+    hubs = models.ManyToManyField(Hub, null=True)
+	
+    def __unicode__(self):
+        return "%s %s" % (self.firstname, self.surname)
 
 '''  end of user models '''
 
@@ -99,6 +100,9 @@ class Pack(models.Model):
     author = models.ForeignKey(Teacher)
     # many to many relationship with resource
     resources = models.ForeignKey(Resource)
+    
+    def __unicode__(self):
+        return self.name
 
 # model for tags of resources and packs    
 class Tag(models.Model):
@@ -114,7 +118,7 @@ class ResourceTag(models.Model):
     resources = models.ForeignKey(Resource)
     
     def __unicode__(self):
-        return self.tags, self.resources
+        return "%s %s" % (self.tags, self.resources)
 
 # intermediate model for the many to many relationship
 # between resources and tags          
@@ -123,7 +127,7 @@ class PackTag(models.Model):
     packs = models.ForeignKey(Pack)
     
     def __unicode__(self):
-        return self.tags.name, self.pack.tag
+        return "%s %s" % (self.tags.name, self.pack.tag)
         
 ''' end of material models '''
 
@@ -137,7 +141,7 @@ class TeacherDownloadsResource(models.Model):
     used = models.BooleanField()
     
     def __unicode__(self):
-        return self.teacher.name, self.resource.name, self.used
+        return "%s %s" % (self.teacher.name, self.resource.name)
         
 # model to store where people used a resource
 class TeacherUsesResource(models.Model):
@@ -151,7 +155,7 @@ class TeacherUsesResource(models.Model):
     rated = models.BooleanField()
     
     def __unicode__(self):
-        return self.teacher.name, self.resource.name, self.download.id
+        return "%s %s" % (self.teacher.name, self.resource.name)
         
 # model to store a users rating of a resource        
 class TeacherRatesResource(models.Model):
@@ -165,7 +169,7 @@ class TeacherRatesResource(models.Model):
     comment = models.TextField()
     
     def __unicode__(self):
-        return self.teacher, self.resource.name
+        return "%s %s" % (self.teacher, self.resource.name)
         
 # model to indicate if users want to talk about a resource        
 class TeacherWantstoTalkResource(models.Model):
@@ -175,7 +179,7 @@ class TeacherWantstoTalkResource(models.Model):
     comment = models.TextField()
     
     def __unicode__(self):
-        return self.teacher.name, self.resource.name  
+        return "%s %s" % (self.teacher.name, self.resource.name)
      
 ''' end of material relationship models '''    
 
@@ -197,6 +201,6 @@ class TeacherRatesResource(models.Model):
     time = models.DateTimeField()
     
     def __unicode__(self):
-        return self.teacher.name, self.resource.name
+        return "%s %s" % (self.teacher.name, self.resource.name)
 
 ''' end of discussion relationship models '''

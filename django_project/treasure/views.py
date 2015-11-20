@@ -94,13 +94,25 @@ def register(request):
 
             # Now we save the UserProfile model instance.
             teacher.save()
+            
+            # save the schools the user has selected
+            schools = teacher_form.cleaned_data['schools']
+            for school in schools:
+                teacher.schools.add(school)
+            teacher.save()   
 
+            # save the hubs the user has selected
+            hubs = teacher_form.cleaned_data['hubs']
+            for hub in hubs:
+                teacher.hubs.add(hub)
+            teacher.save()            
+            
             # Update our variable to tell the template registration was successful.
             registered = True
 
         # Invalid form or forms print problems to the terminal.
         else:
-            print user_form.errors, teacher_form.errors
+            print "ERROR", user_form.errors, teacher_form.errors
 
     # Not a HTTP POST, so we render our form using two ModelForm instances.
     else:

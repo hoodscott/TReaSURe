@@ -41,13 +41,17 @@ class UserForm(forms.ModelForm):
         exclude = []
         
 class TeacherForm(forms.ModelForm):
-
-	firstname = forms.CharField(max_length=128, help_text="Please enter your first name.")
-	surname = forms.CharField(max_length=128, help_text="Please enter your surname.")
-
-	class Meta:
-		model = Teacher
-		fields = ('firstname', 'surname')
+    firstname = forms.CharField(max_length=128, help_text="Please enter your first name.")
+    surname = forms.CharField(max_length=128, help_text="Please enter your surname.")
+    # select school
+    schools = forms.ModelMultipleChoiceField(queryset=School.objects.all().order_by('name'),
+                                                required=False, help_text="Please select your school.")
+    hubs = forms.ModelMultipleChoiceField(queryset=Hub.objects.all().order_by('name'),
+                                                required=False, help_text="Please select your hubs.")
+                                                
+    class Meta:
+        model = Teacher
+        fields = ('firstname', 'surname', 'schools', 'hubs')
         exclude = []
 
 class SchoolForm(forms.ModelForm):
