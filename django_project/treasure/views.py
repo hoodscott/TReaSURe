@@ -6,13 +6,38 @@ from treasure.models import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
+# get the users firstname, surname and school for the sidebar
+def sidebar(request):
+    context_dict = {}
+    
+    try:
+        userid = request.user.id
+        teacher = Teacher.objects.get(user = userid)
+        
+        # get users name
+        context_dict['user_firstname'] = teacher.firstname
+        context_dict['user_surname'] = teacher.surname
+        
+        # get a school from the user
+        if len(teacher.schools.all()) < 1:
+            context_dict['school'] = ""
+        else:
+            context_dict['user_school'] = teacher.schools.all()[0]
+            
+    except Teacher.DoesNotExist:
+        context_dict['user_firstname'] = ""
+        context_dict['user_surname'] = ""
+        context_dict['school'] = ""
+    
+    return context_dict
+
 # view for the homepage
 def index(request):
     # get context of request
     context = RequestContext(request)
     
     # create dictionary to pass data to templates
-    context_dict = {}
+    context_dict = sidebar(request)
     
     # return response object
     return render_to_response('treasure/index.html', context_dict, context)

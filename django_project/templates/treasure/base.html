@@ -64,8 +64,8 @@
                        {% if user.is_authenticated %}
 							<div id="logo">
 								<span class="image avatar48"><img src="{% static 'images/avatar.jpg' %}" alt="" /></span>
-								<h1 id="title">Nigel Clarke</h1>
-								<p>HSoG</p>
+								<h1 id="title">{{ user_firstname }} {{ user_surname }}</h1>
+								<p>{{ user_school }}</p>
 							</div>
 	                   {% endif %}
 
