@@ -31,6 +31,15 @@ def sidebar(request):
         context_dict['school'] = ""
     
     return context_dict
+    
+# function to convert many to many relation list to a string of names
+def get_names(relation):
+    names = [relation[0].name]
+    i = 1
+    while i < len(relation):
+        names += [relation[i].name]
+        i += 1
+    return names
 
 # view for the homepage
 def index(request):
@@ -74,6 +83,36 @@ def profile(request):
     
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
+
+    # get user profile information
+    # first and surname come from sidebar request
+    try:
+        context_dict['username'] = request.user.username
+        context_dict['user_email'] = request.user.email
+        userid = request.user.id
+		
+        teacher = Teacher.objects.get(user = userid)
+        
+        # get schools from the user, if they have any
+        if len(teacher.schools.all()) < 1:
+            context_dict['user_schools'] = "no school"
+        else:
+            # choose first school in list for now
+            context_dict['user_schools'] = get_names(teacher.schools.all())
+	    	
+        # get schools from the user, if they have any
+        if len(teacher.hubs.all()) < 1:
+            context_dict['user_hubs'] = "no school"
+        else:
+            # choose first school in list for now
+            context_dict['user_hubs'] = get_names(teacher.hubs.all())
+	    
+	    # used to check the teacher exists	
+	    context_dict['teacher'] = teacher
+            
+    except Teacher.DoesNotExist:
+		# do nothing as the tempate shows the "no user" page
+		pass
     
     # return response object
     return render_to_response('treasure/profile.html', context_dict, context)
