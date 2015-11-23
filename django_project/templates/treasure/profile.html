@@ -10,7 +10,8 @@
 {% if teacher %}
 	<div class="hero-unit">
 	    <h1>{{ username }}</h1>
-	    <h2> {{ user_firstname }} {{ user_surname }}</h2>
+	    <h2>{{ user_firstname }} {{ user_surname }}</h2>
+
 	</div>
 	<div class="row-fluid">
 		<h3>Email:</h3>
@@ -20,7 +21,7 @@
 			<h3>Schools</h3>
 			<ul>
 			{% for school in user_schools %}
-				<li><p>{{ school }}</p></li>
+				<li><a href="/treasure/school/{{ school.id }}">{{ school.name }}</a></li>
 			{% endfor %}
 			</ul>
 		{% else %}
@@ -31,7 +32,7 @@
 			<h3>Hubs</h3>
 			<ul>
 			{% for hub in user_hubs %}
-				<li><p>{{ hub }}</p></li>
+				<li><a href="/treasure/hub/{{ hub.id }}">{{ hub.name }}</a></li>
 			{% endfor %}
 			</ul>
 		{% else %}

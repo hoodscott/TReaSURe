@@ -32,14 +32,14 @@ def sidebar(request):
     
     return context_dict
     
-# function to convert many to many relation list to a string of names
-def get_names(relation):
-    names = [relation[0].name]
+# function to convert many to many relation list of objects
+def get_list(relation):
+    objects = [relation[0]]
     i = 1
     while i < len(relation):
-        names += [relation[i].name]
+        objects += [relation[i]]
         i += 1
-    return names
+    return objects
 
 # view for the homepage
 def index(request):
@@ -97,15 +97,15 @@ def profile(request):
         if len(teacher.schools.all()) < 1:
             context_dict['user_schools'] = "no school"
         else:
-            # choose first school in list for now
-            context_dict['user_schools'] = get_names(teacher.schools.all())
+            # get list of school objects
+            context_dict['user_schools'] = get_list(teacher.schools.all())
 	    	
         # get schools from the user, if they have any
         if len(teacher.hubs.all()) < 1:
             context_dict['user_hubs'] = "no school"
         else:
-            # choose first school in list for now
-            context_dict['user_hubs'] = get_names(teacher.hubs.all())
+            # get list of hub objects
+            context_dict['user_hubs'] = get_list(teacher.hubs.all())
 	    
 	    # used to check the teacher exists	
 	    context_dict['teacher'] = teacher
