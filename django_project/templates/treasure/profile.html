@@ -8,17 +8,21 @@
 
 {% block body_block %}
 {% if teacher %}
-	<div class="hero-unit">
-	    <h1>{{ username }}</h1>
-	    <h2>{{ user_firstname }} {{ user_surname }}</h2>
-
+	<div class="hero-title">
+	    <h3><u>Profile details</u></h3>
 	</div>
 	<div class="row-fluid">
-		<h3>Email:</h3>
-		<p>{{ user_email }}</p>
-		
+		<h4>Username:</h4>
+		<p>  {{ username }}</p>
+		<p>
+		<h4>Full name:</h4>
+		<p>  {{ user_firstname }} {{ user_surname }}</p>
+		<p>
+		<h4>Email:</h4>
+		<p>  {{ user_email }}</p>
+		<p>
 		{% if user_schools %}
-			<h3>Schools</h3>
+			<h4>Schools</h4>
 			<ul>
 			{% for school in user_schools %}
 				<li><a href="/treasure/school/{{ school.id }}">{{ school.name }}</a></li>
@@ -28,8 +32,9 @@
 			<h4>You are not currently part of any school.<h4>
 		{% endif %}
 		
+		<p>
 		{% if user_hubs %}
-			<h3>Hubs</h3>
+			<h4>Hubs</h4>
 			<ul>
 			{% for hub in user_hubs %}
 				<li><a href="/treasure/hub/{{ hub.id }}">{{ hub.name }}</a></li>
@@ -42,7 +47,7 @@
 	</div>
 {% else %}
 	<div class="hero-unit">
-	    <h1>There is no user!</h1>
+	    <h3>There is no user!</h3>
 	</div>
 {% endif %}
 {% endblock %}
