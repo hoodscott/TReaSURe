@@ -264,6 +264,12 @@ def add_web_resource(request):
             teacher = Teacher.objects.get(user = userid)
             resource.author = Teacher.objects.get(id = teacher.id)
             resource.save()
+            
+            # save the tags the user has selected
+            tags = resource_form.cleaned_data['tags']
+            for tag in tags:
+                resource.tags.add(tag)
+            resource.save()
                         
             # delay saving the model until we're ready to avoid integrity problems
             web = web_form.save(commit=False)
@@ -314,6 +320,12 @@ def add_file_resource(request):
             userid = request.user.id
             teacher = Teacher.objects.get(user = userid)
             resource.author = Teacher.objects.get(id = teacher.id)
+            resource.save()
+            
+            # save the tags the user has selected
+            tags = resource_form.cleaned_data['tags']
+            for tag in tags:
+                resource.tags.add(tag)
             resource.save()
                                     
             # delay saving the model until we're ready to avoid integrity problems
@@ -463,6 +475,11 @@ def resource_view(request, resource_id):
         
         # get authors name
         context_dict['author'] = this_resource.author.firstname + " " + this_resource.author.surname
+        
+        # get tags from the user, if they have any
+        if len(this_resource.tags.all()) > 1:
+            # get list of school objects
+            context_dict['tags'] = get_list(this_resource.tags.all())
         
         try:
             # can we find a web resource with the given resource?

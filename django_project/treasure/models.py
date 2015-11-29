@@ -44,7 +44,14 @@ class Teacher(models.Model):
 
 ''' start of material models '''
 
-# model for super resource table
+# model for tags of resources and packs    
+class Tag(models.Model):
+    name = models.CharField(max_length=128)
+    
+    def __unicode__(self):
+        return self.name
+
+# model for super/parent resource table
 class Resource(models.Model):
     name = models.CharField(max_length=128)
     
@@ -53,6 +60,9 @@ class Resource(models.Model):
   
     # creates foreign key to teacher
     author = models.ForeignKey(Teacher)
+    
+    # creates a many to many relationship with tags
+    tags = models.ManyToManyField(Tag, null=True)
     
     level = models.IntegerField()
     description = models.TextField()
@@ -96,38 +106,15 @@ class TemplateResource(models.Model):
 # model for a pack of resources
 class Pack(models.Model):
     name = models.CharField(max_length=128)
+    
     # creates foreign key to teacher
     author = models.ForeignKey(Teacher)
+    
     # many to many relationship with resource
-    resources = models.ForeignKey(Resource)
+    resources = models.ManyToManyField(Resource, null=True)
     
     def __unicode__(self):
         return self.name
-
-# model for tags of resources and packs    
-class Tag(models.Model):
-    name = models.CharField(max_length=128)
-    
-    def __unicode__(self):
-        return self.name  
-
-# intermediate model for the many to many relationship
-# between resources and tags        
-class ResourceTag(models.Model):
-    tags = models.ForeignKey(Tag)
-    resources = models.ForeignKey(Resource)
-    
-    def __unicode__(self):
-        return "%s %s" % (self.tags, self.resources)
-
-# intermediate model for the many to many relationship
-# between resources and tags          
-class PackTag(models.Model):
-    tags = models.ForeignKey(Tag)
-    packs = models.ForeignKey(Pack)
-    
-    def __unicode__(self):
-        return "%s %s" % (self.tags.name, self.pack.tag)
         
 ''' end of material models '''
 

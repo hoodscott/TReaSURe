@@ -14,10 +14,17 @@
                 <h1>{{ resource_name}}</h1>
                 <h3>by {{ author }}</h3>
                 <h4><strong>Description:</strong></h4>
-                <p>{{ description }}</p>
+                <p>{{ description }}</p><br>
                 <h4><strong>Tags:</strong></h4>
-                <p><em>Tags go here when they are implemented</em></p>
-                <br>
+                {% if tags %}
+                    <ul>
+                    {% for tag in tags %}
+                        <li>{{ tag.name }}</li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>There are no tags.</p>
+                {% endif %}
             </div>
             <div class="span3">
                 <div style="height:120px;width:120px;background-color:blue"></div>
@@ -86,6 +93,7 @@
             <h2>Forum</h2>
             <p>Forum goes here</p>
         </div>
+        <!-- issues go here -->
     {% else %}
         <h2>No Resource At This URL.</h2>
     {% endif %}
