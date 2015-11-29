@@ -75,8 +75,7 @@ class FilesResource(models.Model):
     # one to one relationship with abstract resource
     resource = models.OneToOneField(Resource)
     # path to resource
-    # todo {add a proper file manager}
-    path = models.CharField(max_length=128)
+    path = models.FileField(upload_to='resources/%Y/%m/%d')
 
     def __unicode__(self):
         return self.resource.name

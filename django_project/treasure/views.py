@@ -303,7 +303,7 @@ def add_file_resource(request):
     # A HTTP POST?
     if request.method == 'POST':
         resource_form = ResourceForm(request.POST)
-        file_form = FileForm(request.POST)
+        file_form = FileForm(request.POST, request.FILES)
 
         # Have we been provided with a valid form?
         if resource_form.is_valid() and file_form.is_valid():
@@ -322,8 +322,10 @@ def add_file_resource(request):
                 resource.tags.add(tag)
             resource.save()
                                     
-            # delay saving the model until we're ready to avoid integrity problems
-            files = file_form.save(commit=False)
+            # add file to object
+            files = FilesResource( path = request.FILES['path'])
+            
+            # associate file resource with parent resource
             files.resource = resource
             
             # save the instance
@@ -487,7 +489,7 @@ def resource_view(request, resource_id):
             pass
             
         try:
-            # can we find a web resource with the given resource?
+            # can we find a file resource with the given resource?
             files_resource = FilesResource.objects.get(resource = this_resource)
             
             # add fields to dict

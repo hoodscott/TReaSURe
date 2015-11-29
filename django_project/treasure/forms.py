@@ -17,7 +17,7 @@ class ResourceForm(forms.ModelForm):
         exclude = []
         
 class FileForm(forms.ModelForm):
-    path = forms.CharField(max_length=128, help_text="Please pretend to upload a file.")
+    path = forms.FileField(label='Select the resource to upload', help_text='Maximum of 42MB')
     
     class Meta:
         model = FilesResource
