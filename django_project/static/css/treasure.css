@@ -23,6 +23,12 @@ form input[type="text"], form input[type="email"], form input[type="password"], 
     color:firebrick !important;
 }
 
+/* hide elements from display */
 .hidden {
     display:none;
+}
+
+/* Smaller padding on hero-units */
+.hero-unit{
+    padding: 40px;
 }

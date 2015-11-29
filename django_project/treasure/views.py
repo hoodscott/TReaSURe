@@ -19,9 +19,7 @@ def sidebar(request):
         context_dict['user_surname'] = teacher.surname
         
         # get a school from the user, if they have any
-        if len(teacher.schools.all()) < 1:
-            context_dict['school'] = ""
-        else:
+        if len(teacher.schools.all()) >= 1:
             # choose first school in list for now
             context_dict['user_school'] = teacher.schools.all()[0]
             
@@ -94,25 +92,21 @@ def profile(request):
         teacher = Teacher.objects.get(user = userid)
         
         # get schools from the user, if they have any
-        if len(teacher.schools.all()) < 1:
-            context_dict['user_schools'] = "no school"
-        else:
+        if len(teacher.schools.all()) >= 1:
             # get list of school objects
             context_dict['user_schools'] = get_list(teacher.schools.all())
 	    	
         # get schools from the user, if they have any
-        if len(teacher.hubs.all()) < 1:
-            context_dict['user_hubs'] = "no school"
-        else:
+        if len(teacher.hubs.all()) >= 1:
             # get list of hub objects
             context_dict['user_hubs'] = get_list(teacher.hubs.all())
 	    
-	    # used to check the teacher exists	
-	    context_dict['teacher'] = teacher
+	    # used to check the teacher exists
+        context_dict['teacher'] = teacher
             
     except Teacher.DoesNotExist:
-		# do nothing as the tempate shows the "no user" page
-		pass
+		# do nothing as the template shows the "no user" page
+        pass
     
     # return response object
     return render_to_response('treasure/profile.html', context_dict, context)
@@ -477,7 +471,7 @@ def resource_view(request, resource_id):
         context_dict['author'] = this_resource.author.firstname + " " + this_resource.author.surname
         
         # get tags from the user, if they have any
-        if len(this_resource.tags.all()) > 1:
+        if len(this_resource.tags.all()) >= 1:
             # get list of school objects
             context_dict['tags'] = get_list(this_resource.tags.all())
         
