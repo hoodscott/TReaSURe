@@ -1,0 +1,23 @@
+{% extends 'treasure/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Results
+{% endblock %}
+
+{% block body_block %}
+<div class="hero-unit">
+	<h2>Latest Resources</h2>
+	{% if resources %}
+	<ul>
+		{% for resource in resources %}
+			<li><a href="/treasure/resource/{{ resource.id }}">{{ resource.name }}</a></li>
+		{% endfor %}
+	</ul>
+	{% else %}
+		<strong>No resources found.</strong>
+	{% endif %}
+	<h3><a href="/../search/">Search Again</a></h3>
+</div>
+{% endblock %}

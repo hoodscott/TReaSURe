@@ -41,13 +41,14 @@
                             	<li><a href="/treasure/register">Register</a></li>      
                             {% endif %}                   
                        </ul>
-                       {% if user.is_authenticated %}
                        <ul class="nav">
+                       {% if user.is_authenticated %}
+                           <li><a href="/treasure/search">Search</a></li>
                            <li><a href="/treasure/resources">Resources</a></li>
 			   <li><a href="/treasure/explore">Explore</a></li>                        
+                       {% endif %}
                            <li><a href="/treasure/about">News</a></li>
                        </ul>
-                       {% endif %}
                    </div>
                    <!--/.nav-collapse -->
                </div>
@@ -64,7 +65,7 @@
 						<!-- Logo -->
                        {% if user.is_authenticated %}
 							<div id="logo">
-								<span class="image avatar48"><img src="{% static 'images/avatar.jpg' %}" alt="" /></span>
+								<span class="image avatar48"><img src="{% static 'images/avatar.jpg' %}" alt="user avatar" /></span>
 								<h1 id="title">{{ user_firstname }} {{ user_surname }}</h1>
 								<p>{{ user_school }}</p>
 							</div>
