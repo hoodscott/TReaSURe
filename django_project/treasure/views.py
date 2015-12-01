@@ -64,6 +64,7 @@ def about(request):
     
     
 # view for the search page
+@login_required
 def search(request):
     # get context of request
     context = RequestContext(request)
@@ -101,6 +102,7 @@ def search(request):
     return render_to_response('treasure/search.html', context_dict, context)
     
 # view for the user's profile page
+@login_required
 def profile(request):
     # get context of request
     context = RequestContext(request)
@@ -139,6 +141,7 @@ def profile(request):
     
     
 # view for the user's history (list of all actions) page
+@login_required
 def user_history(request):
     # get context of request
     context = RequestContext(request)
@@ -254,6 +257,7 @@ def user_login(request):
     else:
         return render_to_response('treasure/login.html', context_dict, context)
 
+# log the user out
 @login_required
 def user_logout(request):
     # Since we know the user is logged in, we can now just log them out.
@@ -439,6 +443,8 @@ def add_school(request):
     # Render the form to template with context
     return render_to_response('treasure/add_school.html', context_dict, context)
 
+# view to see all of the resource in the database
+@login_required
 def resources(request):
     # Request the context of the request.
     context = RequestContext(request)
@@ -452,6 +458,8 @@ def resources(request):
     # Render the template depending on the context.
     return render_to_response('treasure/resources.html', context_dict, context)
 
+#view to see all schools sotred in the database
+@login_required
 def schools(request):
     # Request the context of the request.
     context = RequestContext(request)
@@ -464,7 +472,9 @@ def schools(request):
     
     # Render the template depending on the context.
     return render_to_response('treasure/schools.html', context_dict, context)
-    
+
+# view to see all hubs in the database
+@login_required
 def hubs(request):
     # Request the context of the request.
     context = RequestContext(request)
@@ -479,6 +489,7 @@ def hubs(request):
     return render_to_response('treasure/hubs.html', context_dict, context)
     
 # view for the page for each resource
+@login_required
 def resource_view(request, resource_id):
     # get context of request
     context = RequestContext(request)
@@ -536,6 +547,7 @@ def resource_view(request, resource_id):
     return render_to_response('treasure/resource.html', context_dict, context)
     
 # view for the page for each hub
+@login_required
 def hub_view(request, hub_id):
     # get context of request
     context = RequestContext(request)
@@ -564,6 +576,7 @@ def hub_view(request, hub_id):
     return render_to_response('treasure/hub.html', context_dict, context)
     
 # view for the page for each hub
+@login_required
 def school_view(request, school_id):
     # get context of request
     context = RequestContext(request)
@@ -591,7 +604,9 @@ def school_view(request, school_id):
     
     # return response object
     return render_to_response('treasure/school.html', context_dict, context)
-    
+
+# view to see all tags in the database
+@login_required
 def tags(request):
     # Request the context of the request.
     context = RequestContext(request)
@@ -606,6 +621,8 @@ def tags(request):
     # Render the template depending on the context.
     return render_to_response('treasure/tags.html', context_dict, context)
     
+# view to see resource tagged with a specific tag
+@login_required
 def tag(request, tag_id):
     # get context of request
     context = RequestContext(request)
@@ -630,6 +647,8 @@ def tag(request, tag_id):
     # return response object
     return render_to_response('treasure/tag.html', context_dict, context)
     
+# view to explore the resources on the site    
+@login_required
 def explore(request):
     # Request the context of the request.
     context = RequestContext(request)
