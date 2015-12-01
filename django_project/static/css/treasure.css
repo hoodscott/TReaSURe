@@ -32,3 +32,23 @@ form input[type="text"], form input[type="email"], form input[type="password"], 
 .hero-unit{
     padding: 40px;
 }
+
+/* brightening up nav bar */
+.navbar-inverse .brand,.navbar-inverse .nav>li>a {
+	color:#ddd;
+}
+.navbar-inverse .brand {
+	color:#ddd;
+}
+.navbar-inverse .navbar-text {
+	color:#ddd;
+}
+.navbar-inverse .navbar-link {
+	color:#ddd;
+}
+#nav ul li a {
+color: rgba(207, 207, 207, 1);
+}
+#logo p {
+color: rgba(198, 198, 198, 1);
+}
