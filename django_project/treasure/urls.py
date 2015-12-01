@@ -26,5 +26,8 @@ urlpatterns = patterns('',
         url(r'^hub/(?P<hub_id>\w+)/$', views.hub_view, name='hub_view'),
         url(r'^school/(?P<school_id>\w+)/$', views.school_view, name='school_view'),
         
+        url(r'^explore/$', views.explore, name='explore'),
+        url(r'^explore/(?P<tag_id>\w+)/$', views.tag, name='tag'),
+                
         url(r'^search/$', views.search, name='search'),
         )
