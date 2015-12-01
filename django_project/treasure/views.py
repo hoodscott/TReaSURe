@@ -592,7 +592,6 @@ def tag(request, tag_id):
         
         # get resources
         context_dict['tagged_resources'] = Resource.objects.filter(tags__id=tag_id)
-        print context_dict['tagged_resources']
 
         # used to verify it exists
         context_dict['tag'] = this_tag
