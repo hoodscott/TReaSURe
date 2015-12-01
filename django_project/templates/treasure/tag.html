@@ -1,0 +1,30 @@
+{% extends 'treasure/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    {{ tag.name }}
+{% endblock %}
+
+{% block body_block %}
+<div class="hero-unit">
+    {% if tag %}
+        <div class="row-fluid">
+		    <h2>{{ tag.name}}</h2>
+		
+		    <h4>Resources:</h4>
+		    {% if tagged_resources %}
+		        <ul>
+		        {% for resource in tagged_resources %}
+		            <li><a href="/../treasure/resource/{{ resource.id }}">{{ resource.name }}</a></li>
+		        {% endfor %}
+		        </ul>
+		    {% else %}
+		        <p>There are no resources for this tag.</p>
+		    {% endif %}
+	    </div>
+    {% else %}
+        <h2>No Tag At This URL.</h2>
+    {% endif %}
+</div>
+{% endblock %}

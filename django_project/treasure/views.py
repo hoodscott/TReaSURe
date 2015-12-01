@@ -565,3 +565,41 @@ def school_view(request, school_id):
     
     # return response object
     return render_to_response('treasure/school.html', context_dict, context)
+    
+def explore(request):
+    # Request the context of the request.
+    context = RequestContext(request)
+    
+    context_dict = sidebar(request)
+    
+    # get list of all tags
+    tag_list = Tag.objects.all()
+    context_dict['tags'] = tag_list
+    
+    # Render the template depending on the context.
+    return render_to_response('treasure/explore.html', context_dict, context)
+    
+def tag(request, tag_id):
+    # get context of request
+    context = RequestContext(request)
+    
+    # create dictionary to pass data to templates
+    context_dict = sidebar(request)
+    
+    try:
+        # Can we find a hub with the given id?
+        this_tag = Tag.objects.get(id=tag_id)
+        
+        # get resources
+        context_dict['tagged_resources'] = Resource.objects.filter(tags__id=tag_id)
+        print context_dict['tagged_resources']
+
+        # used to verify it exists
+        context_dict['tag'] = this_tag
+    except Hub.DoesNotExist:
+        # We get here if we didn't find the specified tag.
+        # Don't do anything - the template displays the "no tag" message for us.
+        pass
+    
+    # return response object
+    return render_to_response('treasure/tag.html', context_dict, context)
