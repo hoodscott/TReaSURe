@@ -19,7 +19,7 @@
                 {% if tags %}
                     <ul>
                     {% for tag in tags %}
-                        <li><a href="/../treasure/explore/{{ tag.id }}">{{ tag.name }}</a></li>
+                        <li><a href="/../treasure/tags/{{ tag.id }}">{{ tag.name }}</a></li>
                     {% endfor %}
                     </ul>
                 {% else %}
@@ -41,7 +41,7 @@
                 {% if files_resource %}
                     <li><a href="{{ files_resource.url }}" download>Download Resource</a></li>
                 {% endif %}
-                    <li><a href="Evolve.html">Evolve</a></li>
+                    <li><!--a href="Evolve.html"-->Evolve<!--/a--></li>
                 </ul>
                 <hr>
                 <ul>

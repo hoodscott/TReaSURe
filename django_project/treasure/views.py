@@ -592,10 +592,11 @@ def school_view(request, school_id):
     # return response object
     return render_to_response('treasure/school.html', context_dict, context)
     
-def explore(request):
+def tags(request):
     # Request the context of the request.
     context = RequestContext(request)
     
+    #create context dictionary to send back to template
     context_dict = sidebar(request)
     
     # get list of all tags
@@ -603,7 +604,7 @@ def explore(request):
     context_dict['tags'] = tag_list
     
     # Render the template depending on the context.
-    return render_to_response('treasure/explore.html', context_dict, context)
+    return render_to_response('treasure/tags.html', context_dict, context)
     
 def tag(request, tag_id):
     # get context of request
@@ -628,3 +629,13 @@ def tag(request, tag_id):
     
     # return response object
     return render_to_response('treasure/tag.html', context_dict, context)
+    
+def explore(request):
+    # Request the context of the request.
+    context = RequestContext(request)
+    
+    #create context dictionary to send back to template
+    context_dict = sidebar(request)
+    
+    # Render the template depending on the context.
+    return render_to_response('treasure/explore.html', context_dict, context)

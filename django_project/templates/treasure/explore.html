@@ -10,15 +10,7 @@
 <div class="hero-unit">
     <div class="row-fluid">
         <h2>Explore</h2>
-        {% if tags %}
-        <ul>
-            {% for tag in tags %}
-            <li><a href="../explore/{{ tag.id }}">{{ tag.name }}</a></li>
-            {% endfor %}
-        </ul>
-        {% else %}
-            <strong>No tags in database.</strong>
-        {% endif %}
+	<p>Exploration goes here.</p>
     </div>
 </div>
 {% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'treasure/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Tags
+{% endblock %}
+
+{% block body_block %}
+<div class="hero-unit">
+    <div class="row-fluid">
+        <h2>Tags</h2>
+        {% if tags %}
+        <ul>
+            {% for tag in tags %}
+            <li><a href="../tags/{{ tag.id }}">{{ tag.name }}</a></li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <strong>No tags in database.</strong>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
