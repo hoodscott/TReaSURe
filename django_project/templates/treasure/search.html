@@ -12,12 +12,18 @@
     <br/>
     <div class="container">
         {% if searched %}
+            {% if resources %}
                 <h4>Results</h4>
                 <ul>
                 {% for resource in resources %}
-                    <li><a href="">{{ resource.name }}<a/></li>
+                    <li><a href="/treasure/resource/{{ resource.id }}">{{ resource.name }}<a/></li>
                 {% endfor %}
                 </ul>
+            {% else %}
+                <h4>No results</h4>
+            {% endif %}
+            <br>
+            <a class="btn btn-primary" href="/treasure/search">Search Again</a>
         {% else %}
             <form class="span6" id="search_form" method="post" action="/treasure/search/">            
 	
@@ -29,7 +35,6 @@
                         {{ field }}<br/>
                     {% endfor %}
                     
-                <br/>
                 <button class="btn btn-primary" type="submit" name="submit">Search</button>
             </form>
         {% endif %}

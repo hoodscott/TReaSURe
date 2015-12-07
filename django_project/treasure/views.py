@@ -78,17 +78,19 @@ def search(request):
 
         # Have we been provided with a valid form?
         if form.is_valid():
-           
+            # get tags from form
             tags = form.cleaned_data['tags']
-            resources = Resource.objects.all()
             
-             # filter t get the matching resources
-            for i in tags:
-                print i
+            # initalise search results
+            all_resources = Resource.objects.all()
+            found_resources = all_resources.filter(tags__name=tags[0])
             
+            # filter to get the matching resources
+            for tag in tags:
+                # logical AND the queryset fro each tag together
+                found_resources = found_resources & all_resources.filter(tags__name=tag)
             
-            context_dict['resources'] = resources
-            print resources
+            context_dict['resources'] = found_resources
             
             searched = True
             
@@ -97,10 +99,8 @@ def search(request):
             print form.errors
     else:
         # If the request was not a POST, display the form to enter details.
-        #TODO, form without model?
         form = SearchForm()
     
-    #TODO, form without model?
     context_dict['form'] = form
     context_dict['searched'] = searched
     
@@ -370,9 +370,7 @@ def add_web_resource(request):
             # save the instance
             web.save()     
             
-            # Now call the index() view.
-            # The user will be shown the homepage.
-            # //todo show the new materials page
+            # Now show the new materials page
             return resource_view(request, resource.id)
         else:
             # The supplied form contained errors - just print them to the terminal.
