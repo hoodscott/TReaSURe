@@ -16,15 +16,13 @@
 		<p>  {{ user_firstname }} {{ user_surname }}</p><br>
 		<h4>Email:</h4>
 		<p>  {{ user_email }}</p><br>
-		{% if user_schools %}
-			<h4>Schools</h4>
+		{% if user_school %}
+			<h4>School</h4>
 			<ul>
-			{% for school in user_schools %}
-				<li><a href="/treasure/school/{{ school.id }}">{{ school.name }}</a></li>
-			{% endfor %}
+				<li><a href="/treasure/school/{{ user_school.id }}">{{ user_school.name }}</a></li>
 			</ul>
 		{% else %}
-			<h4>You are not currently part of any schools.<h4>
+			<h4>You are not currently part of any school.<h4>
 		{% endif %}
 		<br>
 		{% if user_hubs %}
