@@ -132,12 +132,79 @@ def profile(request):
         context_dict['teacher'] = teacher
             
     except Teacher.DoesNotExist:
-	# do nothing as the template shows the "no user" page
+	    # do nothing as the template shows the "no user" page
         pass
     
     # return response object
     return render_to_response('treasure/profile.html', context_dict, context)
+
+# view to allow the user to edit their profile
+@login_required
+def edit_profile(request):
+    # get context of request
+    context = RequestContext(request)
     
+    # create dictionary to pass data to templates
+    context_dict = sidebar(request)
+    
+    updated = False
+    
+    # get current user and teacher records
+    my_user_record = request.user
+    my_teacher_record =  request.user.teacher
+    
+    # If it's a HTTP POST, we're interested in processing form data.
+    if request.method == 'POST':
+        # Attempt to grab information from the raw form information.
+        # pass in instance of the record to be updated
+        user_form = UserForm(data=request.POST, instance=my_user_record)
+        teacher_form = TeacherForm(data=request.POST, instance=my_teacher_record)
+
+        # If the two forms are valid...
+        if user_form.is_valid() and teacher_form.is_valid():
+            # Save the user's form data to the database.
+            user = user_form.save()
+
+            # Now we hash the password with the set_password method.
+            # Once hashed, we can update the user object.
+            user.set_password(user.password)
+            user.save()
+            
+            # Since we need to set the user attribute ourselves, we set commit=False.
+            # This delays saving the model until we're ready to avoid integrity problems.
+            teacher = teacher_form.save(commit=False)
+            teacher.user = user
+
+            # Now we save the UserProfile model instance.
+            teacher.save()  
+
+            # save the hubs the user has selected
+            hubs = teacher_form.cleaned_data['hubs']
+            for hub in hubs:
+                teacher.hubs.add(hub)
+            teacher.save()            
+            
+            # Update our variable to tell the template registration was successful.
+            updated = True
+
+        # Invalid form or forms print problems to the terminal.
+        else:
+            print "ERROR", user_form.errors, teacher_form.errors
+
+    # Not a HTTP POST, so we render our form using two ModelForm instances.
+    else: 
+        # pass the current records to initially populate the forms
+        user_form = UserForm(instance = my_user_record)
+        teacher_form = TeacherForm(instance = my_teacher_record)
+    
+    # create context dictionary
+    context_dict = sidebar(request)
+    context_dict['user_form'] = user_form
+    context_dict['teacher_form'] = teacher_form
+    context_dict['updated'] = updated
+    
+    # return response object
+    return render_to_response('treasure/edit_profile.html', context_dict, context)
     
 # view for the user's history (list of all actions) page
 @login_required
@@ -180,12 +247,7 @@ def register(request):
             teacher.user = user
 
             # Now we save the UserProfile model instance.
-            teacher.save()
-            
-            # save the school the user has selected //TODO
-            #school = teacher_form.cleaned_data['school']
-            #teacher.school.add(school)
-            #teacher.save()   
+            teacher.save()  
 
             # save the hubs the user has selected
             hubs = teacher_form.cleaned_data['hubs']

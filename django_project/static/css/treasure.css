@@ -52,3 +52,8 @@ color: rgba(207, 207, 207, 1);
 #logo p {
 color: rgba(198, 198, 198, 1);
 }
+
+/* removing underlined text inside buttons */
+a.btn.btn-primary {
+	text-decoration: none;
+}

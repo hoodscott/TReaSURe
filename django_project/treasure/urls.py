@@ -10,8 +10,7 @@ urlpatterns = patterns('',
         url(r'^logout/$', views.user_logout, name='logout'),
         
         url(r'^profile/$', views.profile, name='profile'),
-        url(r'^profile/(?P<user_id>\w+)/$', views.profile, name='profile'),
-        url(r'^profile/(?P<user_id>\w+)/history/$', views.user_history, name='user_history'),
+        url(r'^profile/edit/$', views.edit_profile, name='edit_profile'),
         
         url(r'^add_web_resource/$', views.add_web_resource, name='add_web_resource'),
         url(r'^add_file_resource/$', views.add_file_resource, name='add_file_resource'),
@@ -32,4 +31,8 @@ urlpatterns = patterns('',
         url(r'^explore/$', views.explore, name='explore'),
                 
         url(r'^search/$', views.search, name='search'),
+        
+        #url(r'^profile/(?P<user_id>\w+)/$', views.profile, name='profile'),
+        #url(r'^profile/(?P<user_id>\w+)/history/$', views.user_history, name='user_history'),
+        
         )
