@@ -32,8 +32,8 @@ class Teacher(models.Model):
     firstname = models.CharField(max_length=128)
     surname = models.CharField(max_length=128)
     
-    # creates a many to many relationship with schools
-    schools = models.ManyToManyField(School, null=True)
+    # creates a foreign key relationship with school
+    school = models.ForeignKey(School, null=True)
     # creates a many to many relationship with hubs
     hubs = models.ManyToManyField(Hub, null=True)
 	

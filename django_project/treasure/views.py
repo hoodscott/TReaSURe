@@ -19,9 +19,7 @@ def sidebar(request):
         context_dict['user_surname'] = teacher.surname
         
         # get a school from the user, if they have any
-        if len(teacher.schools.all()) >= 1:
-            # choose first school in list for now
-            context_dict['user_school'] = teacher.schools.all()[0]
+        context_dict['user_school'] = teacher.school
             
     except Teacher.DoesNotExist:
         context_dict['user_firstname'] = ""
@@ -119,12 +117,13 @@ def profile(request):
 		
         teacher = Teacher.objects.get(user = userid)
         
-        # get schools from the user, if they have any
-        if len(teacher.schools.all()) >= 1:
-            # get list of school objects
-            context_dict['user_schools'] = get_list(teacher.schools.all())
+        # get school from the user, if they have any
+        try:
+            context_dict['user_school'] = teacher.school
+        except:
+            print "error"
 	    	
-        # get schools from the user, if they have any
+        # get hubs from the user, if they have any
         if len(teacher.hubs.all()) >= 1:
             # get list of hub objects
             context_dict['user_hubs'] = get_list(teacher.hubs.all())
@@ -133,7 +132,7 @@ def profile(request):
         context_dict['teacher'] = teacher
             
     except Teacher.DoesNotExist:
-		# do nothing as the template shows the "no user" page
+	# do nothing as the template shows the "no user" page
         pass
     
     # return response object
@@ -183,11 +182,10 @@ def register(request):
             # Now we save the UserProfile model instance.
             teacher.save()
             
-            # save the schools the user has selected
-            schools = teacher_form.cleaned_data['schools']
-            for school in schools:
-                teacher.schools.add(school)
-            teacher.save()   
+            # save the school the user has selected //TODO
+            #school = teacher_form.cleaned_data['school']
+            #teacher.school.add(school)
+            #teacher.save()   
 
             # save the hubs the user has selected
             hubs = teacher_form.cleaned_data['hubs']
@@ -458,7 +456,7 @@ def resources(request):
     # Render the template depending on the context.
     return render_to_response('treasure/resources.html', context_dict, context)
 
-#view to see all schools sotred in the database
+#view to see all schools sorted in the database
 @login_required
 def schools(request):
     # Request the context of the request.
