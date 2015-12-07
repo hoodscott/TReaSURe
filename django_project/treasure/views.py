@@ -69,32 +69,40 @@ def search(request):
     
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
+    
+    searched = False
 
     # A HTTP POST?
     if request.method == 'POST':
-  	#TODO, form without model?
-        #form = SearchForm(request.POST)
+        form = SearchForm(request.POST)
 
         # Have we been provided with a valid form?
         if form.is_valid():
-            # get the matching resources
-            resources = "resources"
+           
+            tags = form.cleaned_data['tags']
+            resources = Resource.objects.all()
+            
+             # filter t get the matching resources
+            for i in tags:
+                print i
+            
             
             context_dict['resources'] = resources
+            print resources
             
-            # show search respose
-            return render_to_response('treasure/search/results.html', context_dict, context)
+            searched = True
+            
         else:
             # The supplied form contained errors - just print them to the terminal.
             print form.errors
     else:
         # If the request was not a POST, display the form to enter details.
         #TODO, form without model?
-        #form = SearchForm()
-        pass
+        form = SearchForm()
     
     #TODO, form without model?
-    #context_dict['form'] = form
+    context_dict['form'] = form
+    context_dict['searched'] = searched
     
     # return response object
     return render_to_response('treasure/search.html', context_dict, context)

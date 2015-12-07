@@ -8,10 +8,31 @@
 
 {% block body_block %}
 <div class="hero-unit">
-    <h1>This is the search page</h1>
-    
-    <div class="row-fluid">
-        <p>search box goes here</p>
+    <h2>Search Resources</h2>
+    <br/>
+    <div class="container">
+        {% if searched %}
+                <h4>Results</h4>
+                <ul>
+                {% for resource in resources %}
+                    <li><a href="">{{ resource.name }}<a/></li>
+                {% endfor %}
+                </ul>
+        {% else %}
+            <form class="span6" id="search_form" method="post" action="/treasure/search/">            
+	
+	            {% csrf_token %}
+
+                    {% for field in form.visible_fields %}
+                        {{ field.errors }}
+                        {{ field.help_text }}<br/>
+                        {{ field }}<br/>
+                    {% endfor %}
+                    
+                <br/>
+                <button class="btn btn-primary" type="submit" name="submit">Search</button>
+            </form>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

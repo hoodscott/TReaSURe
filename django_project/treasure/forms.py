@@ -77,3 +77,7 @@ class HubForm(forms.ModelForm):
         model = Hub
         fields = ('name', 'address', 'latitude', 'longitude')
         exclude = []
+        
+class SearchForm(forms.Form):
+    tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all().order_by('name'),
+                                                required=False, help_text="Please select tags.")
