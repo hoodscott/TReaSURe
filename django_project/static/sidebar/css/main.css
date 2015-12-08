@@ -2023,6 +2023,7 @@
 			font-weight: 600;
 			font-size: 1em;
 			line-height: 1em;
+			
 		}
 
 		#logo p {
@@ -2172,7 +2173,7 @@
 
 /* Wide */
 
-	@media screen and (min-width: 961px) and (max-width: 1880px) {
+	@media screen and (min-width: 1321px) and (max-width: 1880px) {
 
 		/* Basic */
 
@@ -2184,6 +2185,18 @@
 
 			#header {
 				width: 200px;
+			}
+			
+			#logo h1 {
+				max-inline-size:10em;
+				text-align:left;
+				margin-left:4em;
+			}
+			
+			#logo p {
+				max-inline-size:10em;
+				text-align:left;
+				margin-left:5em;
 			}
 
 		/* Footer */
@@ -2202,7 +2215,7 @@
 
 /* Normal */
 
-	@media screen and (min-width: 961px) and (max-width: 1620px) {
+	@media screen and (min-width: 961px) and (max-width: 1200px) {
 
 		/* Main */
 
