@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -27,6 +28,7 @@ class Hub(models.Model):
 # model for the users / teachers
 class Teacher(models.Model):
     # Links Teacher to a User model instance.
+    id = models.IntegerField(primary_key=True, db_column='id')
     user = models.OneToOneField(User)
     
     firstname = models.CharField(max_length=128)
@@ -51,8 +53,32 @@ class Tag(models.Model):
     def __unicode__(self):
         return self.name
 
+# model for a pack of resources
+class Pack(models.Model):
+    id  = models.IntegerField(primary_key=True,db_column='id')
+    explore  = models.IntegerField(max_length=1,db_column='explore')
+    name = models.CharField(max_length=128, db_column='name')
+    image = models.CharField(max_length=128, db_column='image')
+
+    # creates foreign key to teacher
+    author = models.ForeignKey(Teacher,db_column='author_id')
+
+    # pack description
+    description = models.CharField(max_length=128,db_column='description')
+
+    # creates a many to many relationship with tags
+    tags = models.ManyToManyField(Tag, null=True)
+
+    class Meta:
+        db_table = 'treasure_pack'
+
+    def __unicode__(self):
+        return self.name
+
 # model for super/parent resource table
 class Resource(models.Model):
+    id = models.IntegerField(primary_key=True, db_column='id')
+
     name = models.CharField(max_length=128)
     
     # comma separated field for easier tree searching
@@ -63,6 +89,7 @@ class Resource(models.Model):
     
     # creates a many to many relationship with tags
     tags = models.ManyToManyField(Tag, null=True)
+    packs = models.ManyToManyField(Pack, null=True, blank=True)
     
     level = models.IntegerField()
     description = models.TextField()
@@ -102,18 +129,6 @@ class TemplateResource(models.Model):
         return self.resource.name
 ''' 
 
-# model for a pack of resources
-class Pack(models.Model):
-    name = models.CharField(max_length=128)
-    
-    # creates foreign key to teacher
-    author = models.ForeignKey(Teacher)
-    
-    # many to many relationship with resource
-    resources = models.ManyToManyField(Resource, null=True)
-    
-    def __unicode__(self):
-        return self.name
         
 ''' end of material models '''
 
@@ -188,5 +203,6 @@ class TeacherRatesResource(models.Model):
     
     def __unicode__(self):
         return "%s %s" % (self.teacher.name, self.resource.name)
+
 
 ''' end of discussion relationship models '''
