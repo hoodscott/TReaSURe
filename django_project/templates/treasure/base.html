@@ -10,13 +10,21 @@
 		<!--[if lte IE 8]><script src="{% static 'sidebar/js/ie/html5shiv.js' %}"></script><![endif]-->
 		<!--[if lte IE 8]><link rel="stylesheet" href="{% static 'sidebar/css/ie8.css' %}" /><![endif]-->
 		<!--[if lte IE 9]><link rel="stylesheet" href="{% static 'sidebar/css/ie9.css' %}" /><![endif]-->
+		
+		<script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+		<script type="text/javascript" src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+		
+		
         <!-- Bootstrap -->
+		<link rel="stylesheet" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css"></style>
         <link href="{% static 'css/bootstrap-fluid-adj.css' %}" rel="stylesheet">
         <link href="{% static 'sidebar/css/main.css' %}" rel="stylesheet">
         <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
         <link rel="stylesheet" href="http://getbootstrap.com/examples/sticky-footer-navbar/sticky-footer-navbar.css">
         <link href="{% static 'css/bootstrap-responsive.css' %}" rel="stylesheet">
         <link href="{% static 'css/treasure.css' %}" rel="stylesheet">
+
+
     </head>
 
     <body>
@@ -31,6 +39,7 @@
                    </button>
                    <a class="brand" href="/treasure/">TReaSURe</a>
 
+				
                    <div class="nav-collapse collapse">
                        <ul class="nav pull-right">
                             {% if user.is_authenticated %}
@@ -45,9 +54,15 @@
                        {% if user.is_authenticated %}
                            <li><a href="/treasure/search">Search</a></li>
                            <li><a href="/treasure/resources">Resources</a></li>
-			   <li><a href="/treasure/explore">Explore</a></li>                        
+			   			   <li><a href="/treasure/explore">Explore</a></li>
+			   			   <li><a href="/treasure/packs">Teaching Plans</a></li>                      
                        {% endif %}
                            <li><a href="/treasure/about">News</a></li>
+                       {% if user.is_authenticated %}
+						   <form class="navbar-search pull-right" action="">
+						 		<input class="search-query span2" placeholder="Quick Search" type="text">
+						   </form>
+					   {% endif %}
                        </ul>
                    </div>
                    <!--/.nav-collapse -->
@@ -118,14 +133,12 @@
         </div-->
 
         <!-- Javascript at the end, page loads faster -->
-        <script src="{% static 'sidebar/js/jquery.min.js' %}"></script>
         <script src="{% static 'sidebar/js/jquery.scrolly.min.js' %}"></script>
         <script src="{% static 'sidebar/js/jquery.scrollzer.min.js' %}"></script>
         <script src="{% static 'sidebar/js/skel.min.js' %}"></script>
         <script src="{% static 'sidebar/js/util.js' %}"></script>
         <!--[if lte IE 8]><script src="{% static 'sidebar/js/ie/respond.min.js' %}"></script><![endif]-->
         <script src="{% static 'sidebar/js/main.js' %}"></script>		
-        <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
         <script src="{% static 'js/bootstrap.min.js' %}"></script>
         <script src="{% static 'js/treasure.js' %}"></script>
     </body>
