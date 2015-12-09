@@ -7,10 +7,32 @@
 {% endblock %}
 
 {% block body_block %}
-<div class="hero-unit">
+
     <div class="row-fluid">
         <h2>Explore</h2>
-	<p>Exploration goes here.</p>
-    </div>
-</div>
+		<div class="row-fluid">
+		            <ul class="thumbnails">
+					{% for pack in packs %}
+						{% if forloop.counter0|divisibleby:"3" %}
+			              <li class="span4">
+						{% endif %}
+			                <div class="thumbnail">
+			                  <img src="{{pack.image}}" style="width: 300px; height: 200px;" data-src="holder.js/300x200" alt="300x200">
+			                  <div class="caption">
+			                    <h3>{{pack.name}}</h3>
+			                    <p>{{pack.description}}</p>
+			                    <p><a href="/../treasure/packs/{{ pack.id }}" class="btn btn-primary">View Pack</a></p>
+			                  </div>
+			                </div>
+						{% if forloop.counter|divisibleby:"3" %}
+			              </li>
+						{% endif %}
+					{% endfor %}
+
+		            </ul>
+		          </div>
+
+
+
+
 {% endblock %}
