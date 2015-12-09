@@ -687,6 +687,23 @@ def tags(request):
     # Render the template depending on the context.
     return render_to_response('treasure/tags.html', context_dict, context)
     
+
+# view to see all packs in the database
+@login_required
+def packs(request):
+    # Request the context of the request.
+    context = RequestContext(request)
+
+    #create context dictionary to send back to template
+    context_dict = sidebar(request)
+
+    # get list of all tags
+    pack_list = Pack.objects.all()
+    context_dict['packs'] = pack_list
+
+    # Render the template depending on the context.
+    return render_to_response('treasure/packs.html', context_dict, context)
+
 # view to see resource tagged with a specific tag
 @login_required
 def tag(request, tag_id):
@@ -713,6 +730,40 @@ def tag(request, tag_id):
     # return response object
     return render_to_response('treasure/tag.html', context_dict, context)
     
+
+    
+# Pack view
+@login_required
+def pack(request, pack_id):
+    # get context of request
+    context = RequestContext(request)
+    
+    # create dictionary to pass data to templates
+    context_dict = sidebar(request)
+    
+    try:
+        this_pack = Pack.objects.get(id=pack_id)
+        
+        # get resources
+        context_dict['Pack_Resources'] = Resource.objects.filter(packs__id=pack_id)
+
+        # get tags from the user, if they have any
+        if len(this_pack.tags.all()) >= 1:
+            # get list of tag objects
+            context_dict['tags'] = get_list(this_pack.tags.all())
+
+        # used to verify it exists
+        context_dict['pack'] = this_pack
+    except Hub.DoesNotExist:
+        # We get here if we didn't find the specified tag.
+        # Don't do anything - the template displays the "no tag" message for us.
+        pass
+    
+    # return response object
+    return render_to_response('treasure/pack.html', context_dict, context)
+
+
+
 # view to explore the resources on the site    
 @login_required
 def explore(request):
@@ -721,6 +772,12 @@ def explore(request):
     
     #create context dictionary to send back to template
     context_dict = sidebar(request)
+
+    try:
+	packs= Pack.objects.filter(explore=1)
+	context_dict['packs'] = packs
+    except Pack.DoesNotExist:
+	pass
     
     # Render the template depending on the context.
     return render_to_response('treasure/explore.html', context_dict, context)
