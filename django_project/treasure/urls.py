@@ -28,6 +28,9 @@ urlpatterns = patterns('',
         url(r'^tags/$', views.tags, name='tags'),
         url(r'^tags/(?P<tag_id>\w+)/$', views.tag, name='tag'),
         
+        url(r'^packs/$', views.packs, name='packs'),
+        url(r'^packs/(?P<pack_id>\w+)/$', views.pack, name='pack'),
+        
         url(r'^explore/$', views.explore, name='explore'),
                 
         url(r'^search/$', views.search, name='search'),
