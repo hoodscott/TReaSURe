@@ -1,0 +1,74 @@
+{% extends 'treasure/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    {{ pack.name }}
+{% endblock %}
+
+{% block body_block %}
+{% if Pack_Resources %}
+<div class="container-fluid">
+	<div class="row">
+			<div class="col-xs-6">
+				<div class="container-fluid">
+					  <div class="row">
+						  <div class="col-xs-6"><u>Pack Name</u>:<br>  <h3 style= 'margin-top: -5px';>{{pack.name}}</h3></div>
+						  <div class="col-xs-6"><u>Pack Creator</u>:<br>  <p style= 'margin-top: +7px';>{{pack.author}}</p></div>
+					  </div>
+					  <div class="row">
+						<div class="col-xs-6"><u>Description</u>:<br>  {{pack.description}}</div>
+						<div class="col-xs-6"><u>Tags</u>:<br>  	
+							{% if tags %}
+								{% for tag in tags %}
+					              <a href="/../treasure/tags/{{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %} 
+					   			{% endfor %}
+					  		{% else %}
+					  			<p>There are no tags.</p>
+					   		{% endif %}
+						</div>
+					  </div>
+				</div> <!-- close container -->
+			</div> <!-- close column -->
+			<div class="col-xs-6"> <img src="{{pack.image}}" style="width: 120px; height: 120px;" data-src="holder.js/120x120" alt="120x120"></div>
+	</div> <!-- close row -->
+
+	  <div class="row">
+		<div class="panel panel-default">
+			<div class="panel-body">
+		        <div class="table-responsive">
+		            <table id="Packs" class="table table-striped table-bordered" cellspacing="0" width="100%">
+		                <thead>
+		                    <tr>
+		                        <th>Resource Name</th>
+		                        <th>Author</th>
+		                        <th>Description</th>
+		                    </tr>
+		                </thead>
+		                <tbody>
+		                    {% for resource in Pack_Resources %}
+		                        <tr class="Label">
+		                            <td><a href="/treasure/resource/{{ resource.id }}">{{resource.name}}</a></td>
+		                            <td>{{resource.author}}</td>
+		                            <td>{{resource.description}}</td>
+		                        </tr>
+		                    {% endfor %}
+
+		                </tbody>
+		             </table>
+		        </div>
+		    </div> <!-- close body -->
+		</div> <!-- close panel -->
+	  </div> <!-- close row -->
+</div>
+{% else %}
+    <h3>Wrong URL, or Pack no longer exists.</h3>
+{% endif %}
+<!-- script for table -->
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#Packs').DataTable();
+});
+</script>
+
+{% endblock %}
