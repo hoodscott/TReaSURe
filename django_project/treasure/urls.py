@@ -23,8 +23,8 @@ urlpatterns = patterns('',
        
         url(r'^resource/(?P<resource_id>\w+)/$', views.resource_view, name='resource_view'),
         url(r'^resource/(?P<resource_id>\w+)/versions/$', views.versions, name='versions'),
-        #url(r'^resource/(?P<resource_id>\w+)/evolve/$', views.evolve, name='evolve'),
-        #url(r'^resource/(?P<resource_id>\w+)/track/$', views.track, name='track'),
+        url(r'^resource/(?P<resource_id>\w+)/evolve/$', views.evolve, name='evolve'),
+        url(r'^resource/(?P<resource_id>\w+)/track/$', views.track, name='track'),
         
         url(r'^hub/(?P<hub_id>\w+)/$', views.hub_view, name='hub_view'),
         url(r'^school/(?P<school_id>\w+)/$', views.school_view, name='school_view'),

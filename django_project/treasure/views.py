@@ -820,7 +820,7 @@ def pack(request, pack_id):
 
 
 
-# view to explore the resources on the site    
+# view to explore the resources on the site
 @login_required
 def explore(request):
     # Request the context of the request.
@@ -864,3 +864,31 @@ def versions(request, resource_id):
     
     # Render the template depending on the context.
     return render_to_response('treasure/versions.html', context_dict, context)
+    
+# view to evolve a resource
+@login_required
+def evolve(request, resource_id):
+    # Request the context of the request.
+    context = RequestContext(request)
+    
+    #create context dictionary to send back to template
+    context_dict = sidebar(request)
+
+    #todo: implement evolution
+    
+    # Render the template depending on the context.
+    return render_to_response('treasure/evolve.html', context_dict, context)
+    
+# view to track a resource
+@login_required
+def track(request, resource_id):
+    # Request the context of the request.
+    context = RequestContext(request)
+    
+    #create context dictionary to send back to template
+    context_dict = sidebar(request)
+
+    #todo: implement tracking
+    
+    # Render the template depending on the context.
+    return render_to_response('treasure/track.html', context_dict, context)
