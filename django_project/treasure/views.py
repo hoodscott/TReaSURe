@@ -357,13 +357,17 @@ def add_web_resource(request):
             resource.author = Teacher.objects.get(id = teacher.id)
             resource.save()
             
+            # combine the tags into one queryset
+            tags =  resource_form.cleaned_data['level_tags'] | \
+                    resource_form.cleaned_data['topic_tags'] | \
+                    resource_form.cleaned_data['other_tags']
             # save the tags the user has selected
-            tags = resource_form.cleaned_data['tags']
             for tag in tags:
                 resource.tags.add(tag)
             resource.save()
                         
-            # delay saving the model until we're ready to avoid integrity problems
+            # delay saving the relationship model until we're ready
+            # to avoid integrity problems
             web = web_form.save(commit=False)
             web.resource = resource
             
@@ -412,12 +416,15 @@ def add_file_resource(request):
             resource.author = Teacher.objects.get(id = teacher.id)
             resource.save()
             
+            # combine the tags into one queryset
+            tags =  resource_form.cleaned_data['level_tags'] | \
+                    resource_form.cleaned_data['topic_tags'] | \
+                    resource_form.cleaned_data['other_tags']
             # save the tags the user has selected
-            tags = resource_form.cleaned_data['tags']
             for tag in tags:
                 resource.tags.add(tag)
             resource.save()
-                                    
+            
             # add file to object
             files = FilesResource( path = request.FILES['path'])
             

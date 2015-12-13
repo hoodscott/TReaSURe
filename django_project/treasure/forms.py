@@ -8,12 +8,18 @@ class ResourceForm(forms.ModelForm):
     tree = forms.CharField(widget = forms.HiddenInput(), required=False)
     user = forms.CharField(widget = forms.HiddenInput(), required=False)
     level = forms.IntegerField(initial=0, help_text="Please enter the level of this resource.")
-    tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all().order_by('name'),
-                                                required=False, help_text="Please select tags.")
+    
+    
+    level_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=0).order_by('name'),
+                                                required=True, help_text="Please select level(s).")
+    topic_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=1).order_by('name'),
+                                                required=True, help_text="Please select topic(s).")
+    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
+                                                required=False, help_text="Please select other tags (optional).")                                                
     
     class Meta:
         model = Resource
-        fields = ('name','description', 'tree', 'user', 'level', 'tags')
+        fields = ('name','description', 'tree', 'user', 'level')
         exclude = []
         
 class FileForm(forms.ModelForm):
