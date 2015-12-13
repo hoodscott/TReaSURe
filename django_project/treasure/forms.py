@@ -83,5 +83,21 @@ class HubForm(forms.ModelForm):
         exclude = []
         
 class SearchForm(forms.Form):
-    tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all().order_by('name'),
-                                                required=False, help_text="Please select tags.")
+    
+    #define types of search
+    SEARCHTYPES = (
+        ('0', 'Resources'),
+        ('1', 'Packs'),
+        
+    )
+    
+    searchtype = forms.ChoiceField(choices=SEARCHTYPES, required=True, label='Resource',
+                                help_text="What do you want to search for.")
+    
+    # tag forms
+    level_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=0).order_by('name'),
+                                                required=False, help_text="Select levels.")
+    topic_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=1).order_by('name'),
+                                                required=False, help_text="Select topics.")
+    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
+                                                required=False, help_text="Select other tags.")                       

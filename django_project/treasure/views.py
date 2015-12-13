@@ -79,18 +79,53 @@ def search(request):
         # Have we been provided with a valid form?
         if form.is_valid():
             # get tags from form
-            tags = form.cleaned_data['tags']
+            # combine the tags into one queryset
+            tags =  form.cleaned_data['level_tags'] | \
+                    form.cleaned_data['topic_tags'] | \
+                    form.cleaned_data['other_tags']
+                    
+            search_type = form.cleaned_data['searchtype']
             
-            # initalise search results
-            all_resources = Resource.objects.all()
-            found_resources = all_resources.filter(tags__name=tags[0])
+            # if search type is 'resources'
+            if search_type == '0':
+                # initialise search results
+                all_resources = Resource.objects.all()
+                if tags:
+                    # initialise the queryset with the first tag results only
+                    found_resources = all_resources.filter(tags__name=tags[0])
+                
+                    # filter to get the matching resources
+                    for tag in tags:
+                        # logical AND the queryset from each tag together
+                        found_resources = found_resources & all_resources.filter(tags__name=tag)
+                
+                    context_dict['results'] = found_resources
+                    
+                    # set flag so template knows which url to use
+                    context_dict['resource'] = True
+                else:
+                    # if no tags are entered, do nothing
+                    # template handles error message
+                    pass
             
-            # filter to get the matching resources
-            for tag in tags:
-                # logical AND the queryset fro each tag together
-                found_resources = found_resources & all_resources.filter(tags__name=tag)
-            
-            context_dict['resources'] = found_resources
+            # if search type is 'packs'
+            if search_type == '1':
+                # initialise search results
+                all_packs = Pack.objects.all()
+                if tags:
+                    # initialise the queryset with the first tag results only
+                    found_packs = all_packs.filter(tags__name=tags[0])
+                
+                    # filter to get the matching resources
+                    for tag in tags:
+                        # logical AND the queryset from each tag together
+                        found_packs = found_packs & all_packs.filter(tags__name=tag)
+                
+                    context_dict['results'] = found_packs
+                else:
+                    # if no tags are entered, do nothing
+                    # template handles error message
+                    pass                    
             
             searched = True
             
