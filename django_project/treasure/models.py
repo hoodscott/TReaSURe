@@ -28,7 +28,6 @@ class Hub(models.Model):
 # model for the users / teachers
 class Teacher(models.Model):
     # Links Teacher to a User model instance.
-    id = models.IntegerField(primary_key=True, db_column='id')
     user = models.OneToOneField(User)
     
     firstname = models.CharField(max_length=128)
@@ -55,16 +54,15 @@ class Tag(models.Model):
 
 # model for a pack of resources
 class Pack(models.Model):
-    id  = models.IntegerField(primary_key=True,db_column='id')
-    explore  = models.IntegerField(max_length=1,db_column='explore')
-    name = models.CharField(max_length=128, db_column='name')
-    image = models.CharField(max_length=128, db_column='image')
+    explore  = models.IntegerField(max_length=1)
+    name = models.CharField(max_length=128)
+    image = models.CharField(max_length=128)
 
     # creates foreign key to teacher
-    author = models.ForeignKey(Teacher,db_column='author_id')
+    author = models.ForeignKey(Teacher)
 
     # pack description
-    description = models.CharField(max_length=128,db_column='description')
+    description = models.CharField(max_length=128)
 
     # creates a many to many relationship with tags
     tags = models.ManyToManyField(Tag, null=True)
@@ -77,8 +75,6 @@ class Pack(models.Model):
 
 # model for super/parent resource table
 class Resource(models.Model):
-    id = models.IntegerField(primary_key=True, db_column='id')
-
     name = models.CharField(max_length=128)
     
     # comma separated field for easier tree searching
