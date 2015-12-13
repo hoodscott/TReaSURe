@@ -52,17 +52,15 @@
                        </ul>
                        <ul class="nav">
                        {% if user.is_authenticated %}
+                           <form class="navbar-search pull-left" action="">
+						 		<input class="search-query span2" placeholder="Quick Search" type="text">
+						   </form>                       
                            <li><a href="/treasure/search">Search</a></li>
-                           <li><a href="/treasure/resources">Resources</a></li>
-			   			   <li><a href="/treasure/explore">Explore</a></li>
-			   			   <li><a href="/treasure/packs">Teaching Plans</a></li>                      
+                           <li><a href="/treasure/explore">Explore</a></li>
+                           <li><a href="/treasure/resources">Resources</a></li>			   			   
+                           <li><a href="/treasure/packs">Packs</a></li>                      
                        {% endif %}
                            <li><a href="/treasure/about">News</a></li>
-                       {% if user.is_authenticated %}
-						   <form class="navbar-search pull-right" action="">
-						 		<input class="search-query span2" placeholder="Quick Search" type="text">
-						   </form>
-					   {% endif %}
                        </ul>
                    </div>
                    <!--/.nav-collapse -->
