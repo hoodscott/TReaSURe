@@ -6,9 +6,7 @@ class ResourceForm(forms.ModelForm):
     name = forms.CharField(max_length=128, help_text="Please enter the resource name.")
     description = forms.CharField(widget = forms.Textarea, help_text="Please enter a description.")
     tree = forms.CharField(widget = forms.HiddenInput(), required=False)
-    user = forms.CharField(widget = forms.HiddenInput(), required=False)
-    level = forms.IntegerField(initial=0, help_text="Please enter the level of this resource.")
-    
+    user = forms.CharField(widget = forms.HiddenInput(), required=False)    
     
     level_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=0).order_by('name'),
                                                 required=True, help_text="Please select level(s).")
@@ -19,7 +17,7 @@ class ResourceForm(forms.ModelForm):
     
     class Meta:
         model = Resource
-        fields = ('name','description', 'tree', 'user', 'level')
+        fields = ('name','description', 'tree', 'user')
         exclude = []
         
 class FileForm(forms.ModelForm):

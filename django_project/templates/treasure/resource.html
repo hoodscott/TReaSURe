@@ -16,9 +16,9 @@
                 <h4><strong>Description:</strong></h4>
                 <p>{{ description }}</p><br>
                 <h4><strong>Tags:</strong></h4>
-                {% if tags %}
+                {% if other_tags %}
                     <ul>
-                    {% for tag in tags %}
+                    {% for tag in other_tags %}
                         <li><a href="/../treasure/tags/{{ tag.id }}">{{ tag.name }}</a></li>
                     {% endfor %}
                     </ul>
@@ -27,26 +27,37 @@
                 {% endif %}
             </div>
             <div class="span3">
-                <div style="height:120px;width:120px;background-color:blue"></div>
                 <hr>
-                <h4><strong>Level:</strong></h4>
-                <p>{{ level }}</p>
-                <h4><strong>Topic?:</strong></h4>
-                <p>Should this be stored, or is it a tag?</p>
-                <hr>
+                
+                <h4><strong>Levels:</strong></h4>
                 <ul>
-                {% if web_resource %}
-                    <li><a href="{{ web_resource }}">Link to Resource</a></li>
-                {% endif %}
-                {% if files_resource %}
-                    <li><a href="{{ files_resource.url }}" download>Download Resource</a></li>
-                {% endif %}
-                    <li><!--a href="Evolve.html"-->Evolve<!--/a--></li>
+                {% for level in level_tags %}
+                    <li><a href="/../treasure/tags/{{ level.id }}">{{ level.name }}</a></li>
+                {% endfor %}
                 </ul>
                 <hr>
+                
+                <h4><strong>Topics:</strong></h4>
                 <ul>
-                    <li>Track</li>
-                    <li>View Versions</li>
+                {% for topic in topic_tags %}
+                    <li><a href="/../treasure/tags/{{ topic.id }}">{{ topic.name }}</a></li>
+                {% endfor %}
+                </ul>
+                <hr>
+                
+                <ul>
+                {% if web_resource %}
+                    <li><a class="btn btn-block btn-primary" href="{{ web_resource }}">Link to Resource</a></li>
+                {% endif %}
+                {% if files_resource %}
+                    <li><a class="btn btn-block btn-primary" href="{{ files_resource.url }}" download>Download Resource</a></li>
+                {% endif %}
+                    <li><p></li>
+                    <li><a class="btn btn-block btn-warning" href="/../evolve">Evolve Resource</a></li>
+                    <li><p></li>                  
+                    <li><a class="btn btn-block btn-success" href="/../evolve">Track Resource</a></li>
+                    <li><p></li>                    
+                    <li><a class="btn btn-block btn-info" href="/../evolve">View Versions</a></li>
                 </ul>
                 <hr>
            </div>

@@ -577,16 +577,23 @@ def resource_view(request, resource_id):
         # get fields
         context_dict['resource_name'] = this_resource.name
         context_dict['description'] = this_resource.description
-        context_dict['level'] = this_resource.level
         
         # get authors name
         context_dict['author'] = this_resource.author.firstname + " " + this_resource.author.surname
+            
+        # get tags
+        filtered_tags = this_resource.tags.filter(type='0')
+        if filtered_tags:
+            context_dict['level_tags'] = get_list(filtered_tags)
         
-        # get tags from the user, if they have any
-        if len(this_resource.tags.all()) >= 1:
-            # get list of school objects
-            context_dict['tags'] = get_list(this_resource.tags.all())
+        filtered_tags = this_resource.tags.filter(type='1')
+        if filtered_tags:
+            context_dict['topic_tags'] = get_list(filtered_tags)
         
+        filtered_tags = this_resource.tags.filter(type='2')
+        if filtered_tags:
+            context_dict['other_tags'] = get_list(filtered_tags)
+                    
         try:
             # can we find a web resource with the given resource?
             web_resource = WebResource.objects.get(resource = this_resource)

@@ -54,6 +54,6 @@ color: rgba(198, 198, 198, 1);
 }
 
 /* removing underlined text inside buttons */
-a.btn.btn-primary {
+a.btn {
 	text-decoration: none;
 }

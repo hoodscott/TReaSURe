@@ -95,7 +95,6 @@ class Resource(models.Model):
     tags = models.ManyToManyField(Tag, null=True)
     packs = models.ManyToManyField(Pack, null=True, blank=True)
     
-    level = models.IntegerField()
     description = models.TextField()
     
     def __unicode__(self):
