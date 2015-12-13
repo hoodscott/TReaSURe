@@ -2504,7 +2504,7 @@
 			}
 
 			.container {
-				padding: 0 15px 0 15px;
+				padding: 0;
 			}
 
 		/* List */
@@ -2517,11 +2517,11 @@
 		/* Main */
 
 			#main > section {
-				padding: 2em 0;
+				padding: 1em 0;
 			}
 
 			#main section.cover {
-				padding: 4em 0em;
+				padding: 2em 0em;
 			}
 
 				#main section.cover header {
