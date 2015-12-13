@@ -49,6 +49,14 @@ class Teacher(models.Model):
 class Tag(models.Model):
     name = models.CharField(max_length=128)
     
+    #define types of tags
+    TAGTYPES = (
+        ('0', 'level'),
+        ('1', 'topic'),
+        ('2', 'other'),
+    )
+    type = models.CharField(max_length=1, choices=TAGTYPES)
+    
     def __unicode__(self):
         return self.name
 
