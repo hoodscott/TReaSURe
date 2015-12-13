@@ -1,0 +1,19 @@
+{% extends 'treasure/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Versions
+{% endblock %}
+
+{% block body_block %}
+    <div class="hero-unit">
+        <h3>Versions</h3>
+        <p>Raw tree: {{ raw_tree }}</p>
+        <ul>
+            {% for node in nodes %}
+                <li><a href="/../treasure/resource/node.id">{{ node.name }}</a></li>
+            {% endfor %}
+        </ul>
+    <div>
+{% endblock %}

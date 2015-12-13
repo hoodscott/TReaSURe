@@ -5,6 +5,7 @@ from treasure.forms import *
 from treasure.models import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from string import split
 
 # get the users firstname, surname and school for the sidebar
 def sidebar(request):
@@ -392,6 +393,9 @@ def add_web_resource(request):
             resource.author = Teacher.objects.get(id = teacher.id)
             resource.save()
             
+            # this is a root so the tree is just the id
+            resource.tree = resource.id
+            
             # combine the tags into one queryset
             tags =  resource_form.cleaned_data['level_tags'] | \
                     resource_form.cleaned_data['topic_tags'] | \
@@ -450,6 +454,9 @@ def add_file_resource(request):
             teacher = Teacher.objects.get(user = userid)
             resource.author = Teacher.objects.get(id = teacher.id)
             resource.save()
+            
+            # this is a root so the tree is just the id
+            resource.tree = resource.id
             
             # combine the tags into one queryset
             tags =  resource_form.cleaned_data['level_tags'] | \
@@ -823,10 +830,37 @@ def explore(request):
     context_dict = sidebar(request)
 
     try:
-	packs= Pack.objects.filter(explore=1)
-	context_dict['packs'] = packs
+        packs= Pack.objects.filter(explore=1)
+        context_dict['packs'] = packs
     except Pack.DoesNotExist:
-	pass
+        pass
     
     # Render the template depending on the context.
     return render_to_response('treasure/explore.html', context_dict, context)
+    
+# view to see the evolution of a resource
+@login_required
+def versions(request, resource_id):
+    # Request the context of the request.
+    context = RequestContext(request)
+    
+    #create context dictionary to send back to template
+    context_dict = sidebar(request)
+    
+    # get direct tree
+    tree = Resource.objects.get(id = resource_id).tree
+    
+    #split tree into each node
+    nodes = tree.split(',')
+    
+    all_resources = Resource.objects.all()
+    set = []
+    
+    for node_id in nodes:
+        set += [all_resources.get(id=node_id)]
+    
+    context_dict['nodes'] = set
+    context_dict['raw_tree'] = tree
+    
+    # Render the template depending on the context.
+    return render_to_response('treasure/versions.html', context_dict, context)
