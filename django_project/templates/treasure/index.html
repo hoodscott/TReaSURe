@@ -7,12 +7,14 @@
 {% endblock %}
 
 {% block notification%}	
+{% if need2rate %}
 <section id="top" class="one dark cover">
 	<div class="container">
 
 		<header>
 			<h2 class="alt">Welcome back, {{ user_firstname }}</a></h2>
-			<p>Please give back to the community by <u><a href="/treasure/resource/1">Rating XX resource</a></u> that you used recently.</p>
+			<p>You have pending actions.
+				Please remember to share your opinion about the resources that you used recently.</p>
 		</header>
 
 		<footer>
@@ -21,31 +23,125 @@
 
 	</div>
 </section>
+{% endif %}
 {% endblock %}
 
 
 {% block body_block %}
-<div class="hero-unit">
-    <h2>Welcome to Treasure</h2>
-    <p>Landing page after login will contain a summary and quick links for everything.</p>
-    
-    <div class="row-fluid">
-    {% if user.is_authenticated %}
-        <p>Test links</p>
-        <ul>
-            <li><a href="/treasure/add_web_resource">Add a Web Resource</a></li>
-        	<li><a href="/treasure/add_file_resource">Add a File Resource</a></li>
-            <li><br></li>
-        	<li><a href="/treasure/add_hub">Add a Hub</a></li>
-        	<li><a href="/treasure/add_school">Add a School</a></li>
-        	<li><br></li>
-            <li><a href="/treasure/resources">View Resources</a></li>
-            <li><a href="/treasure/schools">View Schools</a></li>
-            <li><a href="/treasure/hubs">View Hubs</a></li>
-        </ul>
-    {% else %}
-        <h3>Please <a href="/treasure/login">Login</a> or <a href="/treasure/register">Register</a></li>.</h3>
-    {% endif %}
+
+{% if user.is_authenticated %}
+{% if MyResources%}
+<div class="hero-unit panel panel-default">
+    <div class="panel-heading clearfix">
+		<h4>My Resources</h4>
     </div>
-</div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table id="Resources" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Resource Name</th>
+                        <th>Author</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for resource in MyResources %}
+                        <tr class="studentLabel">
+                            <td><a href="/treasure/resource/{{ resource.id }}">{{resource.name}}</a></td>
+                            <td>{{resource.author}}</td>
+                            <td>{{resource.description}}</td>
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+             </table>
+        </div>
+    </div> <!-- close body -->
+</div> <!-- close panel -->
+{% else %}
+ You have no resources.
+{% endif %}
+
+<div class="hero-unit panel panel-default">
+{% if need2rate %}
+    <div class="panel-heading clearfix">
+		<h4>Downloaded Resources Pending Rating</h4>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table id="Ratings" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Resource Name</th>
+                        <th>Have used it?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in need2rate %}
+                        <tr class="studentLabel">
+                            <td><a href="/treasure/resource/{{entry.resource.id }}">{{entry.resource.name}}</a></td>
+                            <td>{% if entry.used %} Yes{% else %} No{% endif %}</td>
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+             </table>
+        </div>
+    </div> <!-- close body -->
+	{% else %}
+	 All downloaded resources have been rated. <a href="/treasure/explore/">Explore more</a>?
+	{% endif %}
+</div> <!-- close panel -->
+
+
+{% if MyResources %}
+<div class="hero-unit panel panel-default">
+{% if want2talk %}
+    <div class="panel-heading clearfix">
+		<h4>People Willing to talk about my Resources</h4>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table id="Ratings" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Resource Name</th>
+                        <th>Author</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in want2talk %}
+                        <tr class="studentLabel">
+                            <td><a href="/treasure/resource/{{ record.resource.id }}">{{record.resource.name}}</a></td>
+                            <td>{{record.teacher}}</td>
+                            <td>{{record.comment}}</td>
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+             </table>
+        </div>
+    </div> <!-- close body -->
+	{% else %}
+	 Nobody has declared interest in discussing your resources yet.
+	{% endif %}
+</div> <!-- close panel -->
+{% endif %}
+
+
+{% else %}
+    <h3>Please <a href="/treasure/login">Login</a> or <a href="/treasure/register">Register</a>.</h3>
+{% endif %}
+
+{% if user.is_authenticated %}
+<!-- script for table -->
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#Resources').DataTable();
+});
+</script>
+{% endif %}
+
 {% endblock %}
