@@ -738,7 +738,19 @@ def tags(request):
     
     # get list of all tags
     tag_list = Tag.objects.all()
-    context_dict['tags'] = tag_list
+    
+    # get tags
+    filtered_tags = tag_list.filter(type='0')
+    if filtered_tags:
+        context_dict['level_tags'] = get_list(filtered_tags)
+    
+    filtered_tags = tag_list.filter(type='1')
+    if filtered_tags:
+        context_dict['topic_tags'] = get_list(filtered_tags)
+    
+    filtered_tags = tag_list.filter(type='2')
+    if filtered_tags:
+        context_dict['other_tags'] = get_list(filtered_tags)
     
     # Render the template depending on the context.
     return render_to_response('treasure/tags.html', context_dict, context)
