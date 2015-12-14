@@ -57,3 +57,8 @@ color: rgba(198, 198, 198, 1);
 a.btn {
 	text-decoration: none;
 }
+
+/* removing scroll bars from tab panes */
+.tab-content {
+    overflow: visible !important;
+}

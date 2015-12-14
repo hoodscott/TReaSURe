@@ -910,12 +910,12 @@ def versions(request, resource_id):
     nodes = tree.split(',')
     
     all_resources = Resource.objects.all()
-    set = []
+    ancestor_nodes = []
     
     for node_id in nodes:
-        set += [all_resources.get(id=node_id)]
+        ancestor_nodes += [all_resources.get(id=node_id)]
     
-    context_dict['nodes'] = set
+    context_dict['nodes'] = ancestor_nodes
     context_dict['raw_tree'] = tree
     
     # Render the template depending on the context.
@@ -924,15 +924,112 @@ def versions(request, resource_id):
 # view to evolve a resource
 @login_required
 def evolve(request, resource_id):
-    # Request the context of the request.
+    # get context of request
     context = RequestContext(request)
     
-    #create context dictionary to send back to template
-    context_dict = sidebar(request)
+    # A HTTP POST?
+    if request.method == 'POST':
+        
+        resource_form = ResourceForm(request.POST)
+        file_form = FileForm(request.POST, request.FILES)
+        web_form = WebForm(request.POST)
+        
+        # if evolution is a file upload
+        if 'file_evolve' in request.POST:
+            # Have we been provided with a valid form?
+            if resource_form.is_valid() and file_form.is_valid():
+                # delay saving the model until we're ready to avoid integrity problems
+                resource = resource_form.save(commit=False)
+                
+                # set foreign key of the author of the resource
+                userid = request.user.id
+                teacher = Teacher.objects.get(user = userid)
+                resource.author = Teacher.objects.get(id = teacher.id)
+                resource.save()
+                
+                # append new id to parents tree
+                resource.tree = Resource.objects.get(id=resource_id).tree + u',' + unicode(resource.id)
+                
+                # combine the tags into one queryset
+                tags =  resource_form.cleaned_data['level_tags'] | \
+                        resource_form.cleaned_data['topic_tags'] | \
+                        resource_form.cleaned_data['other_tags']
+                # save the tags the user has selected
+                for tag in tags:
+                    resource.tags.add(tag)
+                resource.save()
+                
+                # add file to object
+                files = FilesResource( path = request.FILES['path'])
+                
+                # associate file resource with parent resource
+                files.resource = resource
+                
+                # save the instance
+                files.save()     
+                
+                # show user the new materials page
+                return resource_view(request, resource.id)
+            else:
+                # The supplied form contained errors - just print them to the terminal.
+                print resource_form.errors
+                print file_form.errors
 
-    #todo: implement evolution
+        # if evolution is a web upload   
+        elif 'web_evolve' in request.POST:
+            # Have we been provided with a valid form?
+            if resource_form.is_valid() and web_form.is_valid():
+                # delay saving the model until we're ready to avoid integrity problems
+                resource = resource_form.save(commit=False)
+                
+                # set foreign key of the author of the resource
+                userid = request.user.id
+                teacher = Teacher.objects.get(user = userid)
+                resource.author = Teacher.objects.get(id = teacher.id)
+                resource.save()
+                
+                # append new id to parents tree
+                resource.tree = Resource.objects.get(id=resource_id).tree + u',' + unicode(resource.id)
+                
+                # combine the tags into one queryset
+                tags =  resource_form.cleaned_data['level_tags'] | \
+                        resource_form.cleaned_data['topic_tags'] | \
+                        resource_form.cleaned_data['other_tags']
+                # save the tags the user has selected
+                for tag in tags:
+                    resource.tags.add(tag)
+                resource.save()
+                
+                # delay saving the relationship model until we're ready
+                # to avoid integrity problems
+                web = web_form.save(commit=False)
+                web.resource = resource
+                
+                # save the instance
+                web.save()     
+                
+                # Now show the new materials page
+                return resource_view(request, resource.id)
+            else:
+                # The supplied form contained errors - just print them to the terminal.
+                print resource_form.errors
+                print file_form.errors
+        
+    else:
+        # If the request was not a POST, display the form to enter details.
+        resource_form = ResourceForm()
+        file_form = FileForm()
+        web_form = WebForm()
     
-    # Render the template depending on the context.
+    # create dictionary to pass data to templates
+    context_dict = sidebar(request)
+    context_dict['resource_form'] = resource_form
+    context_dict['file_form'] = file_form
+    context_dict['web_form'] = web_form
+    context_dict['resource_id']= resource_id
+    
+    # Bad form (or form details), no form supplied...
+    # Render the form with error messages (if any).
     return render_to_response('treasure/evolve.html', context_dict, context)
     
 # view to track a resource

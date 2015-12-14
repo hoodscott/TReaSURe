@@ -58,11 +58,9 @@
                 {% if files_resource %}
                     <li><a class="btn btn-block btn-primary" href="{{ files_resource.url }}" download>Download Resource</a></li>
                 {% endif %}
-                    <!-- uncomment when evolve works
                     <li><p></li>
                     <li><a class="btn btn-block btn-warning" href="/../treasure/resource/{{ resource.id}}/evolve">Evolve Resource</a></li>
-                    end evolve-->
-                    <!-- uncommetn when tracking works
+                    <!-- todo: uncomment when tracking works
                     <li><p></li>                  
                     <li><a class="btn btn-block btn-success" href="/../treasure/resource/{{ resource.id}}/track">Track Resource</a></li>
                     end track-->
@@ -72,7 +70,7 @@
                 <hr>
            </div>
         </div>
-       <!-- uncomment when packs are working
+       <!-- todo: uncomment when packs are working
        
        <div class="hero-unit row-fluid">
             <div class="span6">
@@ -143,7 +141,7 @@
         {% endif %}
         </div>
 
-        <!-- issues go here -->
+        <!-- todo: put issues here -->
         
     {% else %}
         <div class="hero-unit"><h2>No Resource At This URL.</h2></div>
