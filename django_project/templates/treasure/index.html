@@ -41,7 +41,6 @@
                 <thead>
                     <tr>
                         <th>Resource Name</th>
-                        <th>Author</th>
                         <th>Description</th>
                     </tr>
                 </thead>
@@ -49,7 +48,6 @@
                     {% for resource in MyResources %}
                         <tr class="studentLabel">
                             <td><a href="/treasure/resource/{{ resource.id }}">{{resource.name}}</a></td>
-                            <td>{{resource.author}}</td>
                             <td>{{resource.description}}</td>
                         </tr>
                     {% endfor %}
@@ -60,7 +58,7 @@
     </div> <!-- close body -->
 </div> <!-- close panel -->
 {% else %}
- You have no resources.
+ You have uploaded no resources.
 {% endif %}
 
 <div class="hero-unit panel panel-default">
@@ -132,7 +130,9 @@
 
 
 {% else %}
-    <h3>Please <a href="/treasure/login">Login</a> or <a href="/treasure/register">Register</a>.</h3>
+    <div class="hero-unit">
+        <h3>Please <a href="/treasure/login">Login</a> or <a href="/treasure/register">Register</a>.</h3>
+    </div>
 {% endif %}
 
 {% if user.is_authenticated %}
