@@ -12,7 +12,7 @@
         <p>Raw tree: {{ raw_tree }}</p>
         <ul>
             {% for node in nodes %}
-                <li><a href="/../treasure/resource/node.id">{{ node.name }}</a></li>
+                <li><a href="/../treasure/resource/{{ node.id }}">{{ node.name }}</a></li>
             {% endfor %}
         </ul>
     <div>
