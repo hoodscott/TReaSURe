@@ -743,6 +743,43 @@ def tags(request):
     # Render the template depending on the context.
     return render_to_response('treasure/tags.html', context_dict, context)
     
+# view to see all tags in the database
+@login_required
+def add_tag(request):
+    # Request the context of the request.
+    context = RequestContext(request)
+    
+    #create context dictionary to send back to template
+    context_dict = sidebar(request)
+    
+    # A HTTP POST?
+    if request.method == 'POST':
+        form = TagForm(request.POST)
+
+        # Have we been provided with a valid form?
+        if form.is_valid():
+            # Put off saving to avodid integrity errors.
+            tag = form.save(commit=False)
+            tag.type = '2'
+            
+            # now save the tag in the database
+            tag.save()
+                        
+            # show user all tags
+            return tags(request)
+        else:
+            # The supplied form contained errors - just print them to the terminal.
+            print form.errors
+    else:
+        # If the request was not a POST, display the form to enter details.
+        form = TagForm()
+    
+    # create dictionary to pass data to templates
+    context_dict = sidebar(request)
+    context_dict['form'] = form
+    
+    # Render the template depending on the context.
+    return render_to_response('treasure/add_tag.html', context_dict, context)    
 
 # view to see all packs in the database
 @login_required

@@ -30,6 +30,7 @@ urlpatterns = patterns('',
         url(r'^school/(?P<school_id>\w+)/$', views.school_view, name='school_view'),
         
         url(r'^tags/$', views.tags, name='tags'),
+        url(r'^tags/new/$', views.add_tag, name='add_tag'),
         url(r'^tags/(?P<tag_id>\w+)/$', views.tag, name='tag'),
         
         url(r'^packs/$', views.packs, name='packs'),

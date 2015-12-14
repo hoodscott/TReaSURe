@@ -100,4 +100,13 @@ class SearchForm(forms.Form):
     topic_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=1).order_by('name'),
                                                 required=False, help_text="Select topics.")
     other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
-                                                required=False, help_text="Select other tags.")                       
+                                                required=False, help_text="Select other tags.")
+                                                
+class TagForm(forms.ModelForm):
+    name = forms.CharField(max_length=128, help_text="Please enter the new tag.")
+    type = forms.CharField(widget = forms.HiddenInput(), required=False)               
+    
+    class Meta:
+        model = Tag
+        fields = ('name','type')
+        exclude = []
