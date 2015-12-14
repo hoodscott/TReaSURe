@@ -7,12 +7,18 @@
 {% endblock %}
 
 {% block body_block %}
-<div class="hero-unit">
     {% if resource %}
-        <div class="row-fluid">
+        <div class="hero-unit row-fluid">
             <div class="span8">
                 <h2>{{ resource_name}}</h2>
-                <h4>by {{ author }}</h4><br>
+                {% if web_resource %}
+                    <h4>added by {{ author }}</h4><br>
+                {% elif files_resource %}
+                    <h4>uploaded by {{ author }}</h4><br>
+                {% else %}
+                    <h4>by {{ author }}</h4><br>
+                {% endif %}
+
                 <h4><strong>Description:</strong></h4>
                 <p>{{ description }}</p><br>
                 <h4><strong>Tags:</strong></h4>
@@ -67,8 +73,8 @@
            </div>
         </div>
        <!-- uncomment when packs are working
-       <br><br><br>
-       <div class="row-fluid">
+       
+       <div class="hero-unit row-fluid">
             <div class="span6">
                 <h4> Author Recommended Prerequisites</h3>
                 <ul>
@@ -102,11 +108,12 @@
                 </ul>
             </div>
         </div>
-        <br><br><br>
+        
         < end comment -->
-<hr>
+        
+        <div class="hero-unit">
         {% if want2talk %}
- 		<div>
+ 		
             <p>People willing to organise discussion about {{resource_name}}:</p>
 	        <div class="table-responsive">
 	            <table id="Resources" class="table table-striped table-bordered" cellspacing="0" width="100%">
@@ -132,13 +139,14 @@
 	        </div>
         </div>
 		{% else %}
-		Nobody declared interest in organising a discussion about {{resource_name}} yet. <a href="">Be the first</a>
+		    <p>Nobody declared interest in organising a discussion about {{resource_name}} yet. <a href="">Be the first</a></p>
         {% endif %}
+        </div>
 
         <!-- issues go here -->
         
     {% else %}
-        <h2>No Resource At This URL.</h2>
+        <div class="hero-unit"><h2>No Resource At This URL.</h2></div>
     {% endif %}
-</div>
+
 {% endblock %}
