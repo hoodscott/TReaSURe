@@ -8,17 +8,40 @@
 
 {% block body_block %}
 <div class="hero-unit">
-    <div class="row-fluid">
+    <div class="container">
         <h2>Tags</h2>
-        {% if tags %}
-        <ul>
-            {% for tag in tags %}
-            <li><a href="../tags/{{ tag.id }}">{{ tag.name }}</a></li>
-            {% endfor %}
-        </ul>
-        {% else %}
-            <strong>No tags in database.</strong>
-        {% endif %}
+        
+        <div class="span4">
+            <h4>Levels</h4>
+            <ul>
+                {% for tag in level_tags %}
+                <li><a href="/treasure/tags/{{ tag.id }}">{{ tag.name }}</a></li>
+                {% endfor %}
+            </ul>
+            <hr>
+        </div>
+        
+        <div class="span4">
+            <h4>Topics</h4>
+            <ul>
+                {% for tag in topic_tags %}
+                <li><a href="/treasure/tags/{{ tag.id }}">{{ tag.name }}</a></li>
+                {% endfor %}
+            </ul>
+            <hr>
+        </div>
+        
+        <div class="span8">
+            <a class="btn btn-primary" href="/treasure/tags/new/">Add New Tag</a>
+            <hr>
+            <h4>Other</h4>
+            <ul>
+                {% for tag in other_tags %}
+                <li><a href="/treasure/tags/{{ tag.id }}">{{ tag.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        
     </div>
 </div>
 {% endblock %}
