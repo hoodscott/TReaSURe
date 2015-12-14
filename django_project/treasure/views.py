@@ -359,16 +359,13 @@ def user_login(request):
                 return HttpResponseRedirect('/treasure/')
             else:
                 # An inactive account was used - no logging in!
-                return HttpResponse("Your account is disabled.")
+                context_dict['disabled_account'] = "aye"
         else:
             # Bad login details were provided. So we can't log the user in.
-            print "Invalid login details: {0}, {1}".format(username, password)
-            return HttpResponse("Invalid login details supplied.")
+            context_dict['bad_details'] = "aye"
 
-    # The request is not a HTTP POST, so display the login form.
-    # This scenario would most likely be a HTTP GET.
-    else:
-        return render_to_response('treasure/login.html', context_dict, context)
+
+    return render_to_response('treasure/login.html', context_dict, context)
 
 # log the user out
 @login_required
