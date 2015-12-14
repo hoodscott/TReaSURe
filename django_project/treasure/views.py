@@ -45,6 +45,15 @@ def index(request):
     
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
+
+
+    MyResources = Resource.objects.all()
+    context_dict['MyResources'] = MyResources.filter(author=request.user.id)
+    want2talk=TeacherWantstoTalkResource.objects.all()
+    context_dict['want2talk'] = want2talk.filter(resource__author=request.user.id)
+    need2rate=TeacherDownloadsResource.objects.all()
+    context_dict['need2rate'] = need2rate.filter(teacher=request.user.id)
+
     
     # return response object
     return render_to_response('treasure/index.html', context_dict, context)
@@ -611,7 +620,8 @@ def resource_view(request, resource_id):
     
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
-    
+    want2talk=TeacherWantstoTalkResource.objects.all()
+    context_dict['want2talk'] = want2talk.filter(resource_id=resource_id)
     try:
         # Can we find a resource with the given id?
         this_resource = Resource.objects.get(id=resource_id)
@@ -802,7 +812,7 @@ def packs(request):
     #create context dictionary to send back to template
     context_dict = sidebar(request)
 
-    # get list of all tags
+    # get list of all packs
     pack_list = Pack.objects.all()
     context_dict['packs'] = pack_list
 
