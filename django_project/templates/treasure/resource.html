@@ -52,10 +52,14 @@
                 {% if files_resource %}
                     <li><a class="btn btn-block btn-primary" href="{{ files_resource.url }}" download>Download Resource</a></li>
                 {% endif %}
+                    <!-- uncomment when evolve works
                     <li><p></li>
                     <li><a class="btn btn-block btn-warning" href="/../treasure/resource/{{ resource.id}}/evolve">Evolve Resource</a></li>
+                    end evolve-->
+                    <!-- uncommetn when tracking works
                     <li><p></li>                  
                     <li><a class="btn btn-block btn-success" href="/../treasure/resource/{{ resource.id}}/track">Track Resource</a></li>
+                    end track-->
                     <li><p></li>                    
                     <li><a class="btn btn-block btn-info" href="/../treasure/resource/{{ resource.id}}/versions">View Versions</a></li>
                 </ul>
@@ -100,11 +104,16 @@
         </div>
         <br><br><br>
         --- end comment -->
+        
+        <!-- forum should go here
         <div>
             <h2>Forum</h2>
             <p>Forum goes here</p>
         </div>
+        -->
+        
         <!-- issues go here -->
+        
     {% else %}
         <h2>No Resource At This URL.</h2>
     {% endif %}
