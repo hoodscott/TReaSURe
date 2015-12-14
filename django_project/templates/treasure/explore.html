@@ -13,7 +13,7 @@
 		<div class="row-fluid">
 		            <ul class="thumbnails">
 					{% for pack in packs %}
-						{% if forloop.counter0|divisibleby:"3" %}
+						{% if forloop.counter0|divisibleby:"2" %}
 			              <li class="span4">
 						{% endif %}
 			                <div class="thumbnail">
@@ -24,7 +24,7 @@
 			                    <p><a href="/../treasure/packs/{{ pack.id }}" class="btn btn-primary">View Pack</a></p>
 			                  </div>
 			                </div>
-						{% if forloop.counter|divisibleby:"3" %}
+						{% if forloop.counter|divisibleby:"2" %}
 			              </li>
 						{% endif %}
 					{% endfor %}
