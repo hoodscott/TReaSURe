@@ -89,10 +89,9 @@ def search(request):
         # Have we been provided with a valid form?
         if form.is_valid():
             # get tags from form
-            # combine the tags into one queryset
-            tags =  form.cleaned_data['level_tags'] | \
-                    form.cleaned_data['topic_tags'] | \
-                    form.cleaned_data['other_tags']
+            level_tags = form.cleaned_data['level_tags']
+            topic_tags = form.cleaned_data['topic_tags']
+            other_tags = form.cleaned_data['other_tags']
                     
             search_type = form.cleaned_data['searchtype']
             
@@ -100,15 +99,40 @@ def search(request):
             if search_type == '0':
                 # initialise search results
                 all_resources = Resource.objects.all()
-                if tags:
-                    # initialise the queryset with the first tag results only
-                    found_resources = all_resources.filter(tags__name=tags[0])
                 
-                    # filter to get the matching resources
-                    for tag in tags:
-                        # logical AND the queryset from each tag together
-                        found_resources = found_resources & all_resources.filter(tags__name=tag)
+                # if tags have been entered
+                if level_tags | topic_tags | other_tags:
+                    # initialise the queryset
+                    found_resources = all_resources.filter(tags__name="")
                 
+                    # filter to get the matching resources for level
+                    if level_tags:
+                        level_resources = all_resources.filter(tags__in=level_tags).distinct()
+                        
+                    # filter to get the matching resources for topic
+                    if topic_tags:
+                        topic_resources = all_resources.filter(tags__in=topic_tags).distinct()
+                            
+                    # filter to get the matching resources for level
+                    if other_tags:
+                        other_resources = all_resources.filter(tags__in=other_tags).distinct()
+                    
+                    # combine search results
+                    if level_tags and topic_tags and other_tags:
+                        found_resources = level_resources & topic_resources & other_resources
+                    elif level_tags and topic_tags:
+                        found_resources = level_resources & topic_resources
+                    elif level_tags and other_tags:
+                        found_resources = level_resources & other_resources
+                    elif topic_tags and other_tags:
+                        found_resources = topic_resources & other_resources
+                    elif level_tags:
+                        found_resources = level_resources
+                    elif topic_tags:
+                        found_resources = topic_resources
+                    elif other_tags:
+                        found_resources = level_resources       
+                                                     
                     context_dict['results'] = found_resources
                     
                     # set flag so template knows which url to use
