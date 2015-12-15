@@ -1,0 +1,26 @@
+{% extends 'treasure/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Add To Pack
+{% endblock %}
+
+{% block body_block %}
+<div class="hero-unit">
+    <h2>Select Pack to add resource to:</h2>
+    <br>
+    <div class="fluid container">
+        {% for pack in packs %}
+        <form class="span6" id="upload_form" method="post" action="/treasure/resource/{{ resource_id }}/addtopack/">
+            {% csrf_token %}
+            <input type="hidden" name="packid" value="{{ pack.id }}">
+            <button class="btn btn-info" type="submit" name="{{ pack.id }}">{{ pack.name }}</button>
+        </form>
+        {% endfor %}
+        
+        <!--todo: find out why this is right aligned? -->
+        <a class="btn btn-primary" href="/treasure/packs/new">New Pack</a>
+    </div>
+</div>
+{% endblock %}

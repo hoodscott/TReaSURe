@@ -3,18 +3,18 @@
 {% load static %}
 
 {% block title %}
-    Add Teacher
+    Create Pack
 {% endblock %}
 
 {% block body_block %}
 
 <div class="hero-unit">
-    <h2>Add a Teacher</h2>
+    <h2>Create a Pack</h2>
     <br/>
     <div class="container">
-        <form class="span6" id="upload_form" method="post" action="/treasure/add_teacher/">
+        <form class="span6" id="upload_form" method="post" action="/treasure/packs/new/">
 	
-	    {% csrf_token %}
+	        {% csrf_token %}
 	    
             {% for hidden in form.hidden_fields %}
                 {{ hidden }}
@@ -27,7 +27,7 @@
             {% endfor %}
 
             <br/>
-            <button class="btn btn-primary" type="submit" name="submit">Add Teacher</button>
+            <button class="btn btn-primary" type="submit" name="submit">Create Pack</button>
         </form>
     </div>
 </div>

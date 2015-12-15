@@ -7,21 +7,25 @@
 {% endblock %}
 
 {% block body_block %}
-<div class="hero-unit">
     {% if resource %}
-        <div class="row-fluid">
+        <div class="hero-unit row-fluid">
             <div class="span8">
                 <h2>{{ resource_name}}</h2>
-                <h4>by {{ author }}</h4><br>
+                {% if web_resource %}
+                    <h4>added by {{ author }}</h4><br>
+                {% elif files_resource %}
+                    <h4>uploaded by {{ author }}</h4><br>
+                {% else %}
+                    <h4>by {{ author }}</h4><br>
+                {% endif %}
+
                 <h4><strong>Description:</strong></h4>
                 <p>{{ description }}</p><br>
                 <h4><strong>Tags:</strong></h4>
                 {% if other_tags %}
-                    <ul>
                     {% for tag in other_tags %}
-                        <li><a href="/../treasure/tags/{{ tag.id }}">{{ tag.name }}</a></li>
+                        <a href="/../treasure/tags/{{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
                     {% endfor %}
-                    </ul>
                 {% else %}
                     <p>There are no tags.</p>
                 {% endif %}
@@ -52,61 +56,51 @@
                 {% if files_resource %}
                     <li><a class="btn btn-block btn-primary" href="{{ files_resource.url }}" download>Download Resource</a></li>
                 {% endif %}
-                    <!-- uncomment when evolve works
                     <li><p></li>
                     <li><a class="btn btn-block btn-warning" href="/../treasure/resource/{{ resource.id}}/evolve">Evolve Resource</a></li>
-                    end evolve-->
-                    <!-- uncommetn when tracking works
+                    <!-- todo: uncomment when tracking works
                     <li><p></li>                  
                     <li><a class="btn btn-block btn-success" href="/../treasure/resource/{{ resource.id}}/track">Track Resource</a></li>
                     end track-->
                     <li><p></li>                    
-                    <li><a class="btn btn-block btn-info" href="/../treasure/resource/{{ resource.id}}/versions">View Versions</a></li>
+                    <li><a class="btn btn-block btn-info" href="/../treasure/resource/{{ resource.id }}/versions">View Versions</a></li>
                 </ul>
                 <hr>
            </div>
         </div>
-       <!-- uncomment when packs are working
-       <br><br><br>
-       <div class="row-fluid">
-            <div class="span6">
-                <h4> Author Recommended Prerequisites</h3>
-                <ul>
-                    <li style="color:blue;text-decoration:underline">Intro to Python</li>
-                        <li style="color:blue;text-decoration:underline">Programming Concepts</li>
-                </ul>
-            </div>
-            <div class="span6">
-                <h4> User Recommended Prerequisites</h3>
-                <ul>
-                    <li style="color:blue;text-decoration:underline">How to Python</li>
-                    <li style="color:blue;text-decoration:underline">Lessons on IDLE</li>
-                    <li style="color:blue;text-decoration:underline">Procedural Programming</li>
-                </ul>
-            </div>	
+       
+        <div class="hero-unit">
+            <a class="btn btn-primary" href="/treasure/resource/{{ resource.id }}/addtopack">Add to Pack</a>
+            <h3>Packs</h3>
+            {% if partofpacks %}
+                <div class="table-responsive">
+	            <table id="Packs" class="table table-striped table-bordered" cellspacing="0" width="100%">
+	                <thead>
+	                    <tr>
+	                        <th>Name</th>
+	                        <th>Author</th>
+	                        <th>Description</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                    {% for pack in partofpacks.all %}
+	                        <tr class="resourceLabel">
+	                            <td>{{pack.name}}</td>
+	                            <td>{{pack.author}}</td>
+   	                            <td>{{pack.description}}</td>
+	                        </tr>
+	                    {% endfor %}
+	                </tbody>
+	             </table>
+	        </div>
+            {% else %}
+                <div>This resource is part of no packs</div>
+            {% endif %}
        </div>
-       <br><br><br>
-       <div class="row-fluid">
-            <div class="span6">
-                <h4> User Recommended Followups</h3>
-                <ul>
-                    <li style="color:blue;text-decoration:underline">Using Object Orientation</li>
-                </ul>
-            </div>
-            <div class="span6">
-                <h4>Member of These Lessons</h4>
-                <ul>
-                    <li style="color:blue;text-decoration:underline">Teaching Programming in Python</li>
-                    <li style="color:blue;text-decoration:underline">Introduction to Software Development</li>
-                    <li style="color:blue;text-decoration:underline">Programming Paradigms</li>
-                </ul>
-            </div>
-        </div>
-        <br><br><br>
-        < end comment -->
-<hr>
+        
+        <div class="hero-unit">
         {% if want2talk %}
- 		<div>
+ 		
             <p>People willing to organise discussion about {{resource_name}}:</p>
 	        <div class="table-responsive">
 	            <table id="Resources" class="table table-striped table-bordered" cellspacing="0" width="100%">
@@ -132,13 +126,14 @@
 	        </div>
         </div>
 		{% else %}
-		Nobody declared interest in organising a discussion about {{resource_name}} yet. <a href="">Be the first</a>
+		    <p>Nobody declared interest in organising a discussion about {{resource_name}} yet. <a href="">Be the first</a></p>
         {% endif %}
+        </div>
 
-        <!-- issues go here -->
+        <!-- todo: put issues here -->
         
     {% else %}
-        <h2>No Resource At This URL.</h2>
+        <div class="hero-unit"><h2>No Resource At This URL.</h2></div>
     {% endif %}
-</div>
+
 {% endblock %}

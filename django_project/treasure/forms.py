@@ -2,6 +2,18 @@ from django import forms
 from treasure.models import *
 from django.contrib.auth.models import User
 
+## custom widget to prevent autocapitalisation and autocompletion of certail fields
+class DisableAutoInput(forms.widgets.Input):
+   input_type = 'text'
+
+   def render(self, name, value, attrs=None):
+       if attrs is None:
+           attrs = {}
+       attrs.update(dict(autocorrect='off',
+                         autocapitalize='off',
+                         spellcheck='false'))
+       return super(DisableAutoInput, self).render(name, value, attrs=attrs)
+
 class ResourceForm(forms.ModelForm):
     name = forms.CharField(max_length=128, help_text="Please enter the resource name.")
     description = forms.CharField(widget = forms.Textarea, help_text="Please enter a description.")
@@ -29,7 +41,7 @@ class FileForm(forms.ModelForm):
         exclude = []
         
 class WebForm(forms.ModelForm):
-    url = forms.URLField(max_length=128, help_text="Please enter the url of the resource.")
+    url = forms.URLField(max_length=128, help_text="Please enter the url of the resource.", widget=DisableAutoInput())
     
     class Meta:
         model = WebResource
@@ -38,7 +50,7 @@ class WebForm(forms.ModelForm):
               
 class UserForm(forms.ModelForm):
     username = forms.CharField(help_text="Please enter a username.")
-    email = forms.CharField(help_text="Please enter your email.")
+    email = forms.CharField(help_text="Please enter your email.", widget=DisableAutoInput())
     password = forms.CharField(widget=forms.PasswordInput(), help_text="Please enter a password.")
 
     class Meta:
@@ -109,4 +121,23 @@ class TagForm(forms.ModelForm):
     class Meta:
         model = Tag
         fields = ('name','type')
+        exclude = []
+        
+class PackForm(forms.ModelForm):
+    explore = forms.CharField(widget = forms.HiddenInput(), required=False)
+    name = forms.CharField(max_length=128, help_text="Please enter the pack name.")
+    image = forms.CharField(max_length=128, help_text="Please enter the image url.")
+    description = forms.CharField(widget = forms.Textarea, help_text="Please enter a description.") 
+    
+    level_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=0).order_by('name'),
+                                                required=False, help_text="Please select level(s).")
+    topic_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=1).order_by('name'),
+                                                required=False, help_text="Please select topic(s).")
+    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
+                                                required=False, help_text="Please select other tags.")
+    
+                                                
+    class Meta:
+        model = Pack
+        fields = ('explore', 'name', 'image', 'description')
         exclude = []

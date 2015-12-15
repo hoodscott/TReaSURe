@@ -7,18 +7,17 @@
 {% endblock %}
 
 {% block body_block %}
-{% if Pack_Resources %}
-<div class="container-fluid">
+{% if pack %}
+<div class="container-fluid hero-unit">
 	<div class="row">
 			<div class="col-xs-6">
 				<div class="container-fluid">
 					  <div class="row">
-						  <div class="col-xs-6"><u>Pack Name</u>:<br>  <h3 style= 'margin-top: -5px';>{{pack.name}}</h3></div>
-						  <div class="col-xs-6"><u>Pack Creator</u>:<br>  <p style= 'margin-top: +7px';>{{pack.author}}</p></div>
+						  <div class="col-xs-6"><h2 style= 'margin-top: -5px';>{{pack.name}}</h2><p style= 'margin-top: -5px';>by {{pack.author}}</p></div>
 					  </div>
 					  <div class="row">
-						<div class="col-xs-6"><u>Description</u>:<br>  {{pack.description}}</div>
-						<div class="col-xs-6"><u>Tags</u>:<br>  	
+						<div class="col-xs-6"><strong>Description:</strong><br>  {{pack.description}}</div>
+						<div class="col-xs-6"><strong>Tags:</strong><br>  	
 							{% if tags %}
 								{% for tag in tags %}
 					              <a href="/../treasure/tags/{{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %} 
@@ -32,8 +31,7 @@
 			</div> <!-- close column -->
 			<div class="col-xs-6"> <img src="{{pack.image}}" style="width: 120px; height: 120px;" data-src="holder.js/120x120" alt="120x120"></div>
 	</div> <!-- close row -->
-
-	  <div class="row">
+      {% if pack_resources %}
 		<div class="panel panel-default">
 			<div class="panel-body">
 		        <div class="table-responsive">
@@ -46,7 +44,7 @@
 		                    </tr>
 		                </thead>
 		                <tbody>
-		                    {% for resource in Pack_Resources %}
+		                    {% for resource in pack_resources %}
 		                        <tr class="Label">
 		                            <td><a href="/treasure/resource/{{ resource.id }}">{{resource.name}}</a></td>
 		                            <td>{{resource.author}}</td>
@@ -59,10 +57,12 @@
 		        </div>
 		    </div> <!-- close body -->
 		</div> <!-- close panel -->
-	  </div> <!-- close row -->
+	  {% else %}
+	  <p> no resources </p>
+	  {% endif %}
 </div>
 {% else %}
-    <h3>Wrong URL, or Pack no longer exists.</h3>
+    <div class="hero-unit"><h3>Wrong URL, or Pack no longer exists.</h3></div>
 {% endif %}
 <!-- script for table -->
 <script type="text/javascript">

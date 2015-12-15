@@ -89,10 +89,9 @@ def search(request):
         # Have we been provided with a valid form?
         if form.is_valid():
             # get tags from form
-            # combine the tags into one queryset
-            tags =  form.cleaned_data['level_tags'] | \
-                    form.cleaned_data['topic_tags'] | \
-                    form.cleaned_data['other_tags']
+            level_tags = form.cleaned_data['level_tags']
+            topic_tags = form.cleaned_data['topic_tags']
+            other_tags = form.cleaned_data['other_tags']
                     
             search_type = form.cleaned_data['searchtype']
             
@@ -100,15 +99,40 @@ def search(request):
             if search_type == '0':
                 # initialise search results
                 all_resources = Resource.objects.all()
-                if tags:
-                    # initialise the queryset with the first tag results only
-                    found_resources = all_resources.filter(tags__name=tags[0])
                 
-                    # filter to get the matching resources
-                    for tag in tags:
-                        # logical AND the queryset from each tag together
-                        found_resources = found_resources & all_resources.filter(tags__name=tag)
+                # if tags have been entered
+                if level_tags | topic_tags | other_tags:
+                    # initialise the queryset
+                    found_resources = all_resources.filter(tags__name="")
                 
+                    # filter to get the matching resources for level
+                    if level_tags:
+                        level_resources = all_resources.filter(tags__in=level_tags).distinct()
+                        
+                    # filter to get the matching resources for topic
+                    if topic_tags:
+                        topic_resources = all_resources.filter(tags__in=topic_tags).distinct()
+                            
+                    # filter to get the matching resources for level
+                    if other_tags:
+                        other_resources = all_resources.filter(tags__in=other_tags).distinct()
+                    
+                    # combine search results (ew)
+                    if level_tags and topic_tags and other_tags:
+                        found_resources = level_resources & topic_resources & other_resources
+                    elif level_tags and topic_tags:
+                        found_resources = level_resources & topic_resources
+                    elif level_tags and other_tags:
+                        found_resources = level_resources & other_resources
+                    elif topic_tags and other_tags:
+                        found_resources = topic_resources & other_resources
+                    elif level_tags:
+                        found_resources = level_resources
+                    elif topic_tags:
+                        found_resources = topic_resources
+                    elif other_tags:
+                        found_resources = level_resources       
+                                                     
                     context_dict['results'] = found_resources
                     
                     # set flag so template knows which url to use
@@ -122,15 +146,40 @@ def search(request):
             if search_type == '1':
                 # initialise search results
                 all_packs = Pack.objects.all()
-                if tags:
-                    # initialise the queryset with the first tag results only
-                    found_packs = all_packs.filter(tags__name=tags[0])
                 
-                    # filter to get the matching resources
-                    for tag in tags:
-                        # logical AND the queryset from each tag together
-                        found_packs = found_packs & all_packs.filter(tags__name=tag)
+                # if tags have been entered
+                if level_tags | topic_tags | other_tags:
+                    # initialise the queryset
+                    found_packs = all_packs.filter(tags__name="")
                 
+                    # filter to get the matching resources for level
+                    if level_tags:
+                        level_packs = all_packs.filter(tags__in=level_tags).distinct()
+                        
+                    # filter to get the matching resources for topic
+                    if topic_tags:
+                        topic_packs = all_packs.filter(tags__in=topic_tags).distinct()
+                            
+                    # filter to get the matching resources for level
+                    if other_tags:
+                        other_packs = all_packs.filter(tags__in=other_tags).distinct()
+                    
+                    # combine search results (ew)
+                    if level_tags and topic_tags and other_tags:
+                        found_packs = level_packs & topic_packs & other_packs
+                    elif level_tags and topic_tags:
+                        found_packs = level_packs & topic_packs
+                    elif level_tags and other_tags:
+                        found_packs = level_packs & other_packs
+                    elif topic_tags and other_tags:
+                        found_packs = topic_packs & other_packs
+                    elif level_tags:
+                        found_packs = level_packs
+                    elif topic_tags:
+                        found_packs = topic_packs
+                    elif other_tags:
+                        found_packs = level_packs       
+                                                     
                     context_dict['results'] = found_packs
                 else:
                     # if no tags are entered, do nothing
@@ -359,16 +408,13 @@ def user_login(request):
                 return HttpResponseRedirect('/treasure/')
             else:
                 # An inactive account was used - no logging in!
-                return HttpResponse("Your account is disabled.")
+                context_dict['disabled_account'] = "aye"
         else:
             # Bad login details were provided. So we can't log the user in.
-            print "Invalid login details: {0}, {1}".format(username, password)
-            return HttpResponse("Invalid login details supplied.")
+            context_dict['bad_details'] = "aye"
 
-    # The request is not a HTTP POST, so display the login form.
-    # This scenario would most likely be a HTTP GET.
-    else:
-        return render_to_response('treasure/login.html', context_dict, context)
+
+    return render_to_response('treasure/login.html', context_dict, context)
 
 # log the user out
 @login_required
@@ -620,8 +666,7 @@ def resource_view(request, resource_id):
     
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
-    want2talk=TeacherWantstoTalkResource.objects.all()
-    context_dict['want2talk'] = want2talk.filter(resource_id=resource_id)
+
     try:
         # Can we find a resource with the given id?
         this_resource = Resource.objects.get(id=resource_id)
@@ -667,6 +712,14 @@ def resource_view(request, resource_id):
         except FilesResource.DoesNotExist:
             # do nothing
             pass
+            
+        # get packs
+        #packs = Pack.objects.all()
+        context_dict['partofpacks'] = this_resource.packs
+
+        # get interactions            
+        want2talk=TeacherWantstoTalkResource.objects.all()
+        context_dict['want2talk'] = want2talk.filter(resource_id=resource_id)
 
         # used to verify it exists
         context_dict['resource'] = this_resource
@@ -765,7 +818,7 @@ def tags(request):
     # Render the template depending on the context.
     return render_to_response('treasure/tags.html', context_dict, context)
     
-# view to see all tags in the database
+# view to add a tag to the database
 @login_required
 def add_tag(request):
     # Request the context of the request.
@@ -860,7 +913,7 @@ def pack(request, pack_id):
         this_pack = Pack.objects.get(id=pack_id)
         
         # get resources
-        context_dict['Pack_Resources'] = Resource.objects.filter(packs__id=pack_id)
+        context_dict['pack_resources'] = Resource.objects.filter(packs__id=pack_id)
 
         # get tags from the user, if they have any
         if len(this_pack.tags.all()) >= 1:
@@ -869,7 +922,7 @@ def pack(request, pack_id):
 
         # used to verify it exists
         context_dict['pack'] = this_pack
-    except Hub.DoesNotExist:
+    except Pack.DoesNotExist:
         # We get here if we didn't find the specified tag.
         # Don't do anything - the template displays the "no tag" message for us.
         pass
@@ -913,12 +966,12 @@ def versions(request, resource_id):
     nodes = tree.split(',')
     
     all_resources = Resource.objects.all()
-    set = []
+    ancestor_nodes = []
     
     for node_id in nodes:
-        set += [all_resources.get(id=node_id)]
+        ancestor_nodes += [all_resources.get(id=node_id)]
     
-    context_dict['nodes'] = set
+    context_dict['nodes'] = ancestor_nodes
     context_dict['raw_tree'] = tree
     
     # Render the template depending on the context.
@@ -927,15 +980,112 @@ def versions(request, resource_id):
 # view to evolve a resource
 @login_required
 def evolve(request, resource_id):
-    # Request the context of the request.
+    # get context of request
     context = RequestContext(request)
     
-    #create context dictionary to send back to template
-    context_dict = sidebar(request)
+    # A HTTP POST?
+    if request.method == 'POST':
+        
+        resource_form = ResourceForm(request.POST)
+        file_form = FileForm(request.POST, request.FILES)
+        web_form = WebForm(request.POST)
+        
+        # if evolution is a file upload
+        if 'file_evolve' in request.POST:
+            # Have we been provided with a valid form?
+            if resource_form.is_valid() and file_form.is_valid():
+                # delay saving the model until we're ready to avoid integrity problems
+                resource = resource_form.save(commit=False)
+                
+                # set foreign key of the author of the resource
+                userid = request.user.id
+                teacher = Teacher.objects.get(user = userid)
+                resource.author = Teacher.objects.get(id = teacher.id)
+                resource.save()
+                
+                # append new id to parents tree
+                resource.tree = Resource.objects.get(id=resource_id).tree + u',' + unicode(resource.id)
+                
+                # combine the tags into one queryset
+                tags =  resource_form.cleaned_data['level_tags'] | \
+                        resource_form.cleaned_data['topic_tags'] | \
+                        resource_form.cleaned_data['other_tags']
+                # save the tags the user has selected
+                for tag in tags:
+                    resource.tags.add(tag)
+                resource.save()
+                
+                # add file to object
+                files = FilesResource( path = request.FILES['path'])
+                
+                # associate file resource with parent resource
+                files.resource = resource
+                
+                # save the instance
+                files.save()     
+                
+                # show user the new materials page
+                return resource_view(request, resource.id)
+            else:
+                # The supplied form contained errors - just print them to the terminal.
+                print resource_form.errors
+                print file_form.errors
 
-    #todo: implement evolution
+        # if evolution is a web upload   
+        elif 'web_evolve' in request.POST:
+            # Have we been provided with a valid form?
+            if resource_form.is_valid() and web_form.is_valid():
+                # delay saving the model until we're ready to avoid integrity problems
+                resource = resource_form.save(commit=False)
+                
+                # set foreign key of the author of the resource
+                userid = request.user.id
+                teacher = Teacher.objects.get(user = userid)
+                resource.author = Teacher.objects.get(id = teacher.id)
+                resource.save()
+                
+                # append new id to parents tree
+                resource.tree = Resource.objects.get(id=resource_id).tree + u',' + unicode(resource.id)
+                
+                # combine the tags into one queryset
+                tags =  resource_form.cleaned_data['level_tags'] | \
+                        resource_form.cleaned_data['topic_tags'] | \
+                        resource_form.cleaned_data['other_tags']
+                # save the tags the user has selected
+                for tag in tags:
+                    resource.tags.add(tag)
+                resource.save()
+                
+                # delay saving the relationship model until we're ready
+                # to avoid integrity problems
+                web = web_form.save(commit=False)
+                web.resource = resource
+                
+                # save the instance
+                web.save()     
+                
+                # Now show the new materials page
+                return resource_view(request, resource.id)
+            else:
+                # The supplied form contained errors - just print them to the terminal.
+                print resource_form.errors
+                print file_form.errors
+        
+    else:
+        # If the request was not a POST, display the form to enter details.
+        resource_form = ResourceForm()
+        file_form = FileForm()
+        web_form = WebForm()
     
-    # Render the template depending on the context.
+    # create dictionary to pass data to templates
+    context_dict = sidebar(request)
+    context_dict['resource_form'] = resource_form
+    context_dict['file_form'] = file_form
+    context_dict['web_form'] = web_form
+    context_dict['resource_id']= resource_id
+    
+    # Bad form (or form details), no form supplied...
+    # Render the form with error messages (if any).
     return render_to_response('treasure/evolve.html', context_dict, context)
     
 # view to track a resource
@@ -951,3 +1101,100 @@ def track(request, resource_id):
     
     # Render the template depending on the context.
     return render_to_response('treasure/track.html', context_dict, context)
+    
+# view to add a resource to a pack
+@login_required
+def addtopack(request, resource_id):
+    # Request the context of the request.
+    context = RequestContext(request)
+    
+    #create context dictionary to send back to template
+    context_dict = sidebar(request)
+    context_dict['resource_id'] = resource_id
+    
+    # if user selects button, add resource to pack
+    if request.method == 'POST':
+        # get packid from request
+        packid = request.POST.get("packid", "")
+        
+        # get this resource
+        resources = Resource.objects.all()
+        this_resource = resources.get(id=resource_id)
+
+        # get this pack
+        packs = Pack.objects.all()
+        this_pack = packs.get(id=packid)
+        
+        # add resource to pack
+        this_resource.packs.add(this_pack)
+        
+        return pack(request, packid)
+    
+    else:
+        # try to get the packs for this user
+        try:
+            # get user id
+            userid = request.user.id
+            teacher = Teacher.objects.get(user = userid)
+            context_dict['packs'] = Pack.objects.all().filter(author=teacher)
+        except:
+            pass
+    
+    # Render the template depending on the context.
+    return render_to_response('treasure/addtopack.html', context_dict, context)
+    
+# view to add a pack to the database
+@login_required
+def newpack(request):
+    # Request the context of the request.
+    context = RequestContext(request)
+    
+    #create context dictionary to send back to template
+    context_dict = sidebar(request)
+    
+    # A HTTP POST?
+    if request.method == 'POST':
+        form = PackForm(request.POST)
+
+        # Have we been provided with a valid form?
+        if form.is_valid():
+            print "valid"
+            # Put off saving to avoid integrity errors.
+            this_pack = form.save(commit=False)
+            this_pack.explore = '0'
+            
+            # add author
+            userid = request.user.id
+            teacher = Teacher.objects.get(user = userid)
+            this_pack.author = Teacher.objects.get(id = teacher.id)
+            
+            # now save the tag in the database
+            this_pack.save()
+            
+            #add tags
+            # combine the tags into one queryset
+            tags =  form.cleaned_data['level_tags'] | \
+                    form.cleaned_data['topic_tags'] | \
+                    form.cleaned_data['other_tags']
+            # save the tags the user has selected
+            for tag in tags:
+                this_pack.tags.add(tag)
+                
+            # save again
+            this_pack.save()
+                        
+            # Now show the new pack page
+            return pack(request, this_pack.id)
+        else:
+            # The supplied form contained errors - just print them to the terminal.
+            print form.errors
+    else:
+        # If the request was not a POST, display the form to enter details.
+        form = PackForm()
+    
+    # create dictionary to pass data to templates
+    context_dict = sidebar(request)
+    context_dict['form'] = form
+    
+    # Render the template depending on the context.
+    return render_to_response('treasure/add_pack.html', context_dict, context) 
