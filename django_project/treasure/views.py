@@ -117,7 +117,7 @@ def search(request):
                     if other_tags:
                         other_resources = all_resources.filter(tags__in=other_tags).distinct()
                     
-                    # combine search results
+                    # combine search results (ew)
                     if level_tags and topic_tags and other_tags:
                         found_resources = level_resources & topic_resources & other_resources
                     elif level_tags and topic_tags:
@@ -146,15 +146,40 @@ def search(request):
             if search_type == '1':
                 # initialise search results
                 all_packs = Pack.objects.all()
-                if tags:
-                    # initialise the queryset with the first tag results only
-                    found_packs = all_packs.filter(tags__name=tags[0])
                 
-                    # filter to get the matching resources
-                    for tag in tags:
-                        # logical AND the queryset from each tag together
-                        found_packs = found_packs & all_packs.filter(tags__name=tag)
+                # if tags have been entered
+                if level_tags | topic_tags | other_tags:
+                    # initialise the queryset
+                    found_packs = all_packs.filter(tags__name="")
                 
+                    # filter to get the matching resources for level
+                    if level_tags:
+                        level_packs = all_packs.filter(tags__in=level_tags).distinct()
+                        
+                    # filter to get the matching resources for topic
+                    if topic_tags:
+                        topic_packs = all_packs.filter(tags__in=topic_tags).distinct()
+                            
+                    # filter to get the matching resources for level
+                    if other_tags:
+                        other_packs = all_packs.filter(tags__in=other_tags).distinct()
+                    
+                    # combine search results (ew)
+                    if level_tags and topic_tags and other_tags:
+                        found_packs = level_packs & topic_packs & other_packs
+                    elif level_tags and topic_tags:
+                        found_packs = level_packs & topic_packs
+                    elif level_tags and other_tags:
+                        found_packs = level_packs & other_packs
+                    elif topic_tags and other_tags:
+                        found_packs = topic_packs & other_packs
+                    elif level_tags:
+                        found_packs = level_packs
+                    elif topic_tags:
+                        found_packs = topic_packs
+                    elif other_tags:
+                        found_packs = level_packs       
+                                                     
                     context_dict['results'] = found_packs
                 else:
                     # if no tags are entered, do nothing
