@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block body_block %}
-{% if Pack_Resources %}
+{% if pack %}
 <div class="container-fluid hero-unit">
 	<div class="row">
 			<div class="col-xs-6">
@@ -31,8 +31,7 @@
 			</div> <!-- close column -->
 			<div class="col-xs-6"> <img src="{{pack.image}}" style="width: 120px; height: 120px;" data-src="holder.js/120x120" alt="120x120"></div>
 	</div> <!-- close row -->
-
-	  <div class="row">
+      {% if pack_resources %}
 		<div class="panel panel-default">
 			<div class="panel-body">
 		        <div class="table-responsive">
@@ -45,7 +44,7 @@
 		                    </tr>
 		                </thead>
 		                <tbody>
-		                    {% for resource in Pack_Resources %}
+		                    {% for resource in pack_resources %}
 		                        <tr class="Label">
 		                            <td><a href="/treasure/resource/{{ resource.id }}">{{resource.name}}</a></td>
 		                            <td>{{resource.author}}</td>
@@ -58,10 +57,12 @@
 		        </div>
 		    </div> <!-- close body -->
 		</div> <!-- close panel -->
-	  </div> <!-- close row -->
+	  {% else %}
+	  <p> no resources </p>
+	  {% endif %}
 </div>
 {% else %}
-    <h3>Wrong URL, or Pack no longer exists.</h3>
+    <div class="hero-unit"><h3>Wrong URL, or Pack no longer exists.</h3></div>
 {% endif %}
 <!-- script for table -->
 <script type="text/javascript">

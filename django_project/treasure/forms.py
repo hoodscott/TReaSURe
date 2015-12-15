@@ -122,3 +122,22 @@ class TagForm(forms.ModelForm):
         model = Tag
         fields = ('name','type')
         exclude = []
+        
+class PackForm(forms.ModelForm):
+    explore = forms.CharField(widget = forms.HiddenInput(), required=False)
+    name = forms.CharField(max_length=128, help_text="Please enter the pack name.")
+    image = forms.CharField(max_length=128, help_text="Please enter the image url.")
+    description = forms.CharField(widget = forms.Textarea, help_text="Please enter a description.") 
+    
+    level_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=0).order_by('name'),
+                                                required=False, help_text="Please select level(s).")
+    topic_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=1).order_by('name'),
+                                                required=False, help_text="Please select topic(s).")
+    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
+                                                required=False, help_text="Please select other tags.")
+    
+                                                
+    class Meta:
+        model = Pack
+        fields = ('explore', 'name', 'image', 'description')
+        exclude = []

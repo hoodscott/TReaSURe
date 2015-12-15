@@ -666,8 +666,7 @@ def resource_view(request, resource_id):
     
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
-    want2talk=TeacherWantstoTalkResource.objects.all()
-    context_dict['want2talk'] = want2talk.filter(resource_id=resource_id)
+
     try:
         # Can we find a resource with the given id?
         this_resource = Resource.objects.get(id=resource_id)
@@ -713,6 +712,14 @@ def resource_view(request, resource_id):
         except FilesResource.DoesNotExist:
             # do nothing
             pass
+            
+        # get packs
+        #packs = Pack.objects.all()
+        context_dict['partofpacks'] = this_resource.packs
+
+        # get interactions            
+        want2talk=TeacherWantstoTalkResource.objects.all()
+        context_dict['want2talk'] = want2talk.filter(resource_id=resource_id)
 
         # used to verify it exists
         context_dict['resource'] = this_resource
@@ -811,7 +818,7 @@ def tags(request):
     # Render the template depending on the context.
     return render_to_response('treasure/tags.html', context_dict, context)
     
-# view to see all tags in the database
+# view to add a tag to the database
 @login_required
 def add_tag(request):
     # Request the context of the request.
@@ -906,7 +913,7 @@ def pack(request, pack_id):
         this_pack = Pack.objects.get(id=pack_id)
         
         # get resources
-        context_dict['Pack_Resources'] = Resource.objects.filter(packs__id=pack_id)
+        context_dict['pack_resources'] = Resource.objects.filter(packs__id=pack_id)
 
         # get tags from the user, if they have any
         if len(this_pack.tags.all()) >= 1:
@@ -915,7 +922,7 @@ def pack(request, pack_id):
 
         # used to verify it exists
         context_dict['pack'] = this_pack
-    except Hub.DoesNotExist:
+    except Pack.DoesNotExist:
         # We get here if we didn't find the specified tag.
         # Don't do anything - the template displays the "no tag" message for us.
         pass
@@ -1094,3 +1101,100 @@ def track(request, resource_id):
     
     # Render the template depending on the context.
     return render_to_response('treasure/track.html', context_dict, context)
+    
+# view to add a resource to a pack
+@login_required
+def addtopack(request, resource_id):
+    # Request the context of the request.
+    context = RequestContext(request)
+    
+    #create context dictionary to send back to template
+    context_dict = sidebar(request)
+    context_dict['resource_id'] = resource_id
+    
+    # if user selects button, add resource to pack
+    if request.method == 'POST':
+        # get packid from request
+        packid = request.POST.get("packid", "")
+        
+        # get this resource
+        resources = Resource.objects.all()
+        this_resource = resources.get(id=resource_id)
+
+        # get this pack
+        packs = Pack.objects.all()
+        this_pack = packs.get(id=packid)
+        
+        # add resource to pack
+        this_resource.packs.add(this_pack)
+        
+        return pack(request, packid)
+    
+    else:
+        # try to get the packs for this user
+        try:
+            # get user id
+            userid = request.user.id
+            teacher = Teacher.objects.get(user = userid)
+            context_dict['packs'] = Pack.objects.all().filter(author=teacher)
+        except:
+            pass
+    
+    # Render the template depending on the context.
+    return render_to_response('treasure/addtopack.html', context_dict, context)
+    
+# view to add a pack to the database
+@login_required
+def newpack(request):
+    # Request the context of the request.
+    context = RequestContext(request)
+    
+    #create context dictionary to send back to template
+    context_dict = sidebar(request)
+    
+    # A HTTP POST?
+    if request.method == 'POST':
+        form = PackForm(request.POST)
+
+        # Have we been provided with a valid form?
+        if form.is_valid():
+            print "valid"
+            # Put off saving to avoid integrity errors.
+            this_pack = form.save(commit=False)
+            this_pack.explore = '0'
+            
+            # add author
+            userid = request.user.id
+            teacher = Teacher.objects.get(user = userid)
+            this_pack.author = Teacher.objects.get(id = teacher.id)
+            
+            # now save the tag in the database
+            this_pack.save()
+            
+            #add tags
+            # combine the tags into one queryset
+            tags =  form.cleaned_data['level_tags'] | \
+                    form.cleaned_data['topic_tags'] | \
+                    form.cleaned_data['other_tags']
+            # save the tags the user has selected
+            for tag in tags:
+                this_pack.tags.add(tag)
+                
+            # save again
+            this_pack.save()
+                        
+            # Now show the new pack page
+            return pack(request, this_pack.id)
+        else:
+            # The supplied form contained errors - just print them to the terminal.
+            print form.errors
+    else:
+        # If the request was not a POST, display the form to enter details.
+        form = PackForm()
+    
+    # create dictionary to pass data to templates
+    context_dict = sidebar(request)
+    context_dict['form'] = form
+    
+    # Render the template depending on the context.
+    return render_to_response('treasure/add_pack.html', context_dict, context) 

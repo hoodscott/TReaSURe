@@ -23,11 +23,9 @@
                 <p>{{ description }}</p><br>
                 <h4><strong>Tags:</strong></h4>
                 {% if other_tags %}
-                    <ul>
                     {% for tag in other_tags %}
-                        <li><a href="/../treasure/tags/{{ tag.id }}">{{ tag.name }}</a></li>
+                        <a href="/../treasure/tags/{{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
                     {% endfor %}
-                    </ul>
                 {% else %}
                     <p>There are no tags.</p>
                 {% endif %}
@@ -65,49 +63,40 @@
                     <li><a class="btn btn-block btn-success" href="/../treasure/resource/{{ resource.id}}/track">Track Resource</a></li>
                     end track-->
                     <li><p></li>                    
-                    <li><a class="btn btn-block btn-info" href="/../treasure/resource/{{ resource.id}}/versions">View Versions</a></li>
+                    <li><a class="btn btn-block btn-info" href="/../treasure/resource/{{ resource.id }}/versions">View Versions</a></li>
                 </ul>
                 <hr>
            </div>
         </div>
-       <!-- todo: uncomment when packs are working
        
-       <div class="hero-unit row-fluid">
-            <div class="span6">
-                <h4> Author Recommended Prerequisites</h3>
-                <ul>
-                    <li style="color:blue;text-decoration:underline">Intro to Python</li>
-                        <li style="color:blue;text-decoration:underline">Programming Concepts</li>
-                </ul>
-            </div>
-            <div class="span6">
-                <h4> User Recommended Prerequisites</h3>
-                <ul>
-                    <li style="color:blue;text-decoration:underline">How to Python</li>
-                    <li style="color:blue;text-decoration:underline">Lessons on IDLE</li>
-                    <li style="color:blue;text-decoration:underline">Procedural Programming</li>
-                </ul>
-            </div>	
+        <div class="hero-unit">
+            <a class="btn btn-primary" href="/treasure/resource/{{ resource.id }}/addtopack">Add to Pack</a>
+            <h3>Packs</h3>
+            {% if partofpacks %}
+                <div class="table-responsive">
+	            <table id="Packs" class="table table-striped table-bordered" cellspacing="0" width="100%">
+	                <thead>
+	                    <tr>
+	                        <th>Name</th>
+	                        <th>Author</th>
+	                        <th>Description</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                    {% for pack in partofpacks.all %}
+	                        <tr class="resourceLabel">
+	                            <td>{{pack.name}}</td>
+	                            <td>{{pack.author}}</td>
+   	                            <td>{{pack.description}}</td>
+	                        </tr>
+	                    {% endfor %}
+	                </tbody>
+	             </table>
+	        </div>
+            {% else %}
+                <div>This resource is part of no packs</div>
+            {% endif %}
        </div>
-       <br><br><br>
-       <div class="row-fluid">
-            <div class="span6">
-                <h4> User Recommended Followups</h3>
-                <ul>
-                    <li style="color:blue;text-decoration:underline">Using Object Orientation</li>
-                </ul>
-            </div>
-            <div class="span6">
-                <h4>Member of These Lessons</h4>
-                <ul>
-                    <li style="color:blue;text-decoration:underline">Teaching Programming in Python</li>
-                    <li style="color:blue;text-decoration:underline">Introduction to Software Development</li>
-                    <li style="color:blue;text-decoration:underline">Programming Paradigms</li>
-                </ul>
-            </div>
-        </div>
-        
-        < end comment -->
         
         <div class="hero-unit">
         {% if want2talk %}
