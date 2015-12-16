@@ -51,7 +51,7 @@
                 
                 <ul>
 					{% if label %}
-                    <li><a class="btn btn-block btn-primary" href="/../treasure/resource/{{resource.id}}/download/">{{label}}</a></li>
+                    <li><a class="btn btn-block btn-primary" href="/../treasure/resource/{{resource.id}}/download/"{% if files_resource %} download{% endif %}>{{label}}</a></li>
 					{% endif %}
                     <li><p></li>
                     <li><a class="btn btn-block btn-warning" href="/../treasure/resource/{{ resource.id}}/evolve">Evolve Resource</a></li>
