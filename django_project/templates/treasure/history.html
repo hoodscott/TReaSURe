@@ -6,34 +6,13 @@
     Home
 {% endblock %}
 
-{% block notification%}	
-{% if need2rate %}
-<section id="top" class="one dark cover">
-	<div class="container">
-
-		<header>
-			<h2 class="alt">Welcome back, {{ user_firstname }}</a></h2>
-			<p>You have pending actions.
-				Please remember to share your opinion about the resources that you used recently.</p>
-		</header>
-
-		<footer>
-			<a href="#MainPage" class="button scrolly" id="continue-browsing">Continue Browsing</a>
-		</footer>
-
-	</div>
-</section>
-{% endif %}
-{% endblock %}
-
-
 {% block body_block %}
 
 
 <div class="hero-unit panel panel-default">
 	{% if downloads %}
     <div class="panel-heading clearfix">
-		<h4>Downloaded Resources Pending Rating</h4>
+		<h4>Resource Downloads</h4>
     </div>
     <div class="panel-body">
         <div class="table-responsive">
