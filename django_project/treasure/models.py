@@ -143,6 +143,7 @@ class TeacherDownloadsResource(models.Model):
     resource = models.ForeignKey(Resource)
     # used or not
     used = models.BooleanField()
+    datetime = models.DateTimeField()
     
     def __unicode__(self):
         return "%s %s" % (self.teacher.name, self.resource.name)
