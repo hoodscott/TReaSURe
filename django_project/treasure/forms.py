@@ -15,16 +15,24 @@ class DisableAutoInput(forms.widgets.Input):
        return super(DisableAutoInput, self).render(name, value, attrs=attrs)
 
 class ResourceForm(forms.ModelForm):
-    name = forms.CharField(max_length=128, help_text="Please enter the resource name.")
-    description = forms.CharField(widget = forms.Textarea, help_text="Please enter a description.")
+    name = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
+                            max_length=128,
+                            help_text="Please enter the resource name.")
+
+    description = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
+                            help_text="Please enter a description.")
+                            
     tree = forms.CharField(widget = forms.HiddenInput(), required=False)
     user = forms.CharField(widget = forms.HiddenInput(), required=False)    
     
-    level_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=0).order_by('name'),
+    level_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
+                                                queryset=Tag.objects.filter(type=0).order_by('name'),
                                                 required=True, help_text="Please select level(s).")
-    topic_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=1).order_by('name'),
+    topic_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
+                                                queryset=Tag.objects.filter(type=1).order_by('name'),
                                                 required=True, help_text="Please select topic(s).")
-    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
+    other_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
+                                                queryset=Tag.objects.filter(type=2).order_by('name'),
                                                 required=False, help_text="Please select other tags (optional).")                                                
     
     class Meta:
@@ -33,7 +41,9 @@ class ResourceForm(forms.ModelForm):
         exclude = []
         
 class FileForm(forms.ModelForm):
-    path = forms.FileField(label='Select the resource to upload', help_text='Maximum of 42MB')
+    path = forms.FileField(widget = forms.ClearableFileInput(attrs={'tabindex':'1'}),
+                            label='Select the resource to upload',
+                            help_text='Maximum of 42MB')
     
     class Meta:
         model = FilesResource
@@ -41,7 +51,9 @@ class FileForm(forms.ModelForm):
         exclude = []
         
 class WebForm(forms.ModelForm):
-    url = forms.URLField(max_length=128, help_text="Please enter the url of the resource.", widget=DisableAutoInput())
+    url = forms.URLField(widget = DisableAutoInput(attrs={'tabindex':'1'}),
+                            max_length=128,
+                            help_text="Please enter the url of the resource.")
     
     class Meta:
         model = WebResource
@@ -49,9 +61,12 @@ class WebForm(forms.ModelForm):
         exclude = []
               
 class UserForm(forms.ModelForm):
-    username = forms.CharField(help_text="Please enter a username.")
-    email = forms.CharField(help_text="Please enter your email.", widget=DisableAutoInput())
-    password = forms.CharField(widget=forms.PasswordInput(), help_text="Please enter a password.")
+    username = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
+                                help_text="Please enter a username.")
+    email = forms.CharField(widget = DisableAutoInput(attrs={'tabindex':'1'}),
+                            help_text = "Please enter your email.")
+    password = forms.CharField(widget = forms.PasswordInput(attrs={'tabindex':'1'}),
+                            help_text = "Please enter a password.")
 
     class Meta:
         model = User
