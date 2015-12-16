@@ -50,12 +50,9 @@
                 <hr>
                 
                 <ul>
-                {% if web_resource %}
-                    <li><a class="btn btn-block btn-primary" href="{{ web_resource }}">Link to Resource</a></li>
-                {% endif %}
-                {% if files_resource %}
-                    <li><a class="btn btn-block btn-primary" href="{{ files_resource.url }}" download>Download Resource</a></li>
-                {% endif %}
+					{% if label %}
+                    <li><a class="btn btn-block btn-primary" href="/../treasure/resource/{{resource.id}}/download/">{{label}}</a></li>
+					{% endif %}
                     <li><p></li>
                     <li><a class="btn btn-block btn-warning" href="/../treasure/resource/{{ resource.id}}/evolve">Evolve Resource</a></li>
                     <!-- todo: uncomment when tracking works
@@ -70,7 +67,6 @@
         </div>
        
         <div class="hero-unit">
-            <a class="btn btn-primary" href="/treasure/resource/{{ resource.id }}/addtopack">Add to Pack</a>
             <h3>Packs</h3>
             {% if partofpacks %}
                 <div class="table-responsive">
@@ -85,7 +81,7 @@
 	                <tbody>
 	                    {% for pack in partofpacks.all %}
 	                        <tr class="resourceLabel">
-	                            <td>{{pack.name}}</td>
+	                            <td><a href="/treasure/packs/{{ pack.id }}">{{pack.name}}</a></td>
 	                            <td>{{pack.author}}</td>
    	                            <td>{{pack.description}}</td>
 	                        </tr>
@@ -96,6 +92,7 @@
             {% else %}
                 <div>This resource is part of no packs</div>
             {% endif %}
+            <a class="btn btn-primary pull-right" href="/treasure/resource/{{ resource.id }}/addtopack">Add to a Pack</a>
        </div>
         
         <div class="hero-unit">
