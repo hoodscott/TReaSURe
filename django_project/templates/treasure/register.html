@@ -11,7 +11,7 @@
 <div class="hero-unit">
     {% if registered %}
         <h2>Thank you for registering</h2>
-        <h3>Please <a href="/treasure/login/">Login</a></h3>
+        <h3>Please <a href="/treasure/login/" tabindex='1'>Login</a></h3>
     {% else %}
         <h2>Add a Teacher</h2>
         <br/>
@@ -41,7 +41,7 @@
                 {% endfor %}
 
                 <br/>
-                <button class="btn btn-primary" type="submit" name="submit">Add Teacher</button>
+                <button class="btn btn-primary" type="submit" name="submit" tabindex='1'>Add Teacher</button>
             </form>
         </div>
     {% endif %}

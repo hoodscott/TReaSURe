@@ -10,17 +10,16 @@
 <div class="hero-unit">
     <h2>Select Pack to add resource to:</h2>
     <br>
-    <div class="fluid container">
+    <div class="container">
         {% for pack in packs %}
-        <form class="span6" id="upload_form" method="post" action="/treasure/resource/{{ resource_id }}/addtopack/">
+        <form class="span12" id="upload_form" method="post" action="/treasure/resource/{{ resource_id }}/addtopack/">
             {% csrf_token %}
             <input type="hidden" name="packid" value="{{ pack.id }}">
-            <button class="btn btn-info" type="submit" name="{{ pack.id }}">{{ pack.name }}</button>
+            <button class="btn btn-info" type="submit" name="{{ pack.id }}" tabindex='1'>{{ pack.name }}</button>
         </form>
         {% endfor %}
         
-        <!--todo: find out why this is right aligned? -->
-        <a class="btn btn-primary" href="/treasure/packs/new">New Pack</a>
+        <div class="span12"><a class="btn btn-primary pull-left" href="/treasure/packs/new" tabindex='1'>New Pack</a></div>
     </div>
 </div>
 {% endblock %}
