@@ -70,7 +70,16 @@ class Pack(models.Model):
     author = models.ForeignKey(Teacher)
 
     # pack description
-    description = models.CharField(max_length=128)
+    description = models.TextField()
+    
+    # short summary
+    summary = models.CharField(max_length=128)
+    
+    # should the resource be shown (basically deleted if not)
+    hidden = models.IntegerField()
+    
+    # is this resource restricted to scottish teachers
+    restricted = models.IntegerField()
 
     # creates a many to many relationship with tags
     tags = models.ManyToManyField(Tag, null=True)
@@ -86,7 +95,7 @@ class Resource(models.Model):
     name = models.CharField(max_length=128)
     
     # comma separated field for easier tree searching
-    tree = models.TextField(null=True)#todo {properly implement tree generation}
+    tree = models.TextField(null=True)
   
     # creates foreign key to teacher
     author = models.ForeignKey(Teacher)
@@ -95,7 +104,23 @@ class Resource(models.Model):
     tags = models.ManyToManyField(Tag, null=True)
     packs = models.ManyToManyField(Pack, null=True, blank=True)
     
+    # long description
     description = models.TextField()
+    
+    # short description
+    summary = models.CharField(max_length=128)
+    
+    # stores the form of evolution (creation, amendment, etc.)
+    evolution_type = models.CharField(max_length=128)
+    
+    # should the resource be shown (basically deleted if not)
+    hidden = models.IntegerField()
+    
+    # is this resource restricted to scottish teachers
+    restricted = models.IntegerField()
+    
+    # what type of resource is this (file, web, something else?)
+    resource_type = models.CharField(max_length=128)
     
     def __unicode__(self):
         return self.name
