@@ -89,9 +89,10 @@
 							<ul>
 								{% if user.is_authenticated %}
 									<li><a href="/treasure/" id="home-link" class="skel-layers-ignoreHref"><span>Home</span></a></li>
-									<li><a href="/treasure/about" class="skel-layers-ignoreHref"><span>History</span></a></li>
-									<li><a href="/treasure/profile" class="skel-layers-ignoreHref"><span>User Profile</span></a></li>
-									<li><a href="#contact" class="skel-layers-ignoreHref"><span>Contact</span></a></li>
+									<li><a href="/treasure#myresources" class="skel-layers-ignoreHref"><span>My Resources</span></a></li>
+                                    <li><a href="/treasure#mypacks" class="skel-layers-ignoreHref"><span>My Packs</span></a></li>
+									<li><a href="/treasure/profile" class="skel-layers-ignoreHref"><span>My Profile</span></a></li>
+									<li><a href="/treasure/about" class="skel-layers-ignoreHref"><span>About TReaSURe</span></a></li>
 								{% else %}									
 									<li><a href="/treasure/login"><span>Login</span></a></li>
 									<li><a href="/treasure/register" class="skel-layers-ignoreHref"><span>Register</span></a></li>									

@@ -45,14 +45,22 @@ def index(request):
     
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
+    
+    # get user
+    this_user = request.user.id
 
-
-    MyResources = Resource.objects.all()
-    context_dict['MyResources'] = MyResources.filter(author=request.user.id)
+    # get resources to show on homepage
+    allresources = Resource.objects.all()
+    context_dict['MyResources'] = allresources.filter(author=this_user)
+    
+    allpacks = Pack.objects.all()
+    context_dict['MyPacks'] = allpacks.filter(author=this_user)
+    
     want2talk=TeacherWantstoTalkResource.objects.all()
-    context_dict['want2talk'] = want2talk.filter(resource__author=request.user.id)
+    context_dict['want2talk'] = want2talk.filter(resource__author=this_user)
+    
     need2rate=TeacherDownloadsResource.objects.all()
-    context_dict['need2rate'] = need2rate.filter(teacher=request.user.id)
+    context_dict['need2rate'] = need2rate.filter(teacher=this_user)
 
     
     # return response object

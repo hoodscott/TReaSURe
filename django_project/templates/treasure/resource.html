@@ -85,9 +85,9 @@
 	                <tbody>
 	                    {% for pack in partofpacks.all %}
 	                        <tr class="resourceLabel">
-	                            <td>{{pack.name}}</td>
-	                            <td>{{pack.author}}</td>
-   	                            <td>{{pack.description}}</td>
+	                            <td><a href="/treasure/packs/{{ pack.id }}">{{ pack.name }}</a></td>
+	                            <td>{{ pack.author }}</td>
+   	                            <td>{{ pack.description }}</td>
 	                        </tr>
 	                    {% endfor %}
 	                </tbody>
