@@ -806,7 +806,8 @@ def resource_view(request, resource_id):
             
         # get packs
         #packs = Pack.objects.all()
-        context_dict['partofpacks'] = this_resource.packs
+        context_dict['partofpacks'] = this_resource.packs.filter(name__isnull=False)
+        print context_dict['partofpacks'], "PARTOFPACKS"
 
         # get interactions            
         want2talk=TeacherWantstoTalkResource.objects.all()
