@@ -18,12 +18,29 @@ class ResourceForm(forms.ModelForm):
     name = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
                             max_length=128,
                             help_text="Please enter the resource name.")
-
+    
+    summary = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
+                        max_length=128,
+                        help_text="Please enter a short description.")
+    
     description = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
-                            help_text="Please enter a description.")
+                            help_text="Please enter the full description.",
+                            required=False)
                             
     tree = forms.CharField(widget = forms.HiddenInput(), required=False)
-    user = forms.CharField(widget = forms.HiddenInput(), required=False)    
+    user = forms.CharField(widget = forms.HiddenInput(), required=False) 
+
+    # stores the form of evolution (creation, amendment, etc.)
+    evolution_type = forms.CharField(widget = forms.HiddenInput(), required=False)
+    
+    # should the resource be shown (basically deleted if not)
+    hidden = forms.IntegerField(widget = forms.HiddenInput(), required=False)
+    
+    # is this resource restricted to scottish teachers
+    restricted = forms.IntegerField(widget = forms.HiddenInput(), required=False)
+    
+    # what type of resource is this (file, web, something else?)
+    resource_type = models.forms.CharField(widget = forms.HiddenInput(), required=False)
     
     level_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(type=0).order_by('name'),
@@ -37,7 +54,7 @@ class ResourceForm(forms.ModelForm):
     
     class Meta:
         model = Resource
-        fields = ('name','description', 'tree', 'user')
+        fields = ('name', 'summary', 'description', 'tree', 'user', 'evolution_type', 'hidden', 'restricted', 'resource_type')
         exclude = []
         
 class FileForm(forms.ModelForm):
@@ -74,12 +91,21 @@ class UserForm(forms.ModelForm):
         exclude = []
         
 class TeacherForm(forms.ModelForm):
-    firstname = forms.CharField(max_length=128, help_text="Please enter your first name.")
-    surname = forms.CharField(max_length=128, help_text="Please enter your surname.")
+    firstname = forms.CharField(max_length=128,
+                                help_text="Please enter your first name.",
+                                widget = forms.TextInput(attrs={'tabindex':'1'}))
+    surname = forms.CharField(max_length=128,
+                                help_text="Please enter your surname.",
+                                widget = forms.TextInput(attrs={'tabindex':'1'}))
     school = forms.ModelChoiceField(queryset=School.objects.all().order_by('name'),
-                                                required=False, help_text="Please select your school.")
+                                    required=False,
+                                    help_text="Please select your school.",
+                                    widget = forms.SelectMultiple(attrs={'tabindex':'1'})
+                                    )
     hubs = forms.ModelMultipleChoiceField(queryset=Hub.objects.all().order_by('name'),
-                                                required=False, help_text="Please select your hubs.")
+                                            required=False,
+                                            help_text="Please select your hubs.",
+                                            widget = forms.SelectMultiple(attrs={'tabindex':'1'}))
                                                 
     class Meta:
         model = Teacher
@@ -87,11 +113,18 @@ class TeacherForm(forms.ModelForm):
         exclude = []
 
 class SchoolForm(forms.ModelForm):
-    name = forms.CharField(max_length=128, help_text="Please enter the name of the school.")
-    town = forms.CharField(max_length=128, help_text="Please enter the town the school is in.")
-    address = forms.CharField( widget = forms.Textarea, help_text="Please enter the address of the school.")
-    latitude = forms.FloatField(help_text="Please enter the latitude of the school.")
-    longitude = forms.FloatField(help_text="Please enter the longitude of the school.")
+    name = forms.CharField(max_length=128,
+                            help_text="Please enter the name of the school.",
+                            widget = forms.TextInput(attrs={'tabindex':'1'}))
+    town = forms.CharField(max_length=128,
+                            help_text="Please enter the town the school is in.",
+                            widget = forms.TextInput(attrs={'tabindex':'1'}))
+    address = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
+                                help_text="Please enter the address of the school.")
+    latitude = forms.FloatField(help_text="Please enter the latitude of the school.",
+                                widget = forms.TextInput(attrs={'tabindex':'1'}))
+    longitude = forms.FloatField(help_text="Please enter the longitude of the school.",
+                                widget = forms.TextInput(attrs={'tabindex':'1'}))
 
     class Meta:
         model = School
@@ -99,10 +132,15 @@ class SchoolForm(forms.ModelForm):
         exclude = []
         
 class HubForm(forms.ModelForm):
-    name = forms.CharField(max_length=128, help_text="Please enter the name of the hub.")
-    address = forms.CharField( widget = forms.Textarea, help_text="Please enter the address of the hub.")
-    latitude = forms.FloatField(help_text="Please enter the latitude of the hub.")
-    longitude = forms.FloatField(help_text="Please enter the longitude of the hub.")
+    name = forms.CharField(max_length=128,
+                            help_text="Please enter the name of the hub.",
+                            widget = forms.TextInput(attrs={'tabindex':'1'}))
+    address = forms.CharField( help_text="Please enter the address of the hub.",
+                                widget = forms.Textarea(attrs={'tabindex':'1'}))
+    latitude = forms.FloatField(help_text="Please enter the latitude of the hub.",
+                                widget = forms.TextInput(attrs={'tabindex':'1'}))
+    longitude = forms.FloatField(help_text="Please enter the longitude of the hub.",
+                                widget = forms.TextInput(attrs={'tabindex':'1'}))
 
     class Meta:
         model = Hub
@@ -118,19 +156,30 @@ class SearchForm(forms.Form):
         
     )
     
-    searchtype = forms.ChoiceField(choices=SEARCHTYPES, required=True, label='Resource',
-                                help_text="What do you want to search for.")
+    searchtype = forms.ChoiceField(choices=SEARCHTYPES,
+                                required=True,
+                                label='Resource',
+                                help_text="What do you want to search for.",
+                                widget = forms.Select(attrs={'tabindex':'1'}))
     
     # tag forms
     level_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=0).order_by('name'),
-                                                required=False, help_text="Select levels.")
+                                                required=False,
+                                                help_text="Select levels.",
+                                                widget = forms.SelectMultiple(attrs={'tabindex':'1'}))
     topic_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=1).order_by('name'),
-                                                required=False, help_text="Select topics.")
+                                                required=False,
+                                                help_text="Select topics.",
+                                                widget = forms.SelectMultiple(attrs={'tabindex':'1'}))
     other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
-                                                required=False, help_text="Select other tags.")
+                                                required=False,
+                                                help_text="Select other tags.",
+                                                widget = forms.SelectMultiple(attrs={'tabindex':'1'}))
                                                 
 class TagForm(forms.ModelForm):
-    name = forms.CharField(max_length=128, help_text="Please enter the new tag.")
+    name = forms.CharField(max_length=128,
+                            help_text="Please enter the new tag.",
+                            widget = forms.TextInput(attrs={'tabindex':'1'}))
     type = forms.CharField(widget = forms.HiddenInput(), required=False)               
     
     class Meta:
@@ -140,41 +189,79 @@ class TagForm(forms.ModelForm):
         
 class PackForm(forms.ModelForm):
     explore = forms.CharField(widget = forms.HiddenInput(), required=False)
-    name = forms.CharField(max_length=128, help_text="Please enter the pack name.")
-    image = forms.CharField(max_length=128, help_text="Please enter the image url.")
-    description = forms.CharField(widget = forms.Textarea, help_text="Please enter a description.") 
+
+    name = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
+                            max_length=128,
+                            help_text="Please enter the resource name.")
     
-    level_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=0).order_by('name'),
-                                                required=False, help_text="Please select level(s).")
-    topic_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=1).order_by('name'),
-                                                required=False, help_text="Please select topic(s).")
-    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
-                                                required=False, help_text="Please select other tags.")
+    summary = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
+                        max_length=128,
+                        help_text="Please enter a short description.")
     
+    description = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
+                            help_text="Please enter the full description.",
+                            required=False)
+                            
+    user = forms.CharField(widget = forms.HiddenInput(), required=False) 
+    
+    # should the resource be shown (basically deleted if not)
+    hidden = forms.IntegerField(widget = forms.HiddenInput(), required=False)
+    
+    # is this resource restricted to scottish teachers
+    restricted = forms.IntegerField(widget = forms.HiddenInput(), required=False)
+    
+    level_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
+                                                queryset=Tag.objects.filter(type=0).order_by('name'),
+                                                required=False, help_text="Select level(s).")
+    topic_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
+                                                queryset=Tag.objects.filter(type=1).order_by('name'),
+                                                required=False, help_text="Select topic(s).")
+    other_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
+                                                queryset=Tag.objects.filter(type=2).order_by('name'),
+                                                required=False, help_text="Select other tags.")
                                                 
     class Meta:
         model = Pack
-        fields = ('explore', 'name', 'image', 'description')
+        fields = ('explore', 'name', 'image', 'summary', 'description', 'hidden', 'restricted')
         exclude = []
         
 class EditResourceForm(forms.ModelForm):
-
-    description = forms.CharField(widget = forms.Textarea, help_text="Edit description.")
     
-    level_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=0).order_by('name'),
+    summary = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
+                        max_length=128,
+                        help_text="Please enter a short description.")
+    
+    description = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
+                            help_text="Please enter the full description.",
+                            required=False)
+    
+    level_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
+                                                queryset=Tag.objects.filter(type=0).order_by('name'),
                                                 required=True, help_text="Please select level(s).")
-    topic_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=1).order_by('name'),
+    topic_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
+                                                queryset=Tag.objects.filter(type=1).order_by('name'),
                                                 required=True, help_text="Please select topic(s).")
-    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
-                                                required=False, help_text="Please select other tags (optional).")
+    other_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
+                                                queryset=Tag.objects.filter(type=2).order_by('name'),
+                                                required=False, help_text="Please select other tags (optional).")                                                
+
                                                 
 class EditPackForm(forms.ModelForm):
 
-    description = forms.CharField(widget = forms.Textarea, help_text="Edit description.")
+    summary = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
+                        max_length=128,
+                        help_text="Please enter a short description.")
     
-    level_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=0).order_by('name'),
-                                                required=False, help_text="Select level(s).")
-    topic_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=1).order_by('name'),
-                                                required=False, help_text="Slect topic(s).")
-    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
-                                                required=False, help_text="Select other tags.")  
+    description = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
+                            help_text="Please enter the full description.",
+                            required=False)
+    
+    level_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
+                                                queryset=Tag.objects.filter(type=0).order_by('name'),
+                                                required=False, help_text="Please select level(s).")
+    topic_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
+                                                queryset=Tag.objects.filter(type=1).order_by('name'),
+                                                required=False, help_text="Please select topic(s).")
+    other_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
+                                                queryset=Tag.objects.filter(type=2).order_by('name'),
+                                                required=False, help_text="Please select other tags (optional).")
