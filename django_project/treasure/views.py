@@ -273,9 +273,6 @@ def edit_profile(request):
     # get context of request
     context = RequestContext(request)
     
-    # create dictionary to pass data to templates
-    context_dict = sidebar(request)
-    
     updated = False
     
     # get current user and teacher records
@@ -334,6 +331,69 @@ def edit_profile(request):
     
     # return response object
     return render_to_response('treasure/edit_profile.html', context_dict, context)
+    
+# view to allow the user to edit a resource they have uploaded/created/linkedto
+@login_required
+def edit_resource(request, resource_id):
+    # get context of request
+    context = RequestContext(request)
+    
+    # create context dictionary
+    context_dict = sidebar(request)
+    context_dict['resource_id'] = resource_id
+     
+    # get resource
+    this_resource = Resource.objects.get(id=resource_id)
+    
+    # get current user
+    teacher = request.user.teacher
+
+    # check if current user owns this resource
+    if this_resource.author == teacher:
+
+        # If it's a HTTP POST, we're interested in processing form data.
+        if request.method == 'POST':
+            # Attempt to grab information from the raw form information.
+            # pass in instance of the record to be updated
+            form = EditResourceForm(data=request.POST, instance=this_resource)
+
+
+            # If the two forms are valid...
+            if form.is_valid():
+                # Save the user's form data to the database.
+                new_resource = form.save(commit=False)
+
+                # combine the tags into one queryset
+                tags =  form.cleaned_data['level_tags'] | \
+                        form.cleaned_data['topic_tags'] | \
+                        form.cleaned_data['other_tags']
+                # save the tags the user has selected
+                for tag in tags:
+                    new_resource.tags.add(tag)
+                                
+                # save the new resource
+                new_resource.save()
+                
+                # show user the updated page
+                return resource_view(request, new_resource.id)
+
+            # Invalid form or forms print problems to the terminal.
+            else:
+                print "ERROR", form.errors
+
+        # Not a HTTP POST, so we render our form using two ModelForm instances.
+        else: 
+            # pass the current records to initially populate the forms
+            form = EditResourceForm(instance = this_resource)
+        
+        context_dict['form'] = form
+            
+    else:
+        # if it is not their resource, then dont show the form
+        pass
+    
+    # return response object
+    return render_to_response('treasure/edit_resource.html', context_dict, context)
     
 # view for the user's history (list of all actions) page
 @login_required
@@ -703,6 +763,9 @@ def resource_view(request, resource_id):
         
         # get authors name
         context_dict['author'] = this_resource.author.firstname + " " + this_resource.author.surname
+        
+        if this_resource.author == request.user.teacher:
+            context_dict['owned'] = True
             
         # get tags
         filtered_tags = this_resource.tags.filter(type='0')

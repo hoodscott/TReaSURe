@@ -29,6 +29,7 @@ urlpatterns = patterns('',
         url(r'^resource/(?P<resource_id>\w+)/evolve/$', views.evolve, name='evolve'),
         url(r'^resource/(?P<resource_id>\w+)/track/$', views.track, name='track'),
         url(r'^resource/(?P<resource_id>\w+)/addtopack/$', views.addtopack, name='addtopack'),
+        url(r'^resource/(?P<resource_id>\w+)/edit/$', views.edit_resource, name='edit_resource'),
         
         url(r'^hub/(?P<hub_id>\w+)/$', views.hub_view, name='hub_view'),
         url(r'^school/(?P<school_id>\w+)/$', views.school_view, name='school_view'),
