@@ -923,10 +923,18 @@ def pack(request, pack_id):
         # get resources
         context_dict['pack_resources'] = Resource.objects.filter(packs__id=pack_id)
 
-        # get tags from the user, if they have any
-        if len(this_pack.tags.all()) >= 1:
-            # get list of tag objects
-            context_dict['tags'] = get_list(this_pack.tags.all())
+        # get tags
+        filtered_tags = this_pack.tags.filter(type='0')
+        if filtered_tags:
+            context_dict['level_tags'] = get_list(filtered_tags)
+        
+        filtered_tags = this_pack.tags.filter(type='1')
+        if filtered_tags:
+            context_dict['topic_tags'] = get_list(filtered_tags)
+        
+        filtered_tags = this_pack.tags.filter(type='2')
+        if filtered_tags:
+            context_dict['other_tags'] = get_list(filtered_tags)
 
         # used to verify it exists
         context_dict['pack'] = this_pack

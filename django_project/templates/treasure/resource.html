@@ -64,6 +64,10 @@
                     end track-->
                     <li><p></li>                    
                     <li><a class="btn btn-block btn-info" href="/../treasure/resource/{{ resource.id }}/versions">View Versions</a></li>
+                    {% if owned %}
+                        <li><p></li>
+                        <li><a class="btn btn-block btn-danger" href="/../treasure/resource/{{ resource.id }}/edit">Edit</a></li>
+                    {% endif %}
                 </ul>
                 <hr>
            </div>

@@ -8,30 +8,68 @@
 
 {% block body_block %}
 {% if pack %}
-<div class="container-fluid hero-unit">
-	<div class="row">
-			<div class="col-xs-6">
-				<div class="container-fluid">
-					  <div class="row">
-						  <div class="col-xs-6"><h2 style= 'margin-top: -5px';>{{pack.name}}</h2><p style= 'margin-top: -5px';>by {{pack.author}}</p></div>
-					  </div>
-					  <div class="row">
-						<div class="col-xs-6"><strong>Description:</strong><br>  {{pack.description}}</div>
-						<div class="col-xs-6"><strong>Tags:</strong><br>  	
-							{% if tags %}
-								{% for tag in tags %}
-					              <a href="/../treasure/tags/{{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %} 
-					   			{% endfor %}
-					  		{% else %}
-					  			<p>There are no tags.</p>
-					   		{% endif %}
-						</div>
-					  </div>
-				</div> <!-- close container -->
-			</div> <!-- close column -->
-			<div class="col-xs-6"> <img src="{{pack.image}}" style="width: 120px; height: 120px;" data-src="holder.js/120x120" alt="120x120"></div>
-	</div> <!-- close row -->
-      {% if pack_resources %}
+<div class="row-fluid hero-unit">
+
+    <div class="span8">
+        <h2>{{ pack.name}}</h2>
+        <h4>collated by {{ pack.author }}</h4><br>
+
+        <h4><strong>Description:</strong></h4>
+        <p>{{ pack.description }}</p><br>
+        <h4><strong>Tags:</strong></h4>
+        {% if other_tags %}
+            {% for tag in other_tags %}
+                <a href="/../treasure/tags/{{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        {% else %}
+            <p>There are no tags.</p>
+        {% endif %}
+    </div>
+    
+    <div class="span3">
+        
+        <div class=""> <img src="{{pack.image}}" style="width: 120px; height: 120px;" data-src="holder.js/120x120" alt="120x120"></div>
+        
+        <hr>
+        
+        <h4><strong>Levels:</strong></h4>
+        <ul>
+        {% if level_tags %}
+            {% for level in level_tags %}
+                <li><a href="/../treasure/tags/{{ level.id }}">{{ level.name }}</a></li>
+            {% endfor %}
+        {% else %}
+            <li>No level tags.</li>
+        {% endif %}
+        </ul>
+        <hr>
+        
+        <h4><strong>Topics:</strong></h4>
+        <ul>
+        {% if level_tags %}
+            {% for topic in topic_tags %}
+                <li><a href="/../treasure/tags/{{ topic.id }}">{{ topic.name }}</a></li>
+            {% endfor %}
+        {% else %}
+            <li>No level tags.</li>
+        {% endif %}
+        </ul>
+        <hr>
+        
+        {% if owned %}
+        <ul>
+            <!--li><a class="btn btn-block btn-primary" href="">Download Pack?</a></li>
+            <li><p></li-->
+            <li><a class="btn btn-block btn-danger" href="/treasure/packs/{{ pack.id }}/edit">Edit</a></li>
+        </ul>
+        <hr>
+        {% endif %}
+    </div>
+</div>
+
+<div class="hero-unit">
+
+    {% if pack_resources %}
 		<div class="panel panel-default">
 			<div class="panel-body">
 		        <div class="table-responsive">
@@ -56,12 +94,12 @@
 		             </table>
 		        </div>
 		    </div> <!-- close body -->
-		</div> <!-- close panel -->
-	  {% else %}
-	  <br>
-	  <h4>There are no resources in this pack.</h4>
-	  <a href="/treasure/resources/">Return to Resources</a>
-	  {% endif %}
+        </div> <!-- close panel -->
+    {% else %}
+        <h4>There are no resources in this pack.</h4>
+        <a href="/treasure/resources/">Return to Resources</a>
+    {% endif %}
+    
 </div>
 {% else %}
     <div class="hero-unit"><h3>Wrong URL, or Pack no longer exists.</h3></div>
