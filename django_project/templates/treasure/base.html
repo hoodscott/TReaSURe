@@ -57,8 +57,9 @@
 						   </form-->                       
                            <li><a href="/treasure/search">Search</a></li>
                            <li><a href="/treasure/explore">Explore</a></li>
-                           <li><a href="/treasure/resources">Resources</a></li>			   			   
-                           <li><a href="/treasure/packs">Packs</a></li>                      
+                           <li><a href="/treasure/resources">Resources</a></li>
+                           <li><a href="/treasure/packs">Packs</a></li>
+                           <li><a href="/treasure/tags">Tags</a></li>
                        {% endif %}
                            <li><a href="/treasure/about">News</a></li>
                        </ul>
@@ -94,7 +95,7 @@
 									<li><a href="/treasure/profile" class="skel-layers-ignoreHref"><span>My Profile</span></a></li>
 									<li><a href="/treasure/about" class="skel-layers-ignoreHref"><span>About TReaSURe</span></a></li>
 								{% else %}									
-									<li><a href="/treasure/login"><span>Login</span></a></li>
+									<li><a href="/treasure/login" class="skel-layers-ignoreHref"><span>Login</span></a></li>
 									<li><a href="/treasure/register" class="skel-layers-ignoreHref"><span>Register</span></a></li>									
 								{% endif %}			                       
 							</ul>
@@ -124,11 +125,6 @@
                 
             </div>
         </div>
-        <!--div class="footer">
-            <div class="container" id="foot-content">
-                <a href="/treasure/about" ><h4>About</h4></a>
-            </div>
-        </div-->
 
         <!-- Javascript at the end, page loads faster -->
         <script src="{% static 'sidebar/js/jquery.scrolly.min.js' %}"></script>

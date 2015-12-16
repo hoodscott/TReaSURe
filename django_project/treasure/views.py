@@ -893,12 +893,19 @@ def tag(request, tag_id):
         # Can we find a hub with the given id?
         this_tag = Tag.objects.get(id=tag_id)
         
-        # get resources
-        context_dict['tagged_resources'] = Resource.objects.filter(tags__id=tag_id)
-
-        # used to verify it exists
+        # get resources (if available)
+        filtered_resources = Resource.objects.filter(tags__id=tag_id)
+        if filtered_resources: 
+            context_dict['tagged_resources'] = filtered_resources
+            
+        # get packs (if available)
+        filtered_packs = Pack.objects.filter(tags__id=tag_id)
+        if filtered_packs: 
+            context_dict['tagged_packs'] = filtered_packs
+            
+        # used to verify tag exists
         context_dict['tag'] = this_tag
-    except Hub.DoesNotExist:
+    except Tag.DoesNotExist:
         # We get here if we didn't find the specified tag.
         # Don't do anything - the template displays the "no tag" message for us.
         pass
