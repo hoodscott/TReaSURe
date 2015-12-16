@@ -1,4 +1,5 @@
 from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.shortcuts import render_to_response, redirect
 from treasure.forms import *
@@ -6,6 +7,7 @@ from treasure.models import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from string import split
+from datetime import datetime
 
 # get the users firstname, surname and school for the sidebar
 def sidebar(request):
@@ -28,7 +30,8 @@ def sidebar(request):
         context_dict['school'] = ""
     
     return context_dict
-    
+     
+
 # function to convert many to many relation list of objects
 def get_list(relation):
     objects = [relation[0]]
@@ -57,7 +60,23 @@ def index(request):
     
     # return response object
     return render_to_response('treasure/index.html', context_dict, context)
-    
+   
+# view for the homepage
+def history(request):
+    # get context of request
+    context = RequestContext(request)
+
+    # create dictionary to pass data to templates
+    context_dict = sidebar(request)
+
+
+    downloads=TeacherDownloadsResource.objects.all()
+    context_dict['downloads'] = downloads.filter(teacher=request.user.id)
+
+
+    # return response object
+    return render_to_response('treasure/history.html', context_dict, context)
+
 
 # view for the about page
 def about(request):
@@ -666,7 +685,6 @@ def resource_view(request, resource_id):
     
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
-
     try:
         # Can we find a resource with the given id?
         this_resource = Resource.objects.get(id=resource_id)
@@ -696,7 +714,7 @@ def resource_view(request, resource_id):
             web_resource = WebResource.objects.get(resource = this_resource)
             
             # add fields to dict
-            context_dict['web_resource'] = web_resource.url
+            context_dict['label'] = 'Link to Resource'
             
         except WebResource.DoesNotExist:
             # do nothing
@@ -706,8 +724,8 @@ def resource_view(request, resource_id):
             # can we find a file resource with the given resource?
             files_resource = FilesResource.objects.get(resource = this_resource)
             
-            # add fields to dict
-            context_dict['files_resource'] = files_resource.path
+            # add label to dict
+            context_dict['label'] = 'Download Resource'
             
         except FilesResource.DoesNotExist:
             # do nothing
@@ -727,7 +745,7 @@ def resource_view(request, resource_id):
         # We get here if we didn't find the specified resource.
         # Don't do anything - the template displays the "no resource" message for us.
         pass
-    
+
     # return response object
     return render_to_response('treasure/resource.html', context_dict, context)
     
@@ -1198,3 +1216,40 @@ def newpack(request):
     
     # Render the template depending on the context.
     return render_to_response('treasure/add_pack.html', context_dict, context) 
+
+# view for the user's history (list of all actions) page
+@login_required
+def download(request, resource_id):
+    # get context of request
+    context = RequestContext(request)
+
+    # create dictionary to pass data to templates
+    context_dict = sidebar(request)
+
+    try:
+        this_teacher = Teacher.objects.get(id=request.user.id)
+        this_resource = get_object_or_404(Resource, id=resource_id)
+
+        # Get resource URL
+        try:
+            res = WebResource.objects.get(resource = this_resource)
+            url=res.url
+	except WebResource.DoesNotExist:
+            # Not a WebResource
+            pass
+	try:
+            res = FilesResource.objects.get(resource = this_resource)
+            url='/../media/'+str(res.path)
+	except FilesResource.DoesNotExist:
+            # Not a FilesResource
+            pass
+
+	# Saving Download Record in the Database
+	download_record= TeacherDownloadsResource(teacher=this_teacher, resource=this_resource, datetime=datetime.now())
+	download_record.save()
+    except Resource.DoesNotExist:
+	# No Resource
+	pass
+
+    # Render the template updating the context dictionary.
+    return redirect(url)
