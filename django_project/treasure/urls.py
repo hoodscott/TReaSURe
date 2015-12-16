@@ -1,9 +1,11 @@
 from django.conf.urls import patterns, url
 from treasure import views
+from treasure.views import download
 
 urlpatterns = patterns('',
         url(r'^$', views.index, name='index'),
         url(r'^about/', views.about, name='about'),
+        url(r'^history/', views.history, name='history'),
         
         url(r'^register/$', views.register, name='register'),
         url(r'^login/$', views.user_login, name='login'),
@@ -22,6 +24,7 @@ urlpatterns = patterns('',
         url(r'^schools/$', views.schools, name='schools'),
        
         url(r'^resource/(?P<resource_id>\w+)/$', views.resource_view, name='resource_view'),
+       	url(r'^resource/(?P<resource_id>\w+)/download/$', download, name='download'),
         url(r'^resource/(?P<resource_id>\w+)/versions/$', views.versions, name='versions'),
         url(r'^resource/(?P<resource_id>\w+)/evolve/$', views.evolve, name='evolve'),
         url(r'^resource/(?P<resource_id>\w+)/track/$', views.track, name='track'),
@@ -38,6 +41,7 @@ urlpatterns = patterns('',
         url(r'^packs/new/$', views.newpack, name='newpack'),
         url(r'^packs/(?P<pack_id>\w+)/$', views.pack, name='pack'),
         
+
         url(r'^explore/$', views.explore, name='explore'),
                 
         url(r'^search/$', views.search, name='search'),

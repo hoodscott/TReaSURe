@@ -110,15 +110,17 @@
             <table id="Ratings" class="table table-striped table-bordered" cellspacing="0" width="100%">
                 <thead>
                     <tr>
-                        <th>Resource Name</th>
-                        <th>Have used it?</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for entry in need2rate %}
-                        <tr class="studentLabel">
-                            <td><a href="/treasure/resource/{{entry.resource.id }}">{{entry.resource.name}}</a></td>
-                            <td>{% if entry.used %} Yes{% else %} No{% endif %}</td>
+	                        <th>Resource Name</th>
+	                        <th>Date and Time</th>
+	                        <th>Have used it?</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                    {% for entry in need2rate %}
+	                        <tr class="studentLabel">
+	                            <td><a href="/treasure/resource/{{entry.resource.id }}">{{entry.resource.name}}</a></td>
+								<td>{{entry.datetime}}</td>
+	                            <td>{% if entry.used %} Yes{% else %} No{% endif %}</td>
                         </tr>
                     {% endfor %}
 
