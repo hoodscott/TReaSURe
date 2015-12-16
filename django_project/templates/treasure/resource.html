@@ -61,6 +61,10 @@
                     end track-->
                     <li><p></li>                    
                     <li><a class="btn btn-block btn-info" href="/../treasure/resource/{{ resource.id }}/versions">View Versions</a></li>
+                    {% if owned %}
+                        <li><p></li>
+                        <li><a class="btn btn-block btn-danger" href="/../treasure/resource/{{ resource.id }}/edit">Edit</a></li>
+                    {% endif %}
                 </ul>
                 <hr>
            </div>
@@ -81,9 +85,9 @@
 	                <tbody>
 	                    {% for pack in partofpacks.all %}
 	                        <tr class="resourceLabel">
-	                            <td><a href="/treasure/packs/{{ pack.id }}">{{pack.name}}</a></td>
-	                            <td>{{pack.author}}</td>
-   	                            <td>{{pack.description}}</td>
+	                            <td><a href="/treasure/packs/{{ pack.id }}">{{ pack.name }}</a></td>
+	                            <td>{{ pack.author }}</td>
+   	                            <td>{{ pack.description }}</td>
 	                        </tr>
 	                    {% endfor %}
 	                </tbody>
