@@ -15,7 +15,7 @@ class DisableAutoInput(forms.widgets.Input):
        return super(DisableAutoInput, self).render(name, value, attrs=attrs)
 
 class ResourceForm(forms.ModelForm):
-    name = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
+    name = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
                             max_length=128,
                             help_text="Please enter the resource name.")
     
@@ -78,7 +78,7 @@ class WebForm(forms.ModelForm):
         exclude = []
               
 class UserForm(forms.ModelForm):
-    username = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
+    username = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
                                 help_text="Please enter a username.")
     email = forms.CharField(widget = DisableAutoInput(attrs={'tabindex':'1'}),
                             help_text = "Please enter your email.")
@@ -100,7 +100,7 @@ class TeacherForm(forms.ModelForm):
     school = forms.ModelChoiceField(queryset=School.objects.all().order_by('name'),
                                     required=False,
                                     help_text="Please select your school.",
-                                    widget = forms.SelectMultiple(attrs={'tabindex':'1'})
+                                    widget = forms.Select(attrs={'tabindex':'1'})
                                     )
     hubs = forms.ModelMultipleChoiceField(queryset=Hub.objects.all().order_by('name'),
                                             required=False,
@@ -115,7 +115,7 @@ class TeacherForm(forms.ModelForm):
 class SchoolForm(forms.ModelForm):
     name = forms.CharField(max_length=128,
                             help_text="Please enter the name of the school.",
-                            widget = forms.TextInput(attrs={'tabindex':'1'}))
+                            widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}))
     town = forms.CharField(max_length=128,
                             help_text="Please enter the town the school is in.",
                             widget = forms.TextInput(attrs={'tabindex':'1'}))
@@ -134,7 +134,7 @@ class SchoolForm(forms.ModelForm):
 class HubForm(forms.ModelForm):
     name = forms.CharField(max_length=128,
                             help_text="Please enter the name of the hub.",
-                            widget = forms.TextInput(attrs={'tabindex':'1'}))
+                            widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}))
     address = forms.CharField( help_text="Please enter the address of the hub.",
                                 widget = forms.Textarea(attrs={'tabindex':'1'}))
     latitude = forms.FloatField(help_text="Please enter the latitude of the hub.",
@@ -160,7 +160,7 @@ class SearchForm(forms.Form):
                                 required=True,
                                 label='Resource',
                                 help_text="What do you want to search for.",
-                                widget = forms.Select(attrs={'tabindex':'1'}))
+                                widget = forms.Select(attrs={'tabindex':'1', 'autofocus':'autofocus'}))
     
     # tag forms
     level_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=0).order_by('name'),
@@ -179,7 +179,7 @@ class SearchForm(forms.Form):
 class TagForm(forms.ModelForm):
     name = forms.CharField(max_length=128,
                             help_text="Please enter the new tag.",
-                            widget = forms.TextInput(attrs={'tabindex':'1'}))
+                            widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}))
     type = forms.CharField(widget = forms.HiddenInput(), required=False)               
     
     class Meta:
@@ -190,9 +190,9 @@ class TagForm(forms.ModelForm):
 class PackForm(forms.ModelForm):
     explore = forms.CharField(widget = forms.HiddenInput(), required=False)
 
-    name = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
+    name = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
                             max_length=128,
-                            help_text="Please enter the resource name.")
+                            help_text="Please enter the pack name.")
     
     summary = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
                         max_length=128,
@@ -202,12 +202,16 @@ class PackForm(forms.ModelForm):
                             help_text="Please enter the full description.",
                             required=False)
                             
-    user = forms.CharField(widget = forms.HiddenInput(), required=False) 
+    user = forms.CharField(widget = forms.HiddenInput(), required=False)
     
-    # should the resource be shown (basically deleted if not)
+    image = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
+                            max_length=128,
+                            help_text="Enter image url.")
+    
+    # should the pack be shown (basically deleted if not)
     hidden = forms.IntegerField(widget = forms.HiddenInput(), required=False)
     
-    # is this resource restricted to scottish teachers
+    # is this pack restricted to scottish teachers
     restricted = forms.IntegerField(widget = forms.HiddenInput(), required=False)
     
     level_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
@@ -222,12 +226,12 @@ class PackForm(forms.ModelForm):
                                                 
     class Meta:
         model = Pack
-        fields = ('explore', 'name', 'image', 'summary', 'description', 'hidden', 'restricted')
+        fields = ('explore', 'name', 'summary', 'description', 'image', 'hidden', 'restricted')
         exclude = []
         
 class EditResourceForm(forms.ModelForm):
     
-    summary = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
+    summary = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
                         max_length=128,
                         help_text="Please enter a short description.")
     
@@ -248,13 +252,17 @@ class EditResourceForm(forms.ModelForm):
                                                 
 class EditPackForm(forms.ModelForm):
 
-    summary = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
+    summary = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
                         max_length=128,
                         help_text="Please enter a short description.")
     
     description = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
                             help_text="Please enter the full description.",
                             required=False)
+                            
+    image = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
+                            max_length=128,
+                            help_text="Enter image url.")
     
     level_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(type=0).order_by('name'),
