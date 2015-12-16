@@ -1,7 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404
 from django.template import RequestContext
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render_to_response, redirect, get_object_or_404
 from treasure.forms import *
 from treasure.models import *
 from django.contrib.auth import authenticate, login, logout
@@ -32,7 +31,7 @@ def sidebar(request):
     return context_dict
      
 
-# function to convert many to many relation list of objects
+# function to convert a many to many relationship to a list of objects
 def get_list(relation):
     objects = [relation[0]]
     i = 1
@@ -805,9 +804,7 @@ def resource_view(request, resource_id):
             pass
             
         # get packs
-        #packs = Pack.objects.all()
         context_dict['partofpacks'] = this_resource.packs.filter(name__isnull=False)
-        print context_dict['partofpacks'], "PARTOFPACKS"
 
         # get interactions            
         want2talk=TeacherWantstoTalkResource.objects.all()
@@ -1265,7 +1262,6 @@ def newpack(request):
 
         # Have we been provided with a valid form?
         if form.is_valid():
-            print "valid"
             # Put off saving to avoid integrity errors.
             this_pack = form.save(commit=False)
             this_pack.explore = '0'
