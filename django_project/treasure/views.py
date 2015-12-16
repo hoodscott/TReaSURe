@@ -723,6 +723,7 @@ def resource_view(request, resource_id):
             
             # add fields to dict
             context_dict['label'] = 'Link to Resource'
+            context_dict['web_resource'] = 'aye'
             
         except WebResource.DoesNotExist:
             # do nothing
@@ -734,6 +735,7 @@ def resource_view(request, resource_id):
             
             # add label to dict
             context_dict['label'] = 'Download Resource'
+            context_dict['files-resource'] = 'aye'
             
         except FilesResource.DoesNotExist:
             # do nothing
