@@ -143,14 +143,23 @@ class PackForm(forms.ModelForm):
         exclude = []
         
 class EditResourceForm(forms.ModelForm):
-    tree = forms.CharField(widget = forms.HiddenInput(), required=False)
+
     description = forms.CharField(widget = forms.Textarea, help_text="Edit description.")
-    tree = forms.CharField(widget = forms.HiddenInput(), required=False)
-    user = forms.CharField(widget = forms.HiddenInput(), required=False)    
     
     level_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=0).order_by('name'),
                                                 required=True, help_text="Please select level(s).")
     topic_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=1).order_by('name'),
                                                 required=True, help_text="Please select topic(s).")
     other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
-                                                required=False, help_text="Please select other tags (optional).")                                                
+                                                required=False, help_text="Please select other tags (optional).")
+                                                
+class EditPackForm(forms.ModelForm):
+
+    description = forms.CharField(widget = forms.Textarea, help_text="Edit description.")
+    
+    level_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=0).order_by('name'),
+                                                required=False, help_text="Select level(s).")
+    topic_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=1).order_by('name'),
+                                                required=False, help_text="Slect topic(s).")
+    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
+                                                required=False, help_text="Select other tags.")  

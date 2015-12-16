@@ -357,7 +357,7 @@ def edit_resource(request, resource_id):
             form = EditResourceForm(data=request.POST, instance=this_resource)
 
 
-            # If the two forms are valid...
+            # If the form is valid...
             if form.is_valid():
                 # Save the user's form data to the database.
                 new_resource = form.save(commit=False)
@@ -763,6 +763,7 @@ def resource_view(request, resource_id):
         # get authors name
         context_dict['author'] = this_resource.author.firstname + " " + this_resource.author.surname
         
+        # check if user owns this resource
         if this_resource.author == request.user.teacher:
             context_dict['owned'] = True
             
@@ -1010,6 +1011,10 @@ def pack(request, pack_id):
         
         # get resources
         context_dict['pack_resources'] = Resource.objects.filter(packs__id=pack_id)
+        
+        # check if user owns this resource
+        if this_pack.author == request.user.teacher:
+            context_dict['owned'] = True
 
         # get tags
         filtered_tags = this_pack.tags.filter(type='0')
@@ -1034,7 +1039,69 @@ def pack(request, pack_id):
     # return response object
     return render_to_response('treasure/pack.html', context_dict, context)
 
+# view to allow the user to edit a pack they have uploaded/created/linkedto
+@login_required
+def edit_pack(request, pack_id):
+    # get context of request
+    context = RequestContext(request)
+    
+    # create context dictionary
+    context_dict = sidebar(request)
+    context_dict['pack_id'] = pack_id
+     
+    # get resource
+    this_pack = Pack.objects.get(id=pack_id)
+    
+    # get current user
+    teacher = request.user.teacher
 
+    # check if current user owns this pack
+    if this_pack.author == teacher:
+
+        # If it's a HTTP POST, we're interested in processing form data.
+        if request.method == 'POST':
+            # Attempt to grab information from the raw form information.
+            # pass in instance of the record to be updated
+            form = EditPackForm(data=request.POST, instance=this_pack)
+
+            # If form is valid...
+            if form.is_valid():
+                # Save the user's form data to the database.
+                new_pack = form.save(commit=False)
+                
+                '''todo: remove all tags'''
+
+                # combine the tags into one queryset
+                tags =  form.cleaned_data['level_tags'] | \
+                        form.cleaned_data['topic_tags'] | \
+                        form.cleaned_data['other_tags']
+                # save the tags the user has selected
+                for tag in tags:
+                    new_pack.tags.add(tag)
+                                
+                # save the new pack
+                new_pack.save()
+                
+                # show user the updated page
+                return pack(request, new_pack.id)
+
+            # Invalid form or forms print problems to the terminal.
+            else:
+                print "ERROR", form.errors
+
+        # Not a HTTP POST, so we render our form using two ModelForm instances.
+        else: 
+            # pass the current records to initially populate the forms
+            form = EditPackForm(instance = this_pack)
+        
+        context_dict['form'] = form
+            
+    else:
+        # if it is not their pack, then dont show the form
+        pass
+    
+    # return response object
+    return render_to_response('treasure/edit_pack.html', context_dict, context)
 
 # view to explore the resources on the site
 @login_required

@@ -41,7 +41,7 @@ urlpatterns = patterns('',
         url(r'^packs/$', views.packs, name='packs'),
         url(r'^packs/new/$', views.newpack, name='newpack'),
         url(r'^packs/(?P<pack_id>\w+)/$', views.pack, name='pack'),
-        
+        url(r'^packs/(?P<pack_id>\w+)/edit/$', views.edit_pack, name='edit_pack'),        
 
         url(r'^explore/$', views.explore, name='explore'),
                 
