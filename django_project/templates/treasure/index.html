@@ -42,14 +42,14 @@
                 <thead>
                     <tr>
                         <th>Resource Name</th>
-                        <th>Description</th>
+                        <th>Summary</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for resource in MyResources %}
                         <tr class="studentLabel">
                             <td><a href="/treasure/resource/{{ resource.id }}">{{ resource.name }}</a></td>
-                            <td>{{ resource.description }}</td>
+                            <td>{{ resource.summary }}</td>
                         </tr>
                     {% endfor %}
 
@@ -61,8 +61,8 @@
 	<p>You have uploaded no resources.</a>
 	{% endif %}
     <hr>
-    <div class="span5"><a class="btn btn-block btn-primary" href="/treasure/add_file_resource">Add File Resource</a><br></div>
-    <div class="span5"><a class="btn btn-block btn-primary" href="/treasure/add_web_resource">Add Web Resource</a><br></div>
+    <div class="span4"><a class="btn btn-block btn-primary" href="/treasure/add_file_resource">Add File Resource</a><br></div>
+    <div class="span4"><a class="btn btn-block btn-primary" href="/treasure/add_web_resource">Add Web Resource</a><br></div>
 </div> <!-- close panel -->
 
 
@@ -77,14 +77,14 @@
                 <thead>
                     <tr>
                         <th>Pack Name</th>
-                        <th>Description</th>
+                        <th>Summary</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for pack in MyPacks %}
                         <tr class="packlabel">
                             <td><a href="/treasure/packs/{{ pack.id }}">{{ pack.name }}</a></td>
-                            <td>{{ pack.description }}</td>
+                            <td>{{ pack.summary }}</td>
                         </tr>
                     {% endfor %}
 
@@ -96,7 +96,7 @@
 	<p>You have created no packs.</p>
 	{% endif %}
     <hr>
-    <div class="span5"><a class="btn btn-block btn-primary" href="/treasure/packs/new">Create New Pack</a><br></div>
+    <div class="span4"><a class="btn btn-block btn-primary" href="/treasure/packs/new">Create New Pack</a><br></div>
 </div> <!-- close panel -->
 
 
@@ -147,7 +147,7 @@
                     <tr>
                         <th>Resource Name</th>
                         <th>Author</th>
-                        <th>Description</th>
+                        <th>summary</th>
                     </tr>
                 </thead>
                 <tbody>

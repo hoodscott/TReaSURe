@@ -11,16 +11,21 @@
         <div class="hero-unit row-fluid">
             <div class="span8">
                 <h2>{{ resource_name}}</h2>
+                <h3><strong>{{ resource.summary }}</strong></h3>
                 {% if web_resource %}
-                    <h4>added by {{ author }}</h4><br>
+                    <h4>added by {{ author }}</h4>
                 {% elif files_resource %}
-                    <h4>uploaded by {{ author }}</h4><br>
+                    <h4>uploaded by {{ author }}</h4>
                 {% else %}
-                    <h4>by {{ author }}</h4><br>
+                    <h4>by {{ author }}</h4>
                 {% endif %}
-
-                <h4><strong>Description:</strong></h4>
-                <p>{{ description }}</p><br>
+                
+                <br>
+                
+                {% if description %}
+                    <h4><strong>Description:</strong></h4>
+                    <p>{{ description }}</p><br>
+                {% endif %}
                 <h4><strong>Tags:</strong></h4>
                 {% if other_tags %}
                     {% for tag in other_tags %}
@@ -73,15 +78,15 @@
 	                    <tr>
 	                        <th>Name</th>
 	                        <th>Author</th>
-	                        <th>Description</th>
+	                        <th>Summary</th>
 	                    </tr>
 	                </thead>
 	                <tbody>
 	                    {% for pack in partofpacks.all %}
-	                        <tr class="resourceLabel">
+	                        <tr class="packLabel">
 	                            <td><a href="/treasure/packs/{{ pack.id }}">{{ pack.name }}</a></td>
 	                            <td>{{ pack.author }}</td>
-   	                            <td>{{ pack.description }}</td>
+   	                            <td>{{ pack.summary }}</td>
 	                        </tr>
 	                    {% endfor %}
 	                </tbody>
@@ -98,7 +103,7 @@
  		
             <p>People willing to organise discussion about {{resource_name}}:</p>
 	        <div class="table-responsive">
-	            <table id="Resources" class="table table-striped table-bordered" cellspacing="0" width="100%">
+	            <table id="wanttotalk" class="table table-striped table-bordered" cellspacing="0" width="100%">
 	                <thead>
 	                    <tr>
 	                        <th>Teacher</th>
@@ -107,12 +112,12 @@
 	                </thead>
 	                <tbody>
 	                    {% for record in want2talk %}
-	                        <tr class="studentLabel">
+	                        <tr class="teacherLabel">
 	                            <td>{{record.teacher}}</td>
 	                            <td>{{record.comment}}</td>
 	                        </tr>
 	                    {% endfor %}
-                        <tr class="studentLabel">
+                        <tr class="teacherLabel">
                             <td>+ADD SELF</td>
                             <td>-Pending Form to add self-</td>
                         </tr>

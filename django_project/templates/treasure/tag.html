@@ -25,15 +25,15 @@
 	                            <tr>
 	                                <th>Resource Name</th>
 	                                <th>Author</th>
-	                                <th>Description</th>
+	                                <th>Summary</th>
 	                            </tr>
 	                        </thead>
 	                        <tbody>
 	                            {% for resource in tagged_resources %}
-	                                <tr class="Label">
+	                                <tr class="resourceLabel">
 	                                    <td><a href="/treasure/resource/{{ resource.id }}">{{resource.name}}</a></td>
 	                                    <td>{{resource.author}}</td>
-	                                    <td>{{resource.description}}</td>
+	                                    <td>{{resource.summary}}</td>
 	                                </tr>
 	                            {% endfor %}
 	                        </tbody>
@@ -55,15 +55,15 @@
 	                            <tr>
 	                                <th>Pack Name</th>
 	                                <th>Author</th>
-	                                <th>Description</th>
+	                                <th>Summary</th>
 	                            </tr>
 	                        </thead>
 	                        <tbody>
 	                            {% for pack in tagged_packs %}
-	                                <tr class="Label">
+	                                <tr class="packLabel">
 	                                    <td><a href="/treasure/packs/{{ pack.id }}">{{ pack.name }}</a></td>
 	                                    <td>{{pack.author}}</td>
-	                                    <td>{{pack.description}}</td>
+	                                    <td>{{pack.summary}}</td>
 	                                </tr>
 	                            {% endfor %}
 	                        </tbody>
