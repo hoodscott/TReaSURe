@@ -532,11 +532,23 @@ def add_web_resource(request):
             userid = request.user.id
             teacher = Teacher.objects.get(user = userid)
             resource.author = Teacher.objects.get(id = teacher.id)
+            
+            # this is a creation
+            resource.evolution_type = "creation"
+            
+            # default values for hidden
+            resource.hidden = 0
+            
+            # todo: restrict views
+            # initially 0 for now
+            resource.restricted = 0
+            
+            # this is a web resource
+            resource.resource_type = "web"
+
+            # save resource before we add tags / set tree
             resource.save()
-            
-            # this is a root so the tree is just the id
-            resource.tree = resource.id
-            
+             
             # combine the tags into one queryset
             tags =  resource_form.cleaned_data['level_tags'] | \
                     resource_form.cleaned_data['topic_tags'] | \
@@ -544,15 +556,19 @@ def add_web_resource(request):
             # save the tags the user has selected
             for tag in tags:
                 resource.tags.add(tag)
+                
+            # this is a root so the tree is just the id
+            resource.tree = resource.id
+            
             resource.save()
-                        
+
             # delay saving the relationship model until we're ready
             # to avoid integrity problems
             web = web_form.save(commit=False)
             web.resource = resource
             
             # save the instance
-            web.save()     
+            web.save()
             
             # Now show the new materials page
             return resource_view(request, resource.id)
@@ -594,10 +610,22 @@ def add_file_resource(request):
             userid = request.user.id
             teacher = Teacher.objects.get(user = userid)
             resource.author = Teacher.objects.get(id = teacher.id)
-            resource.save()
+                        
+            # this is a creation
+            resource.evolution_type = "creation"
             
-            # this is a root so the tree is just the id
-            resource.tree = resource.id
+            # default values for hidden
+            resource.hidden = 0
+            
+            # todo: restrict views
+            # initially 0 for now
+            resource.restricted = 0
+            
+            # this is a file resource
+            resource.resource_type = "file"
+            
+            # save the instance before we add tags / set tree
+            resource.save()            
             
             # combine the tags into one queryset
             tags =  resource_form.cleaned_data['level_tags'] | \
@@ -606,6 +634,10 @@ def add_file_resource(request):
             # save the tags the user has selected
             for tag in tags:
                 resource.tags.add(tag)
+                
+            # this is a root so the tree is just the id
+            resource.tree = resource.id
+            
             resource.save()
             
             # add file to object
@@ -614,8 +646,8 @@ def add_file_resource(request):
             # associate file resource with parent resource
             files.resource = resource
             
-            # save the instance
-            files.save()     
+            # save the resource
+            files.save()
             
             # show user the new materials page
             return resource_view(request, resource.id)
@@ -1331,14 +1363,23 @@ def newpack(request):
         if form.is_valid():
             # Put off saving to avoid integrity errors.
             this_pack = form.save(commit=False)
+            
+            # do not feature every pack on treasure/explore/
             this_pack.explore = '0'
+            
+            # default values for hidden
+            this_pack.hidden = 0
+            
+            # todo: restrict views
+            # initially 0 for now
+            this_pack.restricted = 0
             
             # add author
             userid = request.user.id
             teacher = Teacher.objects.get(user = userid)
             this_pack.author = Teacher.objects.get(id = teacher.id)
             
-            # now save the tag in the database
+            # now save the pack in the database so tags can be added
             this_pack.save()
             
             #add tags
