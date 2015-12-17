@@ -26,11 +26,13 @@
                     </thead>
                     <tbody>
                         {% for resource in resources %}
+                            {% if resource.hidden != 1 and resource.restricted != 1 %}
                             <tr class="studentLabel">
                                 <td><a href="../resource/{{ resource.id }}">{{resource.name}}</a></td>
                                 <td>{{resource.author}}</td>
                                 <td>{{resource.summary}}</td>
                             </tr>
+                            {% endif %}
                         {% endfor %}
 
                     </tbody>

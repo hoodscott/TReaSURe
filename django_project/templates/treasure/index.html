@@ -12,7 +12,7 @@
 	<div class="container">
 
 		<header>
-			<h2 class="alt">Welcome back, {{ user_firstname }}</a></h2>
+			<h2 class="alt">Welcome back, {{ user_teacher.firstname }}</a></h2>
 			<p>You have pending actions.
 				Please remember to share your opinion about the resources that you used recently.</p>
 		</header>
@@ -47,10 +47,12 @@
                 </thead>
                 <tbody>
                     {% for resource in MyResources %}
+                        {% if resource.hidden == 0 %}
                         <tr class="studentLabel">
                             <td><a href="/treasure/resource/{{ resource.id }}">{{ resource.name }}</a></td>
                             <td>{{ resource.summary }}</td>
                         </tr>
+                        {% endif%}
                     {% endfor %}
 
                 </tbody>
@@ -82,10 +84,12 @@
                 </thead>
                 <tbody>
                     {% for pack in MyPacks %}
+                        {% if pack.hidden == 0 %}
                         <tr class="packlabel">
                             <td><a href="/treasure/packs/{{ pack.id }}">{{ pack.name }}</a></td>
                             <td>{{ pack.summary }}</td>
                         </tr>
+                        {% endif %}
                     {% endfor %}
 
                 </tbody>

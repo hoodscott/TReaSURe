@@ -2,6 +2,25 @@ from django import forms
 from treasure.models import *
 from django.contrib.auth.models import User
 
+#define values for hidden
+HIDDEN = (
+    ('0', 'Visible'),
+    ('1', 'Hidden'),
+)
+
+# define values for restriction
+RESTRICTED = (
+    ('0', 'Pubic'),
+    ('1', 'Scottish Teachers Only'),
+)
+
+#define types of search
+SEARCHTYPES = (
+    ('0', 'Resources'),
+    ('1', 'Packs'),
+    
+)    
+
 ## custom widget to prevent autocapitalisation and autocompletion of certail fields
 class DisableAutoInput(forms.widgets.Input):
    input_type = 'text'
@@ -149,13 +168,6 @@ class HubForm(forms.ModelForm):
         
 class SearchForm(forms.Form):
     
-    #define types of search
-    SEARCHTYPES = (
-        ('0', 'Resources'),
-        ('1', 'Packs'),
-        
-    )
-    
     searchtype = forms.ChoiceField(choices=SEARCHTYPES,
                                 required=True,
                                 label='Resource',
@@ -248,7 +260,22 @@ class EditResourceForm(forms.ModelForm):
     other_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(type=2).order_by('name'),
                                                 required=False, help_text="Please select other tags (optional).")                                                
+    
 
+    
+    hidden = forms.ChoiceField(choices=HIDDEN,
+                                required=True,
+                                label='Visible',
+                                help_text="Should this be visible or hidden?",
+                                widget = forms.Select(attrs={'tabindex':'1'}))
+    
+    ''' todo: implement restrictions
+    visible = forms.ChoiceField(choices=VISIBLE,
+                            required=True,
+                            label='Visible',
+                            help_text="Should this be viewable by anyone or just scottish teachers?",
+                            widget = forms.Select(attrs={'tabindex':'1'}))'''
+    
                                                 
 class EditPackForm(forms.ModelForm):
 
@@ -273,3 +300,16 @@ class EditPackForm(forms.ModelForm):
     other_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(type=2).order_by('name'),
                                                 required=False, help_text="Please select other tags (optional).")
+                                                
+    hidden = forms.ChoiceField(choices=HIDDEN,
+                                required=True,
+                                label='Visible',
+                                help_text="Should this be visible or hidden?",
+                                widget = forms.Select(attrs={'tabindex':'1'}))
+    
+    ''' todo: implement restrictions    
+    visible = forms.ChoiceField(choices=VISIBLE,
+                            required=True,
+                            label='Visible',
+                            help_text="Should this be viewable by anyone or just scottish teachers?",
+                            widget = forms.Select(attrs={'tabindex':'1'}))'''

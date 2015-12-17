@@ -8,25 +8,22 @@ from django.contrib.auth.decorators import login_required
 from string import split
 from datetime import datetime
 
-# get the users firstname, surname and school for the sidebar
+# get the users teacher entry and school for the sidebar
 def sidebar(request):
     context_dict = {}
     
     try:
         userid = request.user.id
         teacher = Teacher.objects.get(user = userid)
+        context_dict['user_teacher'] = teacher
         
-        # get users name
-        context_dict['user_firstname'] = teacher.firstname
-        context_dict['user_surname'] = teacher.surname
+        if teacher.school:
+            context_dict['school'] = teacher.school
+        else:
+            context_dict['school'] = "No School"
         
-        # get a school from the user, if they have any
-        context_dict['user_school'] = teacher.school
-            
     except Teacher.DoesNotExist:
-        context_dict['user_firstname'] = ""
-        context_dict['user_surname'] = ""
-        context_dict['school'] = ""
+        pass
     
     return context_dict
      
@@ -359,7 +356,7 @@ def edit_resource(request, resource_id):
 
             # If the form is valid...
             if form.is_valid():
-                # Save the user's form data to the database.
+                # hold off on saving to avoid integrity errors.
                 new_resource = form.save(commit=False)
 
                 # combine the tags into one queryset

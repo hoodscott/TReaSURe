@@ -24,11 +24,13 @@
                     </thead>
                     <tbody>
                         {% for pack in packs %}
+                            {% if pack.hidden != 1 and pack.restricted != 1 %}                        
                             <tr class="packLabel">
                                 <td><a href="../packs/{{ pack.id }}">{{ pack.name }}</a></td>
                                 <td>{{ pack.author }}</td>
                                 <td>{{ pack.summary }}</td>
                             </tr>
+                            {% endif %}
                         {% endfor %}
 
                     </tbody>

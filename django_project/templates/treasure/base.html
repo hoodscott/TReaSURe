@@ -79,8 +79,8 @@
                        {% if user.is_authenticated %}
 							<div id="logo">
 								<span class="image avatar48"><img src="{% static 'images/avatar.jpg' %}" alt="user avatar" /></span>
-								<h1 id="title">{{ user_firstname }} {{ user_surname }}</h1>
-								<p>{{ user_school }}</p>
+								<h1 id="title">{{ user_teacher.firstname }} {{ user_teacher.surname }}</h1>
+								<p>{{ school }}</p>
 							</div>
 	                   {% endif %}
 
@@ -120,7 +120,17 @@
 				<!-- Main Page -->
 				<section id="MainPage">
                     <div class="container">
-                        {% block body_block%}{% endblock%}
+                        {% if resource.hidden == 1  and resource.author != user_teacher %}                        
+                            <div class="hero-unit"><h2>This resource is not visible (hidden).<br>The author has chosen to hide it, sorry.</h2></div>
+                        {% elif resource.restricted == 1 and resource.author != user_teacher %}
+                            <div class="hero-unit"><h2>This resource is not visible (restricted)<br>This resource is only for Scottish teachers, sorry.</h2></div>
+                        {% elif pack.hidden == 1  and pack.author != user_teacher %}
+                            <div class="hero-unit"><h2>This pack is not visible (hidden)<br>The author has chosen to hide it, sorry.</h2></div>
+                        {% elif pack.restricted == 1  and pack.author != user_teacher %}
+                            <div class="hero-unit"><h2>This pack is not visible (restricted)This pack is only for Scottish teachers, sorry.</h2></div>                       
+                        {% else %}
+                            {% block body_block%}{% endblock%}
+                        {% endif %}
                     </div>
                 </section>
                 

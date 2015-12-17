@@ -13,6 +13,8 @@
 		<div class="row-fluid">
 		            <ul class="thumbnails">
 					{% for pack in packs %}
+                    {% if pack.hidden != 1 and pack.restricted != 1 %}
+
 						{% if forloop.counter0|divisibleby:"2" %}
 			              <li class="span4">
 						{% endif %}
@@ -27,6 +29,7 @@
 						{% if forloop.counter|divisibleby:"2" %}
 			              </li>
 						{% endif %}
+                    {% endif %}
 					{% endfor %}
 
 		            </ul>
