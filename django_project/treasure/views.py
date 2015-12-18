@@ -1201,10 +1201,28 @@ def evolve(request, resource_id):
                 userid = request.user.id
                 teacher = Teacher.objects.get(user = userid)
                 resource.author = Teacher.objects.get(id = teacher.id)
+                
+                # todo: elaborate
+                # simply 'evolution' for now
+                resource.evolution_type = "evolution"
+                
+                #default hidden
+                resource.hidden = 0
+                
+                # todo: implement restrictions
+                # initially 0 for now
+                resource.restricted = 0
+                
+                # set type of resource
+                resource.resource_type = 'file'                
+                
+                # save the resource before we add tags / set tree
                 resource.save()
                 
                 # append new id to parents tree
                 resource.tree = Resource.objects.get(id=resource_id).tree + u',' + unicode(resource.id)
+                print 'parent', Resource.objects.get(id=resource_id).tree
+                print 'child', resource.id
                 
                 # combine the tags into one queryset
                 tags =  resource_form.cleaned_data['level_tags'] | \
@@ -1242,6 +1260,22 @@ def evolve(request, resource_id):
                 userid = request.user.id
                 teacher = Teacher.objects.get(user = userid)
                 resource.author = Teacher.objects.get(id = teacher.id)
+                
+                # todo: elaborate
+                # simply 'evolution' for now
+                resource.evolution_type = "evolution"
+                
+                #default hidden
+                resource.hidden = 0
+                
+                # todo: implement restrictions
+                # initially 0 for now
+                resource.restricted = 0
+                
+                # set type of resource
+                resource.resource_type = 'web'
+                
+                # save resource so that tree / tags can be set
                 resource.save()
                 
                 # append new id to parents tree
@@ -1254,6 +1288,7 @@ def evolve(request, resource_id):
                 # save the tags the user has selected
                 for tag in tags:
                     resource.tags.add(tag)
+                
                 resource.save()
                 
                 # delay saving the relationship model until we're ready
