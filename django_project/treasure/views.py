@@ -385,6 +385,9 @@ def edit_resource(request, resource_id):
             if form.is_valid():
                 # hold off on saving to avoid integrity errors.
                 new_resource = form.save(commit=False)
+                
+                # clear current tags
+                new_resource.tags.clear()
 
                 # combine the tags into one queryset
                 tags =  form.cleaned_data['level_tags'] | \
@@ -1132,7 +1135,8 @@ def edit_pack(request, pack_id):
                 # Save the user's form data to the database.
                 new_pack = form.save(commit=False)
                 
-                '''todo: remove all tags'''
+                # clear current tags
+                new_pack.tags.clear()
 
                 # combine the tags into one queryset
                 tags =  form.cleaned_data['level_tags'] | \
