@@ -47,7 +47,7 @@
                 </thead>
                 <tbody>
                     {% for resource in MyResources %}
-                        {% if resource.hidden == 0 %}
+                        {% if resource.hidden != 1 %}
                         <tr class="studentLabel">
                             <td><a href="/treasure/resource/{{ resource.id }}">{{ resource.name }}</a></td>
                             <td>{{ resource.summary }}</td>

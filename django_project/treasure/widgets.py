@@ -39,7 +39,7 @@ class CustomRelatedFieldWidgetWrapper(RelatedFieldWidgetWrapper):
         self.widget.choices = self.choices
         output = [self.widget.render(name, value, *args, **kwargs)]
         if self.permission:
-            output.append(u'<a href="%s" class="add-another" id="add_id_%s" onclick="return showAddAnotherPopup(this);"> ' % \
+            output.append(u'<a href="%s" class="add-another btn btn-info" id="add_id_%s" onclick="return showAddAnotherPopup(this);">Add Another</a><br>' % \
                 (self.add_url, name))
-            output.append(u'<img src="" width="10" height="10" alt="Add Another"/></a>')
+            #output.append(u'<img src="" width="10" height="10" alt="Add Another"/></a>')
         return mark_safe(u''.join(output))

@@ -89,7 +89,7 @@ class ResourceForm(forms.ModelForm):
 class FileForm(forms.ModelForm):
     path = forms.FileField(widget = forms.ClearableFileInput(attrs={'tabindex':'1'}),
                             label='Select the resource to upload',
-                            help_text='Maximum of 42MB')
+                            help_text='Select the resource to upload: Maximum of 42MB')
     
     class Meta:
         model = FilesResource
@@ -128,14 +128,26 @@ class TeacherForm(forms.ModelForm):
                                 widget = forms.TextInput(attrs={'tabindex':'1'}))
     school = forms.ModelChoiceField(queryset=School.objects.all().order_by('name'),
                                     required=False,
-                                    help_text="Please select your school.",
-                                    widget = forms.Select(attrs={'tabindex':'1'})
-                                    )
+                                    help_text="Please select your school.")                                   
     hubs = forms.ModelMultipleChoiceField(queryset=Hub.objects.all().order_by('name'),
                                             required=False,
-                                            help_text="Please select your hubs.",
-                                            widget = forms.SelectMultiple(attrs={'tabindex':'1'}))
-                                                
+                                            help_text="Please select your hubs.")                                                
+    def __init__(self,*args,**kwargs):
+        super(TeacherForm, self).__init__(*args,**kwargs)
+        # wrap the model widget in the wrapper        
+        self.fields['school'].widget = CustomRelatedFieldWidgetWrapper(
+                                               forms.Select(attrs={'tabindex':'1'}),
+                                               '/treasure/add_school/',
+                                                True,)
+        self.fields['school'].queryset=School.objects.all().order_by('name')
+        
+        # do the same for hubs
+        self.fields['hubs'].widget = CustomRelatedFieldWidgetWrapper(
+                                               forms.SelectMultiple(attrs={'tabindex':'1'}),
+                                               '/treasure/add_hub/',
+                                                True,)
+        self.fields['hubs'].queryset=Hub.objects.all().order_by('name')
+        
     class Meta:
         model = Teacher
         fields = ('firstname', 'surname', 'school', 'hubs')
@@ -154,7 +166,7 @@ class SchoolForm(forms.ModelForm):
                                 widget = forms.TextInput(attrs={'tabindex':'1'}))
     longitude = forms.FloatField(help_text="Please enter the longitude of the school.",
                                 widget = forms.TextInput(attrs={'tabindex':'1'}))
-
+       
     class Meta:
         model = School
         fields = ('name', 'town', 'address', 'latitude', 'longitude')

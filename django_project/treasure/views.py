@@ -702,10 +702,16 @@ def add_file_resource(request):
     return render_to_response('treasure/add_file_resource.html', context_dict, context)
     
 # view for the add hub page
-@login_required
 def add_hub(request):
     # get context of request
     context = RequestContext(request)
+    
+    # create dictionary to pass data to templates
+    context_dict = sidebar(request)    
+    
+    # check if form is in a popup
+    if ('_popup' in request.GET):
+        context_dict['popup'] = True    
 
     # A HTTP POST?
     if request.method == 'POST':
@@ -716,7 +722,12 @@ def add_hub(request):
             # Save the new category to the database.
             hub = form.save(commit=True)     
             
-            # show user the new hub page
+            # if addition was in a popup
+            ## This will fire the script to close the popup and update the list
+            if "_popup" in request.POST:
+                return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % \
+                    (escape(hub.pk), escapejs(hub)))
+            ## No popup, so return the normal response            
             return hub_view(request, hub.id)
         else:
             # The supplied form contained errors - just print them to the terminal.
@@ -725,18 +736,22 @@ def add_hub(request):
         # If the request was not a POST, display the form to enter details.
         form = HubForm()
     
-    # create dictionary to pass data to templates
-    context_dict = sidebar(request)
     context_dict['form']  = form
     
     # Render the form depending on context
     return render_to_response('treasure/add_hub.html', context_dict, context)
     
 # view for the add users page
-@login_required
 def add_school(request):
     # get context of request
     context = RequestContext(request)
+    
+    # create dictionary to pass data to templates
+    context_dict = sidebar(request)
+    
+    # check if form is in a popup
+    if ('_popup' in request.GET):
+        context_dict['popup'] = True
 
     # A HTTP POST?
     if request.method == 'POST':
@@ -747,7 +762,12 @@ def add_school(request):
             # Save the new category to the database.
             school = form.save(commit=True)     
             
-            # show user new school page
+            # if addition was in a popup
+            ## This will fire the script to close the popup and update the list
+            if "_popup" in request.POST:
+                return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % \
+                    (escape(school.pk), escapejs(school)))
+            ## No popup, so return the normal response
             return school_view(request, school.id)
         else:
             # The supplied form contained errors - just print them to the terminal.
@@ -756,8 +776,6 @@ def add_school(request):
         # If the request was not a POST, display the form to enter details.
         form = SchoolForm()
     
-    # create dictionary to pass data to templates
-    context_dict = sidebar(request)
     context_dict['form'] = form
     
     # Render the form to template with context
