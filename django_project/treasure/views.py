@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from string import split
 from datetime import datetime
+from django.utils.html import escape, escapejs
 
 # get the users teacher entry and school for the sidebar
 def sidebar(request):
@@ -969,8 +970,8 @@ def tags(request):
         context_dict['other_tags'] = get_list(filtered_tags)
     
     # Render the template depending on the context.
-    return render_to_response('treasure/tags.html', context_dict, context)
-    
+    return render_to_response('treasure/tags.html', context_dict, context) 
+
 # view to add a tag to the database
 @login_required
 def add_tag(request):
@@ -980,21 +981,34 @@ def add_tag(request):
     #create context dictionary to send back to template
     context_dict = sidebar(request)
     
+    # check if form is in a popup
+    if ('_popup' in request.GET):
+        context_dict['popup'] = True
+    
     # A HTTP POST?
     if request.method == 'POST':
         form = TagForm(request.POST)
 
         # Have we been provided with a valid form?
         if form.is_valid():
-            # Put off saving to avodid integrity errors.
+            # Put off saving to avoid integrity errors.
             tag = form.save(commit=False)
+            
+            # only allow 'other tags' to be created using the form
+            # 'levels' and 'topics' should be predefined by admins
             tag.type = '2'
             
             # now save the tag in the database
             tag.save()
                         
-            # show user all tags
+            # if addition was in a popup
+            ## This will fire the script to close the popup and update the list
+            if "_popup" in request.POST:
+                return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % \
+                    (escape(tag.pk), escapejs(tag)))
+            ## No popup, so return the normal response
             return tags(request)
+            
         else:
             # The supplied form contained errors - just print them to the terminal.
             print form.errors
@@ -1002,8 +1016,6 @@ def add_tag(request):
         # If the request was not a POST, display the form to enter details.
         form = TagForm()
     
-    # create dictionary to pass data to templates
-    context_dict = sidebar(request)
     context_dict['form'] = form
     
     # Render the template depending on the context.

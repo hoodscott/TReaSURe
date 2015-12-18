@@ -1,6 +1,7 @@
 from django import forms
 from treasure.models import *
 from django.contrib.auth.models import User
+from treasure.widgets import *
 
 #define values for hidden
 HIDDEN = (
@@ -19,19 +20,7 @@ SEARCHTYPES = (
     ('0', 'Resources'),
     ('1', 'Packs'),
     
-)    
-
-## custom widget to prevent autocapitalisation and autocompletion of certail fields
-class DisableAutoInput(forms.widgets.Input):
-   input_type = 'text'
-
-   def render(self, name, value, attrs=None):
-       if attrs is None:
-           attrs = {}
-       attrs.update(dict(autocorrect='off',
-                         autocapitalize='off',
-                         spellcheck='false'))
-       return super(DisableAutoInput, self).render(name, value, attrs=attrs)
+) 
 
 class ResourceForm(forms.ModelForm):
         
@@ -70,18 +59,32 @@ class ResourceForm(forms.ModelForm):
                                                 queryset=Tag.objects.filter(type=1).order_by('name'),
                                                 required=True,
                                                 help_text="Please select topic(s).")
-    other_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
-                                                queryset=Tag.objects.filter(type=2).order_by('name'),
+    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
                                                 required=False,
                                                 help_text="Please select other tags (optional)")
               
     def __init__(self,tags,*args,**kwargs):
         self.tag_ids = tags
         super(ResourceForm, self).__init__(*args,**kwargs)
+
+        # wrap the model widget in the wrapper        
+        self.fields['other_tags'].widget = CustomRelatedFieldWidgetWrapper(
+                                                forms.SelectMultiple(attrs={'tabindex':'1'}),
+                                                '/treasure/tags/new/',
+                                                True,)
+                                                
+        self.fields['other_tags'].queryset=Tag.objects.filter(type=2).order_by('name')
+        
         # set initial selected tags
         self.fields['level_tags'].initial = tags['level']
         self.fields['topic_tags'].initial = tags['topic']
         self.fields['other_tags'].initial = tags['other']
+        
+
+    class Media:
+        ## media for the custom widget
+        # jsi18n is required by the widget
+        js = ( '/admin/js/admin/RelatedObjectLookups.js',)    
 
     
     class Meta:
