@@ -36,7 +36,32 @@ def get_list(relation):
         objects += [relation[i]]
         i += 1
     return objects
-
+    
+# function to initialise a blank dictionary to pass into forms
+# used to preset the tags in the forms    
+def blank_tag_dict():
+    return {'level':[], 'topic':[], 'other':[]}
+    
+# function to return a list of the current tags
+# used to preset the tags in the forms
+# object type can be resource or pack
+def populate_tag_dict(resource_id, object_type):    
+    selected_tags = blank_tag_dict()
+    
+    level_tags = object_type.objects.get(id=resource_id).tags.filter(type='0')   
+    for tag in level_tags:
+        selected_tags['level'] += [tag.id]
+    
+    topic_tags = object_type.objects.get(id=resource_id).tags.filter(type='1')   
+    for tag in topic_tags:
+        selected_tags['topic'] += [tag.id]
+    
+    other_tags = object_type.objects.get(id=resource_id).tags.filter(type='2')   
+    for tag in other_tags:
+        selected_tags['other'] += [tag.id]
+    
+    return selected_tags
+    
 # view for the homepage
 def index(request):
     # get context of request
@@ -343,6 +368,9 @@ def edit_resource(request, resource_id):
     
     # get current user
     teacher = request.user.teacher
+    
+    # get tags of resource to preload them
+    selected_tags = populate_tag_dict(resource_id, Resource)
 
     # check if current user owns this resource
     if this_resource.author == teacher:
@@ -351,8 +379,7 @@ def edit_resource(request, resource_id):
         if request.method == 'POST':
             # Attempt to grab information from the raw form information.
             # pass in instance of the record to be updated
-            form = EditResourceForm(data=request.POST, instance=this_resource)
-
+            form = EditResourceForm(selected_tags, data=request.POST, instance=this_resource)
 
             # If the form is valid...
             if form.is_valid():
@@ -380,7 +407,7 @@ def edit_resource(request, resource_id):
         # Not a HTTP POST, so we render our form using two ModelForm instances.
         else: 
             # pass the current records to initially populate the forms
-            form = EditResourceForm(instance = this_resource)
+            form = EditResourceForm(selected_tags, instance = this_resource)
         
         context_dict['form'] = form
             
@@ -515,9 +542,11 @@ def add_web_resource(request):
     # get context of request
     context = RequestContext(request)
     
+    selected_tags = blank_tag_dict()
+    
     # A HTTP POST?
     if request.method == 'POST':
-        resource_form = ResourceForm(request.POST)
+        resource_form = ResourceForm(selected_tags, request.POST)
         web_form = WebForm(request.POST)
 
         # Have we been provided with a valid form?
@@ -575,7 +604,7 @@ def add_web_resource(request):
             print web_form.errors
     else:
         # If the request was not a POST, display the form to enter details.
-        resource_form = ResourceForm()
+        resource_form = ResourceForm(selected_tags)
         web_form = WebForm()
     
     # create dictionary to pass data to templates
@@ -593,9 +622,11 @@ def add_file_resource(request):
     # get context of request
     context = RequestContext(request)
     
+    selected_tags = blank_tag_dict()
+
     # A HTTP POST?
     if request.method == 'POST':
-        resource_form = ResourceForm(request.POST)
+        resource_form = ResourceForm(selected_tags, request.POST)
         file_form = FileForm(request.POST, request.FILES)
 
         # Have we been provided with a valid form?
@@ -654,7 +685,7 @@ def add_file_resource(request):
             print file_form.errors
     else:
         # If the request was not a POST, display the form to enter details.
-        resource_form = ResourceForm()
+        resource_form = ResourceForm(selected_tags)
         file_form = FileForm()
     
     # create dictionary to pass data to templates
@@ -1077,6 +1108,9 @@ def edit_pack(request, pack_id):
     # create context dictionary
     context_dict = sidebar(request)
     context_dict['pack_id'] = pack_id
+    
+    # get tags of parent
+    selected_tags = populate_tag_dict(pack_id, Pack)
      
     # get resource
     this_pack = Pack.objects.get(id=pack_id)
@@ -1091,7 +1125,7 @@ def edit_pack(request, pack_id):
         if request.method == 'POST':
             # Attempt to grab information from the raw form information.
             # pass in instance of the record to be updated
-            form = EditPackForm(data=request.POST, instance=this_pack)
+            form = EditPackForm(selected_tags, data=request.POST, instance=this_pack)
 
             # If form is valid...
             if form.is_valid():
@@ -1121,7 +1155,7 @@ def edit_pack(request, pack_id):
         # Not a HTTP POST, so we render our form using two ModelForm instances.
         else: 
             # pass the current records to initially populate the forms
-            form = EditPackForm(instance = this_pack)
+            form = EditPackForm(selected_tags, instance = this_pack)
         
         context_dict['form'] = form
             
@@ -1179,17 +1213,20 @@ def versions(request, resource_id):
     
 # view to evolve a resource
 @login_required
-def evolve(request, resource_id):
+def evolve(request, parent_id):
     # get context of request
     context = RequestContext(request)
     
-   # create dictionary to pass data to templates
+    # create dictionary to pass data to templates
     context_dict = sidebar(request)
+    
+    # get tags of parent
+    selected_tags = populate_tag_dict(parent_id, Resource)
     
     # A HTTP POST?
     if request.method == 'POST':
         
-        resource_form = ResourceForm(request.POST)
+        resource_form = ResourceForm(selected_tags,request.POST)
         file_form = FileForm(request.POST, request.FILES)
         web_form = WebForm(request.POST)
         
@@ -1223,9 +1260,7 @@ def evolve(request, resource_id):
                 resource.save()
                 
                 # append new id to parents tree
-                resource.tree = Resource.objects.get(id=resource_id).tree + u',' + unicode(resource.id)
-                print 'parent', Resource.objects.get(id=resource_id).tree
-                print 'child', resource.id
+                resource.tree = Resource.objects.get(id=parent_id).tree + u',' + unicode(resource.id)
                 
                 # combine the tags into one queryset
                 tags =  resource_form.cleaned_data['level_tags'] | \
@@ -1284,7 +1319,7 @@ def evolve(request, resource_id):
                 resource.save()
                 
                 # append new id to parents tree
-                resource.tree = Resource.objects.get(id=resource_id).tree + u',' + unicode(resource.id)
+                resource.tree = Resource.objects.get(id=parent_id).tree + u',' + unicode(resource.id)
                 
                 # combine the tags into one queryset
                 tags =  resource_form.cleaned_data['level_tags'] | \
@@ -1314,7 +1349,7 @@ def evolve(request, resource_id):
         
     else:
         # If the request was not a POST, display the form to enter details.
-        resource_form = ResourceForm()
+        resource_form = ResourceForm(selected_tags)
         file_form = FileForm()
         web_form = WebForm()
     
@@ -1322,7 +1357,7 @@ def evolve(request, resource_id):
     context_dict['resource_form'] = resource_form
     context_dict['file_form'] = file_form
     context_dict['web_form'] = web_form
-    context_dict['resource_id']= resource_id
+    context_dict['resource_id']= parent_id
     
     # Bad form (or form details), no form supplied...
     # Render the form with error messages (if any).
@@ -1392,9 +1427,12 @@ def newpack(request):
     #create context dictionary to send back to template
     context_dict = sidebar(request)
     
+    # get tags of resource
+    selected_tags = blank_tag_dict()
+    
     # A HTTP POST?
     if request.method == 'POST':
-        form = PackForm(request.POST)
+        form = PackForm(selected_tags, request.POST)
 
         # Have we been provided with a valid form?
         if form.is_valid():
@@ -1438,7 +1476,7 @@ def newpack(request):
             print form.errors
     else:
         # If the request was not a POST, display the form to enter details.
-        form = PackForm()
+        form = PackForm(selected_tags)
     
     # create dictionary to pass data to templates
     context_dict = sidebar(request)

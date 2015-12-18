@@ -34,6 +34,7 @@ class DisableAutoInput(forms.widgets.Input):
        return super(DisableAutoInput, self).render(name, value, attrs=attrs)
 
 class ResourceForm(forms.ModelForm):
+        
     name = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
                             max_length=128,
                             help_text="Please enter the resource name.")
@@ -63,13 +64,25 @@ class ResourceForm(forms.ModelForm):
     
     level_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(type=0).order_by('name'),
-                                                required=True, help_text="Please select level(s).")
+                                                required=True,
+                                                help_text="Please select level(s).")
     topic_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(type=1).order_by('name'),
-                                                required=True, help_text="Please select topic(s).")
+                                                required=True,
+                                                help_text="Please select topic(s).")
     other_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(type=2).order_by('name'),
-                                                required=False, help_text="Please select other tags (optional).")                                                
+                                                required=False,
+                                                help_text="Please select other tags (optional)")
+              
+    def __init__(self,tags,*args,**kwargs):
+        self.tag_ids = tags
+        super(ResourceForm, self).__init__(*args,**kwargs)
+        # set initial selected tags
+        self.fields['level_tags'].initial = tags['level']
+        self.fields['topic_tags'].initial = tags['topic']
+        self.fields['other_tags'].initial = tags['other']
+
     
     class Meta:
         model = Resource
@@ -236,6 +249,14 @@ class PackForm(forms.ModelForm):
                                                 queryset=Tag.objects.filter(type=2).order_by('name'),
                                                 required=False, help_text="Select other tags.")
                                                 
+    def __init__(self,tags,*args,**kwargs):
+        self.tag_ids = tags
+        super(PackForm, self).__init__(*args,**kwargs)
+        # set initial selected tags
+        self.fields['level_tags'].initial = tags['level']
+        self.fields['topic_tags'].initial = tags['topic']
+        self.fields['other_tags'].initial = tags['other']
+    
     class Meta:
         model = Pack
         fields = ('explore', 'name', 'summary', 'description', 'image', 'hidden', 'restricted')
@@ -275,6 +296,14 @@ class EditResourceForm(forms.ModelForm):
                             label='Visible',
                             help_text="Should this be viewable by anyone or just scottish teachers?",
                             widget = forms.Select(attrs={'tabindex':'1'}))'''
+                            
+    def __init__(self,tags,*args,**kwargs):
+        self.tag_ids = tags
+        super(EditResourceForm, self).__init__(*args,**kwargs)
+        # set initial selected tags
+        self.fields['level_tags'].initial = tags['level']
+        self.fields['topic_tags'].initial = tags['topic']
+        self.fields['other_tags'].initial = tags['other']
     
                                                 
 class EditPackForm(forms.ModelForm):
@@ -313,3 +342,11 @@ class EditPackForm(forms.ModelForm):
                             label='Visible',
                             help_text="Should this be viewable by anyone or just scottish teachers?",
                             widget = forms.Select(attrs={'tabindex':'1'}))'''
+                            
+    def __init__(self,tags,*args,**kwargs):
+        self.tag_ids = tags
+        super(EditPackForm, self).__init__(*args,**kwargs)
+        # set initial selected tags
+        self.fields['level_tags'].initial = tags['level']
+        self.fields['topic_tags'].initial = tags['topic']
+        self.fields['other_tags'].initial = tags['other']
