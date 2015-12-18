@@ -11,13 +11,13 @@
         <h2>Evolve</h2>
         
         <ul class="nav nav-pills nav-justified">
-            <li><a data-toggle="tab" href="#file" tabindex='1'>Evolve with a File</a></li>
-            <li><a data-toggle="tab" href="#web" tabindex='1'>Evolve with a Link</a></li>
+            <li {% if error == "file" %}class="active"{% endif %}><a data-toggle="tab" href="#file" tabindex='1'>Evolve with a File</a></li>
+            <li {% if error == "web" %}class="active"{% endif %}><a data-toggle="tab" href="#web" tabindex='1'>Evolve with a Link</a></li>
         </ul>
 
         <div class="tab-content">
         
-            <div id="file" class="tab-pane container">
+            <div id="file" class="{% if error == "file" %}active{% endif %} tab-pane container">
                 <h3>File Evolve</h3>
                 <form class="span6" id="file_evolve" method="post" action="/treasure/resource/{{ resource_id }}/evolve/" enctype="multipart/form-data">
                 	{% csrf_token %}
@@ -46,7 +46,7 @@
                 </form>
             </div>
             
-            <div id="web" class="tab-pane container">
+            <div id="web" class="{% if error == "web" %}active{% endif %} tab-pane container">
                 <h3>Web Evolve</h3>
                 <form class="span6" id="web_evolve" method="post" action="/treasure/resource/{{ resource_id }}/evolve/" enctype="multipart/form-data">
                 	{% csrf_token %}
@@ -75,7 +75,7 @@
                 </form>
             </div>
             
-            <div class="active tab-pane container">
+            <div class="{% if not error %}active{% endif %} tab-pane container">
                 <ul><li><h3>Please select evolution type.</h3></li></ul>
             </div>
 

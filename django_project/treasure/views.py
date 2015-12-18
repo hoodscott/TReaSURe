@@ -1183,6 +1183,9 @@ def evolve(request, resource_id):
     # get context of request
     context = RequestContext(request)
     
+   # create dictionary to pass data to templates
+    context_dict = sidebar(request)
+    
     # A HTTP POST?
     if request.method == 'POST':
         
@@ -1248,6 +1251,8 @@ def evolve(request, resource_id):
                 # The supplied form contained errors - just print them to the terminal.
                 print resource_form.errors
                 print file_form.errors
+                context_dict['error'] = 'file'
+
 
         # if evolution is a web upload   
         elif 'web_evolve' in request.POST:
@@ -1304,7 +1309,8 @@ def evolve(request, resource_id):
             else:
                 # The supplied form contained errors - just print them to the terminal.
                 print resource_form.errors
-                print file_form.errors
+                print web_form.errors
+                context_dict['error'] = 'web'
         
     else:
         # If the request was not a POST, display the form to enter details.
@@ -1312,8 +1318,7 @@ def evolve(request, resource_id):
         file_form = FileForm()
         web_form = WebForm()
     
-    # create dictionary to pass data to templates
-    context_dict = sidebar(request)
+    # pass data to context dict for template
     context_dict['resource_form'] = resource_form
     context_dict['file_form'] = file_form
     context_dict['web_form'] = web_form
