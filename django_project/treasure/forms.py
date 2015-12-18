@@ -78,13 +78,7 @@ class ResourceForm(forms.ModelForm):
         # set initial selected tags
         self.fields['level_tags'].initial = tags['level']
         self.fields['topic_tags'].initial = tags['topic']
-        self.fields['other_tags'].initial = tags['other']
-        
-
-    class Media:
-        ## media for the custom widget
-        # jsi18n is required by the widget
-        js = ( '/admin/js/admin/RelatedObjectLookups.js',)    
+        self.fields['other_tags'].initial = tags['other']   
 
     
     class Meta:
@@ -248,13 +242,22 @@ class PackForm(forms.ModelForm):
     topic_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(type=1).order_by('name'),
                                                 required=False, help_text="Select topic(s).")
-    other_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
-                                                queryset=Tag.objects.filter(type=2).order_by('name'),
-                                                required=False, help_text="Select other tags.")
-                                                
+    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
+                                                required=False,
+                                                help_text="Please select other tags (optional)")
+              
     def __init__(self,tags,*args,**kwargs):
         self.tag_ids = tags
         super(PackForm, self).__init__(*args,**kwargs)
+
+        # wrap the model widget in the wrapper        
+        self.fields['other_tags'].widget = CustomRelatedFieldWidgetWrapper(
+                                                forms.SelectMultiple(attrs={'tabindex':'1'}),
+                                                '/treasure/tags/new/',
+                                                True,)
+                                                
+        self.fields['other_tags'].queryset=Tag.objects.filter(type=2).order_by('name')
+        
         # set initial selected tags
         self.fields['level_tags'].initial = tags['level']
         self.fields['topic_tags'].initial = tags['topic']
@@ -281,12 +284,10 @@ class EditResourceForm(forms.ModelForm):
     topic_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(type=1).order_by('name'),
                                                 required=True, help_text="Please select topic(s).")
-    other_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
-                                                queryset=Tag.objects.filter(type=2).order_by('name'),
-                                                required=False, help_text="Please select other tags (optional).")                                                
-    
-
-    
+    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
+                                                required=False,
+                                                help_text="Please select other tags (optional)")
+     
     hidden = forms.ChoiceField(choices=HIDDEN,
                                 required=True,
                                 label='Visible',
@@ -303,6 +304,14 @@ class EditResourceForm(forms.ModelForm):
     def __init__(self,tags,*args,**kwargs):
         self.tag_ids = tags
         super(EditResourceForm, self).__init__(*args,**kwargs)
+        
+        # wrap the model widget in the wrapper        
+        self.fields['other_tags'].widget = CustomRelatedFieldWidgetWrapper(
+                                                forms.SelectMultiple(attrs={'tabindex':'1'}),
+                                                '/treasure/tags/new/',
+                                                True,)                                        
+        self.fields['other_tags'].queryset=Tag.objects.filter(type=2).order_by('name')
+        
         # set initial selected tags
         self.fields['level_tags'].initial = tags['level']
         self.fields['topic_tags'].initial = tags['topic']
@@ -329,10 +338,10 @@ class EditPackForm(forms.ModelForm):
     topic_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(type=1).order_by('name'),
                                                 required=False, help_text="Please select topic(s).")
-    other_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
-                                                queryset=Tag.objects.filter(type=2).order_by('name'),
-                                                required=False, help_text="Please select other tags (optional).")
-                                                
+    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
+                                                required=False,
+                                                help_text="Please select other tags (optional)")
+                                                     
     hidden = forms.ChoiceField(choices=HIDDEN,
                                 required=True,
                                 label='Visible',
@@ -349,6 +358,15 @@ class EditPackForm(forms.ModelForm):
     def __init__(self,tags,*args,**kwargs):
         self.tag_ids = tags
         super(EditPackForm, self).__init__(*args,**kwargs)
+        
+        # wrap the model widget in the wrapper        
+        self.fields['other_tags'].widget = CustomRelatedFieldWidgetWrapper(
+                                                forms.SelectMultiple(attrs={'tabindex':'1'}),
+                                                '/treasure/tags/new/',
+                                                True,)
+                                                
+        self.fields['other_tags'].queryset=Tag.objects.filter(type=2).order_by('name')        
+        
         # set initial selected tags
         self.fields['level_tags'].initial = tags['level']
         self.fields['topic_tags'].initial = tags['topic']
