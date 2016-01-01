@@ -22,6 +22,10 @@
                         <th>Resource Name</th>
                         <th>Date and Time</th>
                         <th>Have used it?</th>
+                        <th>Have rated it?</th>
+                        <th>lat</th>
+                        <th>long</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -30,6 +34,9 @@
                             <td><a href="/treasure/resource/{{entry.resource.id }}">{{entry.resource.name}}</a></td>
 							<td>{{entry.datetime}}</td>
                             <td>{% if entry.used %} Yes{% else %} No{% endif %}</td>
+                            <td>{% if entry.rated %} Yes{% else %} No{% endif %}</td>
+                            <td>{{entry.latitude}}</td>
+                            <td>{{entry.longitude}}</td>
                         </tr>
                     {% endfor %}
 

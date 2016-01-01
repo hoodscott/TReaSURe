@@ -8,6 +8,57 @@
 
 {% block body_block %}
     <div class="hero-unit">
-        <h3>Track</h3>
-        <p>todo</p>
+    Downloaded={{downloaded|length}}
+    Used={{used|length}}
+        <div id="map" style="height: 1280px; width: 960px"><div style="text-align:center;">
+			<span style="color:Gray;">Loading map...</span>
+		</div>
+  
+  <div id="legend" style="z-index: 0; position: absolute; top: 0px; left: 100px;">
+	  <b>Resources:</b> <img src="{% static 'images/dlicon.png' %}" alt="Downlaoded" /> Downloaded 
+	  <img src="{% static 'images/classicon.png' %}" alt="Used" /> Used
+	</div>
+    </div>
+    </div>
+    <script type="text/javascript">
+function initMap() {
+  var myLatLng = {lat: 1.0, lng: 1.0};
+  var dlicon="{% static 'images/dlicon.png' %}";
+  var classicon="{% static 'images/classicon.png' %}";
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 4,
+    center: myLatLng
+  });
+
+  var downloaded=[];
+  var used=[];
+  {% for download in downloaded %}
+  downloaded.push({lat:{{download.latitude}}, lng: {{download.longitude}} })
+  {% endfor %}
+  {% for usage in used %}
+  used.push({lat:{{usage.latitude}}, lng: {{usage.longitude}} })
+  {% endfor %}
+
+  for (i = 0; i < downloaded.length; i++) { 
+	  marker = new google.maps.Marker({
+	    position: downloaded[i],
+	    map: map,
+	    icon: dlicon,
+	    title: 'Hello World!'
+	  });
+	}
+  for (i = 0; i < used.length; i++) { 
+	  marker = new google.maps.Marker({
+	    position: used[i],
+	    map: map,
+	    icon: classicon,
+	    title: 'Hello World!'
+	  });
+	}
+
+}
+</script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDudWkR_tpJ06lIarBZm3qIngNAae1RXNw&scale=2&signed_in=true&callback=initMap">
+</script>
 {% endblock %}

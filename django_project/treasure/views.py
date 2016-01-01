@@ -1405,8 +1405,20 @@ def track(request, resource_id):
     
     #create context dictionary to send back to template
     context_dict = sidebar(request)
+    this_resource = get_object_or_404(Resource, id=resource_id)
 
-    #todo: implement tracking
+    #Track locations
+    try:
+        downloaded=TeacherDownloadsResource.objects.all().filter(resource=this_resource, used=0)
+        context_dict['downloaded']=downloaded
+    except TeacherDownloadsResource.DoesNotExist:
+        pass
+
+    try:
+        used=TeacherDownloadsResource.objects.all().filter(resource=this_resource, used=1)
+        context_dict['used']=used
+    except TeacherDownloadsResource.DoesNotExist:
+        pass
     
     # Render the template depending on the context.
     return render_to_response('treasure/track.html', context_dict, context)
@@ -1531,6 +1543,7 @@ def download(request, resource_id):
     try:
         this_teacher = Teacher.objects.get(id=request.user.id)
         this_resource = get_object_or_404(Resource, id=resource_id)
+        teacher_school = School.objects.get(id=this_teacher.school_id)
 
         # Get resource URL
         try:
@@ -1547,11 +1560,36 @@ def download(request, resource_id):
             pass
 
 	# Saving Download Record in the Database
-	download_record= TeacherDownloadsResource(teacher=this_teacher, resource=this_resource, datetime=datetime.now())
-	download_record.save()
+	try:
+            downloaded= TeacherDownloadsResource.objects.get(teacher=this_teacher, resource=this_resource)
+	except TeacherDownloadsResource.DoesNotExist:
+            download_record= TeacherDownloadsResource(teacher=this_teacher, resource=this_resource, datetime=datetime.now(), latitude= teacher_school.latitude, longitude= teacher_school.longitude, used=0, rated=0)
+            download_record.save()
+            pass
+
     except Resource.DoesNotExist:
 	# No Resource
 	pass
 
     # Render the template updating the context dictionary.
     return redirect(url)
+
+
+@login_required
+def newSocialAuthentication(request):
+    # get context of request
+    context = RequestContext(request)
+
+    # create dictionary to pass data to templates
+    context_dict = sidebar(request)
+
+    try:
+        his = request.user
+        new_teacher = Teacher(user_id=his.id, firstname=his.first_name, surname=his.last_name)
+        new_teacher.save()
+    except user.DoesNotExist:
+            # Not a WebResource
+            pass
+
+    # Render the template updating the context dictionary.
+    return redirect('/treasure/')

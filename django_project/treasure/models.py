@@ -1,8 +1,14 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
+from geoposition.fields import GeopositionField
 
 ''' start of user models '''
+
+
+class POI(models.Model):
+    name = models.CharField(max_length=100)
+    position = GeopositionField()
 
 # model for schools
 class School(models.Model):
@@ -167,22 +173,13 @@ class TeacherDownloadsResource(models.Model):
     teacher = models.ForeignKey(Teacher)
     resource = models.ForeignKey(Resource)
     # used or not
-    used = models.BooleanField()
+    used = models.IntegerField()
     datetime = models.DateTimeField()
-    
-    def __unicode__(self):
-        return "%s %s" % (self.teacher.name, self.resource.name)
-        
-# model to store where people used a resource
-class TeacherUsesResource(models.Model):
-    teacher = models.ForeignKey(Teacher)
-    resource = models.ForeignKey(Resource)
-    download = models.ForeignKey(TeacherDownloadsResource)
     # lat and long of where it was used
     latitude = models.FloatField()
     longitude = models.FloatField()
-    # rated
-    rated = models.BooleanField()
+    # rated or not
+    rated = models.IntegerField()
     
     def __unicode__(self):
         return "%s %s" % (self.teacher.name, self.resource.name)

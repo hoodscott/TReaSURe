@@ -57,10 +57,8 @@
 					{% if label %}
                         <a class="btn btn-block btn-primary" href="/../treasure/resource/{{resource.id}}/download/"{% if files_resource %} download{% endif %}>{{label}}</a>
 					{% endif %}
-                    <a class="btn btn-block btn-warning" href="/../treasure/resource/{{ resource.id}}/evolve">Evolve Resource</a>
-                    <!-- todo: uncomment when tracking works                  
-                    <a class="btn btn-block btn-success" href="/../treasure/resource/{{ resource.id}}/track">Track Resource</a>
-                    end track-->                    
+                    <a class="btn btn-block btn-warning" href="/../treasure/resource/{{ resource.id}}/evolve">Evolve Resource</a>                 
+                    <a class="btn btn-block btn-success" href="/../treasure/resource/{{ resource.id}}/track">Track Resource</a>                
                     <a class="btn btn-block btn-info" href="/../treasure/resource/{{ resource.id }}/versions">View Versions</a>
                     {% if owned %}
                         <a class="btn btn-block btn-danger" href="/../treasure/resource/{{ resource.id }}/edit">Edit Resource</a>
