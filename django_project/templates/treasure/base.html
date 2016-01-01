@@ -51,7 +51,8 @@
                             	<li><a href="/treasure/logout">Logout</a></li>
                             {% else %}
                             	<li><a href="/treasure/login">Login</a></li>
-                            	<li><a href="/treasure/register">Register</a></li>      
+                              <li><a href="/treasure/register">Register</a></li>
+                              <li><a href="/treasure/auth/login/google-oauth2/?next=/">Login with Google</a></li>   
                             {% endif %}                   
                        </ul>
                        <ul class="nav">
@@ -85,7 +86,7 @@
 							<div id="logo">
 								<span class="image avatar48"><img src="{% static 'images/avatar.jpg' %}" alt="user avatar" /></span>
 								<h1 id="title">{{ user_teacher.firstname }} {{ user_teacher.surname }}</h1>
-								<p>{{ school }}</p>
+								<p>{{ school }}{% ifequal school 'No School' %}, <a href="/treasure/profile/edit/">Add?</a>{% endifequal%}</p>
 							</div>
 	                   {% endif %}
 
@@ -102,7 +103,8 @@
 									
 								{% else %}									
 									<li><a href="/treasure/login" class="skel-layers-ignoreHref"><span>Login</span></a></li>
-									<li><a href="/treasure/register" class="skel-layers-ignoreHref"><span>Register</span></a></li>									
+									<li><a href="/treasure/register" class="skel-layers-ignoreHref"><span>Register</span></a></li>
+                  <li><a href="/treasure/auth/login/google-oauth2/"><span>Login with Google</span></a></li>									
 								{% endif %}			                       
 							</ul>
 						</nav>

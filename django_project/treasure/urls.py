@@ -1,8 +1,9 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import patterns, url, include
 from treasure import views
 from treasure.views import download
 
 urlpatterns = patterns('',
+    
         url(r'^$', views.index, name='index'),
         url(r'^about/', views.about, name='about'),
         url(r'^history/', views.history, name='history'),
@@ -46,6 +47,8 @@ urlpatterns = patterns('',
         url(r'^explore/$', views.explore, name='explore'),
                 
         url(r'^search/$', views.search, name='search'),
+        url(r'^auth/', include('social.apps.django_app.urls', namespace='social')),
+        url(r'^auth/new/', views.newSocialAuthentication, name='new'),
         
         #url(r'^profile/(?P<user_id>\w+)/$', views.profile, name='profile'),
         #url(r'^profile/(?P<user_id>\w+)/history/$', views.user_history, name='user_history'),
