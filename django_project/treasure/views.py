@@ -291,9 +291,12 @@ def profile(request):
     try:
         context_dict['username'] = request.user.username
         context_dict['user_email'] = request.user.email
+
         userid = request.user.id
 		
         teacher = Teacher.objects.get(user = userid)
+        context_dict['user_firstname'] = teacher.firstname
+        context_dict['user_lastname'] = teacher.surname
         
         # get school from the user, if they have any
         try:

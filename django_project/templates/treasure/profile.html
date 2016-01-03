@@ -10,32 +10,30 @@
 {% if teacher %}
     <div class="hero-unit row-fluid">
 	    <h2>Profile Details</h2><br>
-		<h4>Username:</h4>
-		<p>  {{ username }}</p><br>
-		<h4>Full name:</h4>
-		<p>  {{ user_firstname }} {{ user_surname }}</p><br>
-		<h4>Email:</h4>
-		<p>  {{ user_email }}</p><br>
-		{% if user_school %}
-			<h4>School</h4>
-			<ul>
-				<li><a href="/treasure/school/{{ user_school.id }}">{{ user_school.name }}</a></li>
-			</ul>
-		{% else %}
-			<h4>You are not currently part of any school.<h4>
-		{% endif %}
-		<br>
-		{% if user_hubs %}
-			<h4>Hubs</h4>
-			<ul>
-			{% for hub in user_hubs %}
-				<li><a href="/treasure/hub/{{ hub.id }}">{{ hub.name }}</a></li>
-			{% endfor %}
-			</ul>
-		{% else %}
-			<h4>You are not currently part of any hubs.<h4>
-		{% endif %}
-		<br>
+		<ul>
+			<li>Username</li>
+			<li><input type="text" value="{{username}}" disabled="disabled"></li>
+			<li>E-mail</li>
+			<li><input type="text" value="{{user_email}}" disabled="disabled"></li>
+			<li>Password</li>
+			<li><input type="text" value="************" disabled="disabled"></li>
+			<li>First Name</li>
+			<li><input type="text" value="{{user_firstname}}" disabled="disabled"></li>
+			<li>Last Name</li>
+			<li><input type="text" value="{{user_lastname}}" disabled="disabled"></li>
+			<li>School</li>
+			<li>
+				<ul><li>{% if user_school %}<a href="/treasure/school/{{ user_school.id }}">{{ user_school.name }}</a>{% else %} You have not added any schools in your profile.{% endif %}</li></ul>
+			</li>
+			<li>Hub</li>
+			<li>{% if user_hubs %}
+				<ul>
+				{% for hub in user_hubs %}
+					<li><a href="/treasure/hub/{{ hub.id }}">{{ hub.name }}</a></li>
+				{% endfor %}
+				</ul>
+				{% else %} You have not added any hubs in your profile.{% endif %}</li>
+		</ul>
 		<a class="btn btn-primary" href="/treasure/profile/edit">Edit Profile</a>
     </div>
 {% else %}
