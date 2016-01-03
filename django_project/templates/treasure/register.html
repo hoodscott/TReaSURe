@@ -1,6 +1,7 @@
 {% extends 'treasure/base.html' %}
 
 {% load static %}
+{% load render_help %}
 
 {% block title %}
     Register
@@ -26,7 +27,7 @@
 
                 {% for field in user_form.visible_fields %}
                     {{ field.errors }}
-                    {{ field.help_text }}<br/>
+                    {{field.label}}{% render_help_text field %}<br/>
                     {{ field }}<br/>
                 {% endfor %}
                 
@@ -36,7 +37,7 @@
 
                 {% for field in teacher_form.visible_fields %}
                     {{ field.errors }}
-                    {{ field.help_text }}<br/>
+                    {{field.label}}{% render_help_text field %}<br/>
                     {{ field }}<br/>
                 {% endfor %}
 

@@ -2,6 +2,7 @@ from django import forms
 from treasure.models import *
 from django.contrib.auth.models import User
 from treasure.widgets import *
+from django.utils.safestring import mark_safe
 
 #define values for hidden
 HIDDEN = (
@@ -21,20 +22,26 @@ SEARCHTYPES = (
     ('1', 'Packs'),
     
 ) 
+countries= (("Scotland", "Scotland"),
+        ("England", "England"),("NorthernIreland", "NorthernIreland"),
+        ("Wales", "Wales"))
 
 class ResourceForm(forms.ModelForm):
         
     name = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
                             max_length=128,
-                            help_text="Please enter the resource name.")
+                            help_text="The resource name.",
+                            label='Name')
     
     summary = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
                         max_length=128,
-                        help_text="Please enter a short description.")
+                        label='Summary',
+                        help_text="A short description. This will appear in resource lists.")
     
     description = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
-                            help_text="Please enter the full description.",
-                            required=False)
+                            help_text="The full description of the Resource. This will appear when viewing that resource.",
+                            required=False,
+                            label='Description')
                             
     tree = forms.CharField(widget = forms.HiddenInput(), required=False)
     user = forms.CharField(widget = forms.HiddenInput(), required=False) 
@@ -54,14 +61,17 @@ class ResourceForm(forms.ModelForm):
     level_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(type=0).order_by('name'),
                                                 required=True,
-                                                help_text="Please select level(s).")
+                                                label='Level Tags',
+                                                help_text="Tags that describe the Level that this material concerns")
     topic_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(type=1).order_by('name'),
                                                 required=True,
-                                                help_text="Please select topic(s).")
+                                                label='Topic Tags',
+                                                help_text="Tags that describe the Topic that this material covers")
     other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
                                                 required=False,
-                                                help_text="Please select other tags (optional)")
+                                                label='Other Tags',
+                                                help_text="Any other tags not falling under the Level and Topic categories (optional)")
               
     def __init__(self,tags,*args,**kwargs):
         self.tag_ids = tags
@@ -108,11 +118,14 @@ class WebForm(forms.ModelForm):
               
 class UserForm(forms.ModelForm):
     username = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
-                                help_text="Please enter a username.")
+                                help_text="The account username",
+                                label='Username')
     email = forms.CharField(widget = DisableAutoInput(attrs={'tabindex':'1'}),
-                            help_text = "Please enter your email.")
+                            help_text = "The email address",
+                            label='E-mail')
     password = forms.CharField(widget = forms.PasswordInput(attrs={'tabindex':'1'}),
-                            help_text = "Please enter a password.")
+                            help_text = "The account password.",
+                            label='Password')
 
     class Meta:
         model = User
@@ -121,17 +134,21 @@ class UserForm(forms.ModelForm):
         
 class TeacherForm(forms.ModelForm):
     firstname = forms.CharField(max_length=128,
-                                help_text="Please enter your first name.",
+                                help_text="Your first name",
+                                label='First Name',
                                 widget = forms.TextInput(attrs={'tabindex':'1'}))
     surname = forms.CharField(max_length=128,
-                                help_text="Please enter your surname.",
+                                help_text="Your last name",
+                                label='Last Name',
                                 widget = forms.TextInput(attrs={'tabindex':'1'}))
     school = forms.ModelChoiceField(queryset=School.objects.all().order_by('name'),
                                     required=False,
-                                    help_text="Please select your school.")                                   
+                                    label='School',
+                                    help_text="The school you work for")                                   
     hubs = forms.ModelMultipleChoiceField(queryset=Hub.objects.all().order_by('name'),
                                             required=False,
-                                            help_text="Please select your hubs.")                                                
+                                            label='Hubs',
+                                            help_text="The teaching hubs that you are member of (eg. Plan C)")                                                
     def __init__(self,*args,**kwargs):
         super(TeacherForm, self).__init__(*args,**kwargs)
         # wrap the model widget in the wrapper        
@@ -153,40 +170,36 @@ class TeacherForm(forms.ModelForm):
         fields = ('firstname', 'surname', 'school', 'hubs')
         exclude = []
 
-class SchoolForm(forms.ModelForm):
+class SchoolForm(forms.Form):
+
     name = forms.CharField(max_length=128,
-                            help_text="Please enter the name of the school.",
+                            help_text="The name of the school",
+                            label='Name',
                             widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}))
+    country = forms.ChoiceField(label='Country',help_text="The Country the School is in", choices=countries)
     town = forms.CharField(max_length=128,
-                            help_text="Please enter the town the school is in.",
+                            help_text="The town the school is in",
+                            label='Town',
                             widget = forms.TextInput(attrs={'tabindex':'1'}))
     address = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
-                                help_text="Please enter the address of the school.")
-    latitude = forms.FloatField(help_text="Please enter the latitude of the school.",
+                                help_text="The address of the school",
+                                label='Address (eg. 3 George Street)')
+    postcode = forms.CharField(help_text="The Postcode of the school",
+                                label='Postcode',
                                 widget = forms.TextInput(attrs={'tabindex':'1'}))
-    longitude = forms.FloatField(help_text="Please enter the longitude of the school.",
-                                widget = forms.TextInput(attrs={'tabindex':'1'}))
-       
-    class Meta:
-        model = School
-        fields = ('name', 'town', 'address', 'latitude', 'longitude')
-        exclude = []
         
-class HubForm(forms.ModelForm):
+class HubForm(forms.Form):
     name = forms.CharField(max_length=128,
-                            help_text="Please enter the name of the hub.",
+                            help_text="The name of the hub.",
+                            label='Name',
                             widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}))
-    address = forms.CharField( help_text="Please enter the address of the hub.",
-                                widget = forms.Textarea(attrs={'tabindex':'1'}))
-    latitude = forms.FloatField(help_text="Please enter the latitude of the hub.",
-                                widget = forms.TextInput(attrs={'tabindex':'1'}))
-    longitude = forms.FloatField(help_text="Please enter the longitude of the hub.",
-                                widget = forms.TextInput(attrs={'tabindex':'1'}))
 
-    class Meta:
-        model = Hub
-        fields = ('name', 'address', 'latitude', 'longitude')
-        exclude = []
+    country = forms.ChoiceField(label='Country',help_text="The Country the Hub is in", choices=countries)
+    address = forms.CharField( label='Address',help_text="The address of the hub",
+                                widget = forms.Textarea(attrs={'tabindex':'1'}))
+    postcode = forms.CharField(help_text="The Postcode of the Hub",
+                                label='Postcode',
+                                widget = forms.TextInput(attrs={'tabindex':'1'}))
         
 class SearchForm(forms.Form):
     
@@ -199,6 +212,7 @@ class SearchForm(forms.Form):
     # tag forms
     level_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=0).order_by('name'),
                                                 required=False,
+                                                label='Level Tags',
                                                 help_text="Select levels.",
                                                 widget = forms.SelectMultiple(attrs={'tabindex':'1'}))
     topic_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=1).order_by('name'),
@@ -212,7 +226,8 @@ class SearchForm(forms.Form):
                                                 
 class TagForm(forms.ModelForm):
     name = forms.CharField(max_length=128,
-                            help_text="Please enter the new tag.",
+                            help_text="The name of the new tag (Should be Descriptive)",
+                            label='Name',
                             widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}))
     type = forms.CharField(widget = forms.HiddenInput(), required=False)               
     
@@ -226,21 +241,25 @@ class PackForm(forms.ModelForm):
 
     name = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
                             max_length=128,
-                            help_text="Please enter the pack name.")
+                            help_text="The name of the pack",
+                            label='Name')
     
     summary = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
                         max_length=128,
-                        help_text="Please enter a short description.")
+                        help_text="A short description for the pack. This will appear in pack lists.",
+                        label='Summary')
     
     description = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
-                            help_text="Please enter the full description.",
-                            required=False)
+                            help_text="The full description of the pack. This will appear when viewing a pack.",
+                            required=False,
+                            label='Description')
                             
     user = forms.CharField(widget = forms.HiddenInput(), required=False)
     
     image = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
                             max_length=128,
-                            help_text="Enter image url.")
+                            help_text="URL for the Pack's image",
+                            label='Image URL')
     
     # should the pack be shown (basically deleted if not)
     hidden = forms.IntegerField(widget = forms.HiddenInput(), required=False)
@@ -250,13 +269,16 @@ class PackForm(forms.ModelForm):
     
     level_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(type=0).order_by('name'),
-                                                required=False, help_text="Select level(s).")
+                                                required=False, help_text="Tags that describe the Level that this material concerns",
+                                                label='Level Tags')
     topic_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(type=1).order_by('name'),
-                                                required=False, help_text="Select topic(s).")
+                                                required=False, help_text="Tags that describe the Topic that his material covers",
+                                                label='Topic Tags')
     other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
                                                 required=False,
-                                                help_text="Please select other tags (optional)")
+                                                help_text="Any other tags not falling into Level or Topic category (optional)",
+                                                label='Other Tags')
               
     def __init__(self,tags,*args,**kwargs):
         self.tag_ids = tags
@@ -282,24 +304,31 @@ class PackForm(forms.ModelForm):
         
 class EditResourceForm(forms.ModelForm):
     
-    summary = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
+    summary = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
                         max_length=128,
-                        help_text="Please enter a short description.")
+                        label='Summary',
+                        help_text="A short description. This will appear in resource lists.")
     
     description = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
-                            help_text="Please enter the full description.",
-                            required=False)
-    
+                            help_text="The full description of the Resource. This will appear when viewing that resource.",
+                            required=False,
+                            label='Description')
+                            
     level_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(type=0).order_by('name'),
-                                                required=True, help_text="Please select level(s).")
+                                                required=True,
+                                                label='Level Tags',
+                                                help_text="Tags that describe the Level that this material concerns")
     topic_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(type=1).order_by('name'),
-                                                required=True, help_text="Please select topic(s).")
+                                                required=True,
+                                                label='Topic Tags',
+                                                help_text="Tags that describe the Topic that this material covers")
     other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
                                                 required=False,
-                                                help_text="Please select other tags (optional)")
-     
+                                                label='Other Tags',
+                                                help_text="Any other tags not falling under the Level and Topic categories (optional)")
+
     hidden = forms.ChoiceField(choices=HIDDEN,
                                 required=True,
                                 label='Visible',
@@ -332,28 +361,34 @@ class EditResourceForm(forms.ModelForm):
                                                 
 class EditPackForm(forms.ModelForm):
 
-    summary = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
+    summary = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
                         max_length=128,
-                        help_text="Please enter a short description.")
+                        help_text="A short description for the pack. This will appear in pack lists.",
+                        label='Summary')
     
     description = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
-                            help_text="Please enter the full description.",
-                            required=False)
-                            
+                            help_text="The full description of the pack. This will appear when viewing a pack.",
+                            required=False,
+                            label='Description')
+    
     image = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
                             max_length=128,
-                            help_text="Enter image url.")
+                            help_text="URL for the Pack's image",
+                            label='Image URL')
     
     level_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(type=0).order_by('name'),
-                                                required=False, help_text="Please select level(s).")
+                                                required=False, help_text="Tags that describe the Level that this material concerns",
+                                                label='Level Tags')
     topic_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(type=1).order_by('name'),
-                                                required=False, help_text="Please select topic(s).")
+                                                required=False, help_text="Tags that describe the Topic that his material covers",
+                                                label='Topic Tags')
     other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
                                                 required=False,
-                                                help_text="Please select other tags (optional)")
-                                                     
+                                                help_text="Any other tags not falling into Level or Topic category (optional)",
+                                                label='Other Tags')
+
     hidden = forms.ChoiceField(choices=HIDDEN,
                                 required=True,
                                 label='Visible',

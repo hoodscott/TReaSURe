@@ -1,6 +1,7 @@
 {% extends 'treasure/base.html' %}
 
 {% load static %}
+{% load render_help %}
 
 {% block title %}
     Edit Profile
@@ -25,9 +26,9 @@
 				{% endfor %}
 
 				{% for field in user_form.visible_fields %}
-				    {{ field.errors }}
-				    {{ field.help_text }}<br/>
-				    {{ field }}<br/>
+	                {{ field.errors }}
+	                {{field.label}}{% render_help_text field %}<br/>
+	                {{ field }}<br/>
 				{% endfor %}
 				
 				{% for hidden in teacher_form.hidden_fields %}
@@ -35,9 +36,9 @@
 				{% endfor %}
 
 				{% for field in teacher_form.visible_fields %}
-				    {{ field.errors }}
-				    {{ field.help_text }}<br/>
-				    {{ field }}<br/>
+	                {{ field.errors }}
+	                {{field.label}}{% render_help_text field %}<br/>
+	                {{ field }}<br/>
 				{% endfor %}
 				
 				<br/>
