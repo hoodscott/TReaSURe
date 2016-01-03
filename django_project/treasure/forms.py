@@ -205,23 +205,23 @@ class SearchForm(forms.Form):
     
     searchtype = forms.ChoiceField(choices=SEARCHTYPES,
                                 required=True,
-                                label='Resource',
-                                help_text="What do you want to search for.",
+                                label='Search for',
+                                help_text="What do you want to search for",
                                 widget = forms.Select(attrs={'tabindex':'1', 'autofocus':'autofocus'}))
     
     # tag forms
     level_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=0).order_by('name'),
                                                 required=False,
                                                 label='Level Tags',
-                                                help_text="Select levels.",
+                                                help_text="Tags that describe the Level that this material concerns",
                                                 widget = forms.SelectMultiple(attrs={'tabindex':'1'}))
     topic_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=1).order_by('name'),
                                                 required=False,
-                                                help_text="Select topics.",
+                                                help_text="Tags that describe the Topic that his material covers",
                                                 widget = forms.SelectMultiple(attrs={'tabindex':'1'}))
     other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
                                                 required=False,
-                                                help_text="Select other tags.",
+                                                help_text="Any other tags not falling into Level or Topic category (optional)",
                                                 widget = forms.SelectMultiple(attrs={'tabindex':'1'}))
                                                 
 class TagForm(forms.ModelForm):

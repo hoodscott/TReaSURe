@@ -1,6 +1,7 @@
 {% extends 'treasure/base.html' %}
 
 {% load static %}
+{% load render_help %}
 
 {% block title %}
     Search
@@ -61,7 +62,7 @@
 
                                 {% for field in form.visible_fields %}
                                     {{ field.errors }}
-                                    {{ field.help_text }}<br/>
+                                    {{field.label}}{% render_help_text field %}<br/>
                                     {{ field }}<br/>
                                 {% endfor %}
                                 
