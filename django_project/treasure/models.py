@@ -232,3 +232,37 @@ class TeacherRatesResource(models.Model):
 
 
 ''' end of discussion relationship models '''
+
+# postcode Models        
+class ScotlandPostcodes(models.Model):
+    Postcode = models.TextField(primary_key=True)
+    Latitude = models.FloatField()
+    Longitude = models.FloatField()
+    
+    def __unicode__(self):
+        return "%s" % (self.Postcode)
+# postcode Models        
+class EnglandPostcodes(models.Model):
+    Postcode = models.TextField(primary_key=True)
+    Latitude = models.FloatField()
+    Longitude = models.FloatField()
+    
+    def __unicode__(self):
+        return "%s" % (self.Postcode)
+# postcode Models        
+class WalesPostcodes(models.Model):
+    Postcode = models.TextField(primary_key=True)
+    Latitude = models.FloatField()
+    Longitude = models.FloatField()
+    
+    def __unicode__(self):
+        return "%s" % (self.Postcode)
+
+# postcode Models        
+class NorthernIrelandPostcodes(models.Model):
+    Postcode = models.TextField(primary_key=True)
+    Latitude = models.FloatField()
+    Longitude = models.FloatField()
+    
+    def __unicode__(self):
+        return "%s" % (self.Postcode)

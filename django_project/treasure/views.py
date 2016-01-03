@@ -5,9 +5,12 @@ from treasure.forms import *
 from treasure.models import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from string import split
+from django.core.exceptions import ValidationError 
+from django.core import validators
+from string import split, upper
 from datetime import datetime
 from django.utils.html import escape, escapejs
+from django.utils.translation import ugettext as _
 
 # get the users teacher entry and school for the sidebar
 def sidebar(request):
@@ -27,7 +30,27 @@ def sidebar(request):
         pass
     
     return context_dict
-     
+
+def postcodeLocation(country, postcode_given):
+    s=upper(str(postcode_given))     #converting given postcode to uppercase
+    if ' ' not in s:
+        s=s[:-3]+' '+s[-3:]   #if postcode has no space, add appropriately
+    try:
+        if country=='England':
+            result=EnglandPostcodes.objects.get(Postcode=s)
+        elif country=='Scotland':
+            result=ScotlandPostcodes.objects.get(Postcode=s)
+        elif country=='Wales':
+            result=WalesPostcodes.objects.all().get(Postcode=s)
+        elif country=='NorthernIreland':
+            result=NorthernIrelandPostcodes.objects.get(Postcode=s)
+        long=result.Longitude
+        lat=result.Latitude
+        return {'long': long,'lat': lat}
+    except:
+        return -1
+
+    return
 
 # function to convert a many to many relationship to a list of objects
 def get_list(relation):
@@ -86,6 +109,10 @@ def index(request):
     
     need2rate=TeacherDownloadsResource.objects.all()
     context_dict['need2rate'] = need2rate.filter(teacher=this_user)
+
+    geolocationDict=postcodeLocation('England','AL1 1AL')
+    context_dict['long']=geolocationDict['long']
+    context_dict['lat']=geolocationDict['lat']
 
     
     # return response object
@@ -720,15 +747,20 @@ def add_hub(request):
         # Have we been provided with a valid form?
         if form.is_valid():
             # Save the new category to the database.
-            hub = form.save(commit=True)     
-            
-            # if addition was in a popup
-            ## This will fire the script to close the popup and update the list
-            if "_popup" in request.POST:
-                return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % \
-                    (escape(hub.pk), escapejs(hub)))
-            ## No popup, so return the normal response            
-            return hub_view(request, hub.id)
+            geolocationDict=postcodeLocation(form.cleaned_data['country'],form.cleaned_data['postcode'])
+            if geolocationDict!=-1:
+                hub = Hub(name=form.cleaned_data['name'], address=form.cleaned_data['address'], longitude=geolocationDict['long'],latitude=geolocationDict['lat'])     
+                hub.save()
+                # if addition was in a popup
+                ## This will fire the script to close the popup and update the list
+                if "_popup" in request.POST:
+                    return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % \
+                        (escape(hub.pk), escapejs(hub)))
+                ## No popup, so return the normal response            
+                return hub_view(request, hub.id)
+            else:
+                form._errors['postcode'] = '--Invalid Postcode. '
+                print form.errors
         else:
             # The supplied form contained errors - just print them to the terminal.
             print form.errors
@@ -756,19 +788,23 @@ def add_school(request):
     # A HTTP POST?
     if request.method == 'POST':
         form = SchoolForm(request.POST)
-
         # Have we been provided with a valid form?
         if form.is_valid():
             # Save the new category to the database.
-            school = form.save(commit=True)     
-            
-            # if addition was in a popup
-            ## This will fire the script to close the popup and update the list
-            if "_popup" in request.POST:
-                return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % \
-                    (escape(school.pk), escapejs(school)))
-            ## No popup, so return the normal response
-            return school_view(request, school.id)
+            geolocationDict=postcodeLocation(form.cleaned_data['country'],form.cleaned_data['postcode'])
+            if geolocationDict!=-1:
+                school= School(name=form.cleaned_data['name'], town=form.cleaned_data['town'], address=form.cleaned_data['address'], latitude=geolocationDict['lat'], longitude=geolocationDict['long'])       
+                school.save()
+                # if addition was in a popup
+                ## This will fire the script to close the popup and update the list
+                if "_popup" in request.POST:
+                    return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % \
+                        (escape(school.pk), escapejs(school)))
+                ## No popup, so return the normal response
+                return school_view(request, school.id)
+            else:
+                form._errors['postcode'] = '--Invalid Postcode. '
+                print form.errors
         else:
             # The supplied form contained errors - just print them to the terminal.
             print form.errors
