@@ -7,10 +7,14 @@
 {% endblock %}
 
 {% block body_block %}
-    <div class="hero-unit">
-    Downloaded={{downloaded|length}}
-    Used={{used|length}}
-        <div id="map" style="height: 1280px; width: 960px"><div style="text-align:center;">
+  <div style="height:100%; width:100%">
+    <div class="btn-group">
+      <a href="../{% ifequal timeline 'timeline' %}../{% endifequal%}downloads/{% ifequal timeline 'timeline' %}timeline/{% endifequal%}" class="btn">{% if downloaded %}<strong>Downloads</strong>{% else %}Downloads{% endif %}</a>
+      <a href="../{% ifequal timeline 'timeline' %}../{% endifequal%}usage/{% ifequal timeline 'timeline' %}timeline/{% endifequal%}" class="btn">{% if used %}<strong>Usage</strong>{% else %}Usage{% endif %}</a>
+      <a href="../{% ifequal timeline 'timeline' %}../{% endifequal%}rating/{% ifequal timeline 'timeline' %}timeline/{% endifequal%}" class="btn">{% if rated %}<strong>Feedback</strong>{% else %}Feedback{% endif %}</a>
+    </div>
+     <div class='btn' onclick='window.location.assign('{% ifequal timeline 'timeline' %}../ {% else %}./timeline/{% endifequal%}')'>Timeline Animation <input type="checkbox"  onclick='window.location.assign("{% ifequal timeline 'timeline' %}../')' checked="checked" {% else %}./timeline/")'{% endifequal%}/></div>
+        <div id="map" style="height: 100%; min-height: 640px; width: 100%"><div style="text-align:center;">
 			<span style="color:Gray;">Loading map...</span>
 		</div>
   
@@ -25,40 +29,69 @@ function initMap() {
   var myLatLng = {lat: 1.0, lng: 1.0};
   var dlicon="{% static 'images/dlicon.png' %}";
   var classicon="{% static 'images/classicon.png' %}";
+  var fbicon="{% static 'images/feedback.png' %}";
   var map = new google.maps.Map(document.getElementById('map'), {
     zoom: 4,
-    center: myLatLng
+    center: myLatLng,
+    zIndex: 1
   });
 
   var downloaded=[];
   var used=[];
+  var rated=[];
+  var markers=[];
+  var loadingTime=12000;
+  var delay= 2500;
+  
+  {% if downloaded %}
   {% for download in downloaded %}
   downloaded.push({lat:{{download.latitude}}, lng: {{download.longitude}} })
   {% endfor %}
+  for (i = 0; i < downloaded.length; i++) { 
+	  {% ifequal timeline 'timeline' %}addMarkerWithTimeout(downloaded, i, (loadingTime+i*delay), dlicon, "Downloaded");{% else %}addMarker(downloaded, i, dlicon, "Downloaded");
+    {% endifequal %}
+	}
+  {% endif %}
+
+
+  {% if used %}
   {% for usage in used %}
   used.push({lat:{{usage.latitude}}, lng: {{usage.longitude}} })
-  {% endfor %}
-
-  for (i = 0; i < downloaded.length; i++) { 
-	  marker = new google.maps.Marker({
-	    position: downloaded[i],
-	    map: map,
-	    icon: dlicon,
-	    title: 'Hello World!'
-	  });
-	}
+  {% endfor %}  
   for (i = 0; i < used.length; i++) { 
-	  marker = new google.maps.Marker({
-	    position: used[i],
-	    map: map,
-	    icon: classicon,
-	    title: 'Hello World!'
-	  });
-	}
+    {% ifequal timeline 'timeline' %}addMarkerWithTimeout(used, i, (loadingTime+i*delay), classicon, "Used");{% else %}addMarker(used, i, classicon, "Used");
+    {% endifequal %}
+  }
+  {% endif %} 
 
+  {% if rated %}
+  {% for rating in rated %}
+  rated.push({lat:{{rating.latitude}}, lng: {{rating.longitude}} })
+  {% endfor %}  
+  for (i = 0; i < rated.length; i++) { 
+    {% ifequal timeline 'timeline' %}addMarkerWithTimeout(rated, i, (loadingTime+i*delay), fbicon, "Rated");{% else %}addMarker(rated, i, fbicon, "Rated");
+    {% endifequal %}
+  }
+  {% endif %} 
+
+function addMarkerWithTimeout(array, index, timeout, icon, title) {
+  window.setTimeout(function(){addMarker(array, index,icon, title);}, timeout);
 }
+
+function addMarker(array, index, icon, title) {
+    markers.push(new google.maps.Marker({
+      position: array[index],
+      map: map,
+      icon: icon,
+      animation: google.maps.Animation.DROP,
+      title: title,
+      zIndex: index+2
+    }));
+  }
+}
+
 </script>
 <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDudWkR_tpJ06lIarBZm3qIngNAae1RXNw&scale=2&signed_in=true&callback=initMap">
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDudWkR_tpJ06lIarBZm3qIngNAae1RXNw&scale=1&signed_in=true&callback=initMap">
 </script>
 {% endblock %}

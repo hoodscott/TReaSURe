@@ -523,6 +523,61 @@ def register(request):
     return render_to_response('treasure/register.html', context_dict, context)
             
          
+# submit rating
+def rate(request, resource_id):
+    # get the context of request
+    context = RequestContext(request)
+    context_dict = sidebar(request)
+    this_teacher = Teacher.objects.get(id=request.user.id)
+    this_resource = Resource.objects.get(id=resource_id)
+    try:
+        condition = TeacherRatesResource.objects.get(teacher_id=this_teacher.id, resource_id=this_resource.id)
+        context_dict['condition'] = condition
+    except TeacherRatesResource.DoesNotExist:
+            # do nothing
+            pass 
+    try:
+        download = TeacherDownloadsResource.objects.get(teacher_id=this_teacher.id, resource_id=this_resource.id)
+    except TeacherDownloadsResource.DoesNotExist:
+            # This could never happen
+            pass 
+    rated = False
+
+    # If it's a HTTP POST, we're interested in processing form data.
+    if request.method == 'POST':
+        # Attempt to grab information from the raw form information.
+        rating_form = RatingForm(request.POST)
+        # If the form is valid..
+        if rating_form.is_valid():
+            # Save the rating to the database.
+            rating=TeacherRatesResource(teacher_id=this_teacher.id,resource_id=this_resource.id,measure1=rating_form.cleaned_data['measure1'],measure2=rating_form.cleaned_data['measure2'],measure3=rating_form.cleaned_data['measure3'],comment=rating_form.cleaned_data['comment'])
+            rating.save()
+            download.rated='1'
+            download.save()
+            
+            # Update our variable to tell the template registration was successful.
+            rated = True
+
+        # Invalid form or forms print problems to the terminal.
+        else:
+            print "ERROR", rating_form.errors
+
+    # Not a HTTP POST, so we render our form using two ModelForm instances.
+    else:
+        rating_form=RatingForm()
+    
+    # create context dictionary
+    context_dict['this_resource'] = this_resource
+    context_dict['this_teacher'] = this_teacher
+    context_dict['rating_form'] = rating_form
+    context_dict['rated'] = rated
+
+    # Render the template depending on the context.
+    return render_to_response('treasure/rate.html', context_dict, context)
+            
+         
+
+
 def user_login(request):
     # get the context of request
     context = RequestContext(request)
@@ -873,9 +928,28 @@ def resource_view(request, resource_id):
     
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
+    this_teacher = Teacher.objects.get(id=request.user.id)
+    this_resource = Resource.objects.get(id=resource_id)
+    try:
+        rating_exists = TeacherRatesResource.objects.get(teacher_id=this_teacher.id, resource_id=this_resource.id)
+        context_dict['rating_exists'] = rating_exists
+    except TeacherRatesResource.DoesNotExist:
+            # do nothing
+            pass 
+    try:
+        downloaded = TeacherDownloadsResource.objects.get(teacher_id=this_teacher.id, resource_id=this_resource.id)
+        context_dict['downloaded'] = downloaded
+    except TeacherDownloadsResource.DoesNotExist:
+            # do nothing
+            pass 
     try:
         # Can we find a resource with the given id?
         this_resource = Resource.objects.get(id=resource_id)
+        try:
+            feedback= TeacherRatesResource.objects.all().filter(resource_id=this_resource.id)
+            context_dict['feedback']=feedback
+        except TeacherRatesResource.DoesNotExist:
+            pass
         
         # get fields
         context_dict['resource_name'] = this_resource.name
@@ -906,7 +980,7 @@ def resource_view(request, resource_id):
             web_resource = WebResource.objects.get(resource = this_resource)
             
             # add fields to dict
-            context_dict['label'] = 'Link to Resource'
+            context_dict['label'] = 'Visit Resource'
             context_dict['web_resource'] = True
             
         except WebResource.DoesNotExist:
@@ -1438,7 +1512,7 @@ def evolve(request, parent_id):
     
 # view to track a resource
 @login_required
-def track(request, resource_id):
+def track(request, resource_id, trackType, timeline=0):
     # Request the context of the request.
     context = RequestContext(request)
     
@@ -1447,17 +1521,27 @@ def track(request, resource_id):
     this_resource = get_object_or_404(Resource, id=resource_id)
 
     #Track locations
-    try:
-        downloaded=TeacherDownloadsResource.objects.all().filter(resource=this_resource, used=0)
-        context_dict['downloaded']=downloaded
-    except TeacherDownloadsResource.DoesNotExist:
-        pass
-
-    try:
-        used=TeacherDownloadsResource.objects.all().filter(resource=this_resource, used=1)
-        context_dict['used']=used
-    except TeacherDownloadsResource.DoesNotExist:
-        pass
+    if trackType=='downloads':
+        try:
+            downloaded=TeacherDownloadsResource.objects.all().filter(resource=this_resource).order_by('datetime')
+            context_dict['downloaded']=downloaded
+            context_dict['timeline']=timeline
+        except TeacherDownloadsResource.DoesNotExist:
+            pass
+    elif trackType=='usage':
+        try:
+            used=TeacherDownloadsResource.objects.all().filter(resource=this_resource, used=1).order_by('datetime')
+            context_dict['used']=used
+            context_dict['timeline']=timeline
+        except TeacherDownloadsResource.DoesNotExist:
+            pass
+    elif trackType=='rating':
+        try:
+            rated=TeacherDownloadsResource.objects.all().filter(resource=this_resource, rated=1).order_by('datetime')
+            context_dict['rated']=rated
+            context_dict['timeline']=timeline
+        except TeacherDownloadsResource.DoesNotExist:
+            pass
     
     # Render the template depending on the context.
     return render_to_response('treasure/track.html', context_dict, context)
