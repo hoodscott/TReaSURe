@@ -26,6 +26,20 @@ countries= (("Scotland", "Scotland"),
         ("England", "England"),("NorthernIreland", "NorthernIreland"),
         ("Wales", "Wales"))
 
+rating= (('5','5'),('4','4'),('3','3'),('2','2'),('1','1'))
+
+class RatingForm(forms.Form):
+    teacher = forms.CharField(widget = forms.HiddenInput(), required=False)
+    resource = forms.CharField(widget = forms.HiddenInput(), required=False)
+    measure1 = forms.ChoiceField(label='Measure1',help_text="Measure 1 Description", choices=rating)
+    measure2 = forms.ChoiceField(label='Measure1',help_text="Measure 1 Description", choices=rating)
+    measure3 = forms.ChoiceField(label='Measure1',help_text="Measure 1 Description", choices=rating)
+    comment = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
+                            max_length=128,
+                            help_text="Feedback for the resource",
+                            label='Feedback/Comment')
+
+
 class ResourceForm(forms.ModelForm):
         
     name = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),

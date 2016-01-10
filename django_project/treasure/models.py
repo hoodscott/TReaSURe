@@ -186,6 +186,7 @@ class TeacherDownloadsResource(models.Model):
         
 # model to store a users rating of a resource        
 class TeacherRatesResource(models.Model):
+    id = models.AutoField(primary_key=True)
     teacher = models.ForeignKey(Teacher)
     resource = models.ForeignKey(Resource)
     # rating measures
@@ -212,6 +213,7 @@ class TeacherWantstoTalkResource(models.Model):
 
 ''' start of discussion relationship models '''
 
+''' Don't know what this is
 # model to disucssions of a resource        
 class TeacherRatesResource(models.Model):
     owner = models.ForeignKey(Teacher)
@@ -229,7 +231,7 @@ class TeacherRatesResource(models.Model):
     
     def __unicode__(self):
         return "%s %s" % (self.teacher.name, self.resource.name)
-
+'''
 
 ''' end of discussion relationship models '''
 
