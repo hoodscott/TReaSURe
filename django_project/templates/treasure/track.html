@@ -26,14 +26,15 @@
     </div>
     <script type="text/javascript">
 function initMap() {
-  var myLatLng = {lat: 1.0, lng: 1.0};
+  var myLatLng = {lat: 54.53, lng: -4.17};
   var dlicon="{% static 'images/dlicon.png' %}";
   var classicon="{% static 'images/classicon.png' %}";
   var fbicon="{% static 'images/feedback.png' %}";
   var map = new google.maps.Map(document.getElementById('map'), {
     zoom: 4,
     center: myLatLng,
-    zIndex: 1
+    zIndex: 1,
+    zoom: 5
   });
 
   var downloaded=[];

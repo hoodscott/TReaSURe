@@ -1,2 +1,4 @@
 *.pyc
 *~
+
+django_project/treasure_.db
