@@ -3,6 +3,8 @@
 {% load static %}
 {% load render_help %}
 
+{% block head_block %}{% if registered %}<meta http-equiv="refresh" content="2; url=../login/" />{% endif %}{% endblock %}
+
 {% block title %}
     Register
 {% endblock %}
@@ -11,8 +13,8 @@
 
 <div class="hero-unit">
     {% if registered %}
-        <h2>Thank you for registering</h2>
-        <h3>Please <a href="/treasure/login/" tabindex='1'>Login</a></h3>
+        <h3>Thank you for registering</h3>
+        <h4>You are being automatically redirected to the login page. If nothing happens, please <a href="/treasure/login/" tabindex='1'>click here</a>!</h4>
     {% else %}
         <h2>Teacher Registration</h2>
         <br/>
