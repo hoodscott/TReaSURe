@@ -616,7 +616,6 @@ def user_login(request):
     return render_to_response('treasure/login.html', context_dict, context)
 
 # log the user out
-@login_required
 def user_logout(request):
     # Since we know the user is logged in, we can now just log them out.
     logout(request)
