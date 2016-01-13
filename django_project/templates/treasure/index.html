@@ -46,13 +46,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for resource in MyResources %}
-                        {% if resource.hidden != 1 %}
+                    {% for resource in MyResources %}                        
                         <tr class="studentLabel">
                             <td><a href="/treasure/resource/{{ resource.id }}">{{ resource.name }}</a></td>
                             <td>{{ resource.summary }}</td>
-                        </tr>
-                        {% endif%}
+                        </tr>                        
                     {% endfor %}
 
                 </tbody>
@@ -83,15 +81,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for pack in MyPacks %}
-                        {% if pack.hidden == 0 %}
+                    {% for pack in MyPacks %}                        
                         <tr class="packlabel">
                             <td><a href="/treasure/packs/{{ pack.id }}">{{ pack.name }}</a></td>
                             <td>{{ pack.summary }}</td>
-                        </tr>
-                        {% endif %}
+                        </tr>                        
                     {% endfor %}
-
                 </tbody>
              </table>
         </div>
