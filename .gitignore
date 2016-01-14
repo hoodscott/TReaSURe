@@ -2,3 +2,4 @@
 *~
 *.db
 django_project/treasure_.db
+django_project/media
