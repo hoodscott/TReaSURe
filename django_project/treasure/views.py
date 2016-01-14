@@ -1589,7 +1589,6 @@ def addtopack(request, resource_id):
 # view to add a pack to the database
 @login_required
 def newpack(request):
-    print "herere"
 
     # Request the context of the request.
     context = RequestContext(request)
@@ -1659,7 +1658,7 @@ def newpack(request):
 # initialises the new pack with the resource the new pack button was selected on
 @login_required
 def newpack_initial(request, resource_id):
-    print "shysst"
+
     # Request the context of the request.
     context = RequestContext(request)
     
@@ -1712,9 +1711,7 @@ def newpack_initial(request, resource_id):
             this_resource = Resource.objects.get(id=resource_id)
         
             # add resource to pack
-            this_resource.packs.add(this_pack)
-            print "bisssssss" , this_resource.packs
-            
+            this_resource.packs.add(this_pack)            
             this_resource.save()
                         
             # Now show the new pack page
