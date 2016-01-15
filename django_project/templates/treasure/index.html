@@ -111,7 +111,8 @@
                     <tr>
 	                        <th>Resource Name</th>
 	                        <th>Date and Time</th>
-	                        <th>Have used it?</th>
+                            <th>Have used it?</th>
+                            <th>Have rated it?</th>
 	                    </tr>
 	                </thead>
 	                <tbody>
@@ -119,7 +120,8 @@
 	                        <tr class="studentLabel">
 	                            <td><a href="/treasure/resource/{{entry.resource.id }}">{{entry.resource.name}}</a></td>
 								<td>{{entry.datetime}}</td>
-	                            <td>{% if entry.used %} Yes{% else %} No{% endif %}</td>
+                                <td>{% if entry.used %} Yes{% else %} No. (<a href="/treasure/resource/{{entry.resource.id }}/use/home"> Yes?</a>){% endif %}</td>
+                                <td>{% if entry.rated %} Yes{% else %} No. (<a href="/treasure/resource/{{entry.resource.id }}/rate/"> Rate it</a>){% endif %}</td>
                         </tr>
                     {% endfor %}
 
