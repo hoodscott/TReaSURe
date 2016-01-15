@@ -43,6 +43,7 @@ urlpatterns = patterns('',
         url(r'^tags/(?P<tag_id>\w+)/$', views.tag, name='tag'),
         
         url(r'^packs/$', views.packs, name='packs'),
+        url(r'^packs/new/(?P<resource_id>\w+)/$', views.newpack_initial, name='newpack_initial'),
         url(r'^packs/new/$', views.newpack, name='newpack'),
         url(r'^packs/(?P<pack_id>\w+)/$', views.pack, name='pack'),
         url(r'^packs/(?P<pack_id>\w+)/edit/$', views.edit_pack, name='edit_pack'),        

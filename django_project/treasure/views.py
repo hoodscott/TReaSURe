@@ -1611,6 +1611,7 @@ def addtopack(request, resource_id):
 # view to add a pack to the database
 @login_required
 def newpack(request):
+
     # Request the context of the request.
     context = RequestContext(request)
     
@@ -1673,7 +1674,84 @@ def newpack(request):
     context_dict['form'] = form
     
     # Render the template depending on the context.
-    return render_to_response('treasure/add_pack.html', context_dict, context) 
+    return render_to_response('treasure/add_pack.html', context_dict, context)    
+    
+# view to add a pack to the database
+# initialises the new pack with the resource the new pack button was selected on
+@login_required
+def newpack_initial(request, resource_id):
+
+    # Request the context of the request.
+    context = RequestContext(request)
+    
+    #create context dictionary to send back to template
+    context_dict = sidebar(request)
+    
+    # get tags of resource
+    selected_tags = blank_tag_dict()
+    
+    # A HTTP POST?
+    if request.method == 'POST':
+        form = PackForm(selected_tags, request.POST)
+
+        # Have we been provided with a valid form?
+        if form.is_valid():
+            # Put off saving to avoid integrity errors.
+            this_pack = form.save(commit=False)
+            
+            # do not feature every pack on treasure/explore/
+            this_pack.explore = '0'
+            
+            # default values for hidden
+            this_pack.hidden = 0
+            
+            # todo: restrict views
+            # initially 0 for now
+            this_pack.restricted = 0
+            
+            # add author
+            userid = request.user.id
+            teacher = Teacher.objects.get(user = userid)
+            this_pack.author = Teacher.objects.get(id = teacher.id)
+            
+            # now save the pack in the database so tags can be added
+            this_pack.save()
+            
+            #add tags
+            # combine the tags into one queryset
+            tags =  form.cleaned_data['level_tags'] | \
+                    form.cleaned_data['topic_tags'] | \
+                    form.cleaned_data['other_tags']
+            # save the tags the user has selected
+            for tag in tags:
+                this_pack.tags.add(tag)
+                
+            # save again
+            this_pack.save()
+            
+            # get resource
+            this_resource = Resource.objects.get(id=resource_id)
+        
+            # add resource to pack
+            this_resource.packs.add(this_pack)            
+            this_resource.save()
+                        
+            # Now show the new pack page
+            return pack(request, this_pack.id)
+        else:
+            # The supplied form contained errors - just print them to the terminal.
+            print form.errors
+    else:
+        # If the request was not a POST, display the form to enter details.
+        form = PackForm(selected_tags)
+    
+    # create dictionary to pass data to templates
+    context_dict = sidebar(request)
+    context_dict['resource_id'] = resource_id
+    context_dict['form'] = form
+    
+    # Render the template depending on the context.
+    return render_to_response('treasure/add_pack.html', context_dict, context)    
 
 # view for the user's history (list of all actions) page
 @login_required
