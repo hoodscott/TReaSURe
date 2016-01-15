@@ -2,3 +2,5 @@
 *~
 
 django_project/treasure_.db
+
+*.db

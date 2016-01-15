@@ -576,6 +576,28 @@ def rate(request, resource_id):
     return render_to_response('treasure/rate.html', context_dict, context)
             
          
+def use(request, resource_id, red):
+    # get the context of request
+    context = RequestContext(request)
+    context_dict = sidebar(request)
+    this_teacher = Teacher.objects.get(id=request.user.id)
+    this_resource = Resource.objects.get(id=resource_id)
+
+    try:
+        download = TeacherDownloadsResource.objects.get(teacher_id=this_teacher.id, resource_id=this_resource.id)
+    except TeacherDownloadsResource.DoesNotExist:
+            # This could never happen
+            pass 
+
+    download.used='1'
+    download.save()
+    link=''
+    if red=='res':
+        link= '/treasure/resource/'+resource_id
+    else:
+        link='/treasure/'
+
+    return HttpResponseRedirect(link)     
 
 
 def user_login(request):
