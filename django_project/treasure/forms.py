@@ -70,7 +70,7 @@ class ResourceForm(forms.ModelForm):
     restricted = forms.IntegerField(widget = forms.HiddenInput(), required=False)
     
     # what type of resource is this (file, web, something else?)
-    resource_type = models.forms.CharField(widget = forms.HiddenInput(), required=False)
+    resource_type = forms.CharField(widget = forms.HiddenInput(), required=False)
     
     level_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(type=0).order_by('name'),
