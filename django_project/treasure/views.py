@@ -594,6 +594,8 @@ def use(request, resource_id, red):
     link=''
     if red=='res':
         link= '/treasure/resource/'+resource_id
+    elif red=='hist':
+        link='/treasure/history/'
     else:
         link='/treasure/'
 
