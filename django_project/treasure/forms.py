@@ -146,6 +146,21 @@ class UserForm(forms.ModelForm):
         fields = ('username', 'email', 'password')
         exclude = []
         
+class UserFormNoPW(forms.ModelForm):
+    username = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
+                                help_text="The account username",
+                                label='Username')
+    email = forms.CharField(widget = DisableAutoInput(attrs={'tabindex':'1'}),
+                            help_text = "The email address",
+                            label='E-mail')
+
+    password = forms.CharField(widget = forms.HiddenInput(), required=False)
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password')
+        exclude = []
+        
 class TeacherForm(forms.ModelForm):
     firstname = forms.CharField(max_length=128,
                                 help_text="Your first name",

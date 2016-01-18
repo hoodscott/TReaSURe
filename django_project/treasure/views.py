@@ -335,18 +335,13 @@ def edit_profile(request):
     if request.method == 'POST':
         # Attempt to grab information from the raw form information.
         # pass in instance of the record to be updated
-        user_form = UserForm(data=request.POST, instance=my_user_record)
+        user_form = UserFormNoPW(data=request.POST, instance=my_user_record)
         teacher_form = TeacherForm(data=request.POST, instance=my_teacher_record)
 
         # If the two forms are valid...
         if user_form.is_valid() and teacher_form.is_valid():
             # Save the user's form data to the database.
             user = user_form.save()
-
-            # Now we hash the password with the set_password method.
-            # Once hashed, we can update the user object.
-            user.set_password(user.password)
-            user.save()
             
             # Since we need to set the user attribute ourselves, we set commit=False.
             # This delays saving the model until we're ready to avoid integrity problems.
@@ -372,7 +367,7 @@ def edit_profile(request):
     # Not a HTTP POST, so we render our form using two ModelForm instances.
     else: 
         # pass the current records to initially populate the forms
-        user_form = UserForm(instance = my_user_record)
+        user_form = UserFormNoPW(instance = my_user_record)
         teacher_form = TeacherForm(instance = my_teacher_record)
     
     # create context dictionary
