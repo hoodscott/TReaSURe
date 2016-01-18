@@ -62,3 +62,8 @@ a.btn {
 .tab-content {
     overflow: visible !important;
 }
+
+/* making the header slightly lighter */
+#header {
+    background: #333
+}
