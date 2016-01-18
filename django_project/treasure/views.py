@@ -116,7 +116,7 @@ def index(request):
 
     
     # return response object
-    return render_to_response('treasure/index.html', context_dict, context)
+    return render_to_response('treasure/user_home.html', context_dict, context)
    
 # view for the homepage
 def history(request):
@@ -1817,3 +1817,13 @@ def newSocialAuthentication(request):
 
     # Render the template updating the context dictionary.
     return redirect('/treasure/')
+    
+def home(request):
+    # get context of request
+    context = RequestContext(request)
+
+    # create dictionary to pass data to templates
+    context_dict = sidebar(request)
+    
+     # Render the template updating the context dictionary.
+    return render_to_response('treasure/index.html', context_dict, context)    
