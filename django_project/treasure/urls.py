@@ -58,4 +58,6 @@ urlpatterns = patterns('',
         #url(r'^profile/(?P<user_id>\w+)/$', views.profile, name='profile'),
         #url(r'^profile/(?P<user_id>\w+)/history/$', views.user_history, name='user_history'),
         
+        url('^', include('django.contrib.auth.urls'))
+        
         )

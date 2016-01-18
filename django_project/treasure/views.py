@@ -1817,7 +1817,9 @@ def newSocialAuthentication(request):
 
     # Render the template updating the context dictionary.
     return redirect('/treasure/')
-    
+
+
+# View to show a basic homepage to all users
 def home(request):
     # get context of request
     context = RequestContext(request)

@@ -33,6 +33,10 @@ ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
 
+## allow django to send email
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
 MANAGERS = ADMINS
 
 DATABASES = {
