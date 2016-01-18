@@ -8,6 +8,7 @@ urlpatterns = patterns('',
         url(r'^about/', views.about, name='about'),
         url(r'^history/', views.history, name='history'),
         url(r'^me/', views.index, name='my_homepage'),
+        url(r'^help/', views.help, name='help'),
         
         url(r'^register/$', views.register, name='register'),
         url(r'^login/$', views.user_login, name='login'),

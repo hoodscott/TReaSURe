@@ -1823,4 +1823,17 @@ def home(request):
     context_dict = sidebar(request)
     
      # Render the template updating the context dictionary.
-    return render_to_response('treasure/index.html', context_dict, context)    
+    return render_to_response('treasure/index.html', context_dict, context)
+    
+
+# View to show a help page
+@login_required
+def help(request):
+    # get context of request
+    context = RequestContext(request)
+
+    # create dictionary to pass data to templates
+    context_dict = sidebar(request)
+    
+     # Render the template updating the context dictionary.
+    return render_to_response('treasure/help.html', context_dict, context) 
