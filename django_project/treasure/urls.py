@@ -13,6 +13,14 @@ urlpatterns = patterns('',
         url(r'^register/$', views.register, name='register'),
         url(r'^login/$', views.user_login, name='login'),
         url(r'^logout/$', views.user_logout, name='logout'),
+        url(r'^password_reset/$', 'django.contrib.auth.views.password_reset', 
+            {'post_reset_redirect' : '/treasure/password_reset/done/'}, name="password_reset"),
+        url(r'^password_reset/done/$', 'django.contrib.auth.views.password_reset_done'),
+        
+        url(r'^password_reset_complete/$', 'django.contrib.auth.views.password_reset_complete'),
+        url(r'^password_reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', 
+            'django.contrib.auth.views.password_reset_confirm', {'post_reset_redirect' : '/treasure/password_reset_complete/'}),
+        
         
         url(r'^profile/$', views.profile, name='profile'),
         url(r'^profile/edit/$', views.edit_profile, name='edit_profile'),
@@ -59,6 +67,6 @@ urlpatterns = patterns('',
         #url(r'^profile/(?P<user_id>\w+)/$', views.profile, name='profile'),
         #url(r'^profile/(?P<user_id>\w+)/history/$', views.user_history, name='user_history'),
         
-        url('^', include('django.contrib.auth.urls'))
+
         
         )
