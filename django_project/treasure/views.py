@@ -109,11 +109,6 @@ def index(request):
     
     need2rate=TeacherDownloadsResource.objects.all()
     context_dict['need2rate'] = need2rate.filter(teacher=this_user)
-
-    geolocationDict=postcodeLocation('England','AL1 1AL')
-    context_dict['long']=geolocationDict['long']
-    context_dict['lat']=geolocationDict['lat']
-
     
     # return response object
     return render_to_response('treasure/user_home.html', context_dict, context)
