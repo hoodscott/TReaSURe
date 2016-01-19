@@ -30,12 +30,73 @@
 {% block body_block %}
 
 {% if user.is_authenticated %}
+<div class="span12">
+    <div class="span7 hero-unit">
+        <h2>TREASURE</h2>
+        <h4>Welcome to treasure, blah bla......</h4><br>
+        <h5>Quick Links</h5>
+        <ul>
+            <li><a href="/treasure/add_file_resource/">Upload a File Resource</a></li>
+            <li><a href="/treasure/add_web_resource/">Link to a Web Resource</a></li>
+            <li><a href="/treasure/search">Search for a Resource or a Pack of Resources</a></li>
+            <li><a href="/treasure/packs/new">Create a New Pack of Resources</a></li>
+            <li><a href="/treasure/history">View My Contributions</a></li>
+        </ul>
+    </div>
+    
+    
+    <div class="span4 hero-unit">
+        <h3>Top Resources</h3>
+        <ol>
+        {% for r in top_resources %}
+            <li><a href="/treasure/resource/{{ r.id }}">{{ r }}; {{r.num_downloads}} Downloads</a></li>
+        {% endfor %}
+        </ol>
+    </div>
 
-<div class="span7 hero-unit">
-    <h2>new homepage goes here<h2>
 </div>
-<div class="span3 hero-unit">
-    <h3>FancySIdebar</h3>
+
+<div class="span12">
+
+    <div class="span4 hero-unit">
+        <h3>Newest Resources</h3>
+        <ol>
+        {% for r in new_resources %}
+            <li><a href="/treasure/resource/{{ r.id }}">{{ r }}</a></li>
+        {% endfor %}
+        </ol>
+    </div>
+    
+    <div class="span3 hero-unit">
+        <h3><emph>{{ num_resources }} Resources;<br>{{ num_packs }} Packs;<br>{{ num_users }} Users</emph></h3>
+    </div>
+
+    <div class="span4 hero-unit">
+        <h3>Newest Packs</h3>
+        <ol>
+        {% for p in new_packs %}
+            <li><a href="/treasure/packs/{{ p.id }}">{{ p }}</a></li>
+        {% endfor %}
+        </ol>
+    </div>
+</div>
+
+<div class="span12">
+
+    <div class="span6 hero-unit">
+        <h2>Latest Ratings</h2>
+        <ol>
+            {% for rating in new_ratings %}
+                <li>{{ rating.teacher.user.username }} rated <a href="/treasure/resource/{{ rating.resource.id }}"><!--{{ rating.resource.name }}</a> {{ ratings.measure1 }}, {{ ratings.measure2 }}, {{ ratings.measure3 }}--></li>
+            {% endfor %}
+        </ol>
+    </div>
+
+    <div class="span5 hero-unit">
+        <h2>Some other community thing</h2>
+        <p> Could be a map, latest comments, etc...</p>
+    </div>
+
 </div>
 
 

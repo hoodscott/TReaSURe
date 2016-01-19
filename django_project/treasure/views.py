@@ -11,6 +11,8 @@ from string import split, upper
 from datetime import datetime
 from django.utils.html import escape, escapejs
 from django.utils.translation import ugettext as _
+from django.db.models import Count
+
 
 # get the users teacher entry and school for the sidebar
 def sidebar(request):
@@ -1816,6 +1818,23 @@ def home(request):
 
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
+    
+    # get newest resources
+    context_dict['new_resources'] = Resource.objects.all().order_by('-id')[:5]
+    
+    # get top resources
+    context_dict['top_resources'] = Resource.objects.annotate(num_downloads=Count('teacherdownloadsresource')).order_by('-num_downloads')[:5]
+    
+    # get top packs
+    context_dict['new_packs'] = Pack.objects.all().order_by('-id')[:5]
+    
+    # get latest ratings
+    context_dict['new_ratings'] = TeacherRatesResource.objects.all().order_by('-id')[:5]
+    
+    # get numbers
+    context_dict['num_resources'] = Resource.objects.all().count()
+    context_dict['num_packs'] = Pack.objects.all().count()
+    context_dict['num_users'] = Teacher.objects.all().count()
     
      # Render the template updating the context dictionary.
     return render_to_response('treasure/index.html', context_dict, context)
