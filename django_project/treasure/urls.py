@@ -24,6 +24,7 @@ urlpatterns = patterns('',
         
         url(r'^profile/$', views.profile, name='profile'),
         url(r'^profile/edit/$', views.edit_profile, name='edit_profile'),
+        url(r'^profile/edit/(?P<soc>\w+)/$', views.edit_profile, name='edit_profile'),
         
         url(r'^add_web_resource/$', views.add_web_resource, name='add_web_resource'),
         url(r'^add_file_resource/$', views.add_file_resource, name='add_file_resource'),

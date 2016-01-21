@@ -324,7 +324,7 @@ def profile(request):
 
 # view to allow the user to edit their profile
 @login_required
-def edit_profile(request):
+def edit_profile(request,soc=0):
     # get context of request
     context = RequestContext(request)
     
@@ -378,6 +378,8 @@ def edit_profile(request):
     context_dict['user_form'] = user_form
     context_dict['teacher_form'] = teacher_form
     context_dict['updated'] = updated
+    if soc!=0:
+        context_dict['soc'] = 'soc'
     
     # return response object
     return render_to_response('treasure/edit_profile.html', context_dict, context)
@@ -1816,7 +1818,7 @@ def newSocialAuthentication(request):
             pass
 
     # Render the template updating the context dictionary.
-    return redirect('/treasure/')
+    return redirect('/treasure/profile/edit/soc/')
 
 
 # View to show a basic homepage to all users
