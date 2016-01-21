@@ -98,6 +98,34 @@
             {% endif %}
             <a class="btn btn-primary pull-right" href="/treasure/resource/{{ resource.id }}/addtopack">Add to a Pack</a>
        </div>
+
+        <div class="hero-unit">
+            <h3>Discuss {{resource_name}}</h3>
+        {% if want2talk %}
+            <div class="table-responsive">
+                <table id="wanttotalk" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Teacher</th>
+                            <!--<th>Comment</th>-->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in want2talk %}
+                            <tr class="teacherLabel">
+                                <td>{{record.teacher}}. {% ifequal record.teacher user_teacher%}<a href="./talk/no/">Remove</a>{%endifequal%}</td>
+                                <!--<td>{{record.comment}}</td>-->
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                 </table>
+            </div>
+                        {% if not iWant2Talk %}<a class="btn btn-primary pull-right" href="/treasure/resource/{{ resource.id }}/talk/yes/">I am happy to talk</a>{% endif %}
+        {% else %}
+            <p><a href="./talk/yes/">I am happy to discuss about it.</a></p>
+        {% endif %}
+        </div>
+
         
         <div class="hero-unit">
         {% if feedback %}
@@ -137,31 +165,6 @@
             <p>There is no feedback for resource {{resource_name}} yet. {% if downloaded and not rating_exists %}<a href="./rate/">Be the first!</a>{% elif not downloaded %}<a href="./rate/">Download Resource!</a>{% endif %}</p>
         {% endif %}
         </div>     
-        <div class="hero-unit">
-            <h3>Discuss {{resource_name}}</h3>
-        {% if want2talk %}
-            <div class="table-responsive">
-                <table id="wanttotalk" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                    <thead>
-                        <tr>
-                            <th>Teacher</th>
-                            <!--<th>Comment</th>-->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for record in want2talk %}
-                            <tr class="teacherLabel">
-                                <td>{{record.teacher}}. {% ifequal record.teacher user_teacher%}<a href="./talk/no/">Remove</a>{%endifequal%}</td>
-                                <!--<td>{{record.comment}}</td>-->
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                 </table>
-            </div>
-        {% else %}
-            <p><a href="./talk/yes/">I am happy to discuss about it.</a></p>
-        {% endif %}
-        </div>
 
 
         <!-- todo: put issues here -->

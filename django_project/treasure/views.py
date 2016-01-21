@@ -994,6 +994,12 @@ def resource_view(request, resource_id):
             # do nothing
             pass 
     try:
+        iWant2Talk = TeacherWantstoTalkResource.objects.get(teacher_id=this_teacher.id, resource_id=this_resource.id)
+        context_dict['iWant2Talk'] = iWant2Talk
+    except TeacherWantstoTalkResource.DoesNotExist:
+            # do nothing
+            pass 
+    try:
         # Can we find a resource with the given id?
         this_resource = Resource.objects.get(id=resource_id)
         try:
