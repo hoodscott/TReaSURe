@@ -597,10 +597,38 @@ def use(request, resource_id, red):
     elif red=='hist':
         link='/treasure/history/'
     else:
-        link='/treasure/'
+        link='/treasure/me/'
 
     return HttpResponseRedirect(link)     
 
+
+def talk(request, resource_id, var,red="res"):
+    # get the context of request
+    context = RequestContext(request)
+    context_dict = sidebar(request)
+    this_teacher = Teacher.objects.get(id=request.user.id)
+    this_resource = Resource.objects.get(id=resource_id)
+
+    if var=="yes":
+        talk=TeacherWantstoTalkResource(resource=this_resource, teacher=this_teacher)
+        talk.save()
+    elif var=="no":
+        try:
+            wanted = TeacherWantstoTalkResource.objects.get(teacher_id=this_teacher.id, resource_id=this_resource.id)
+            wanted.delete()
+        except TeacherWantstoTalkResource.DoesNotExist:
+            # This could never happen
+            pass 
+
+    link=''
+    if red=='res':
+        link= '/treasure/resource/'+resource_id
+    elif red=='hist':
+        link='/treasure/history/'
+    else:
+        link='/treasure/me/'
+
+    return HttpResponseRedirect(link)   
 
 def user_login(request):
     # get the context of request

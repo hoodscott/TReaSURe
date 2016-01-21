@@ -133,44 +133,35 @@
                     </tbody>
                  </table>
             </div>
-        </div>
         {% else %}
             <p>There is no feedback for resource {{resource_name}} yet. {% if downloaded and not rating_exists %}<a href="./rate/">Be the first!</a>{% elif not downloaded %}<a href="./rate/">Download Resource!</a>{% endif %}</p>
         {% endif %}
-        </div>
-<!--  ORGANISE A DISCUSSION FEATURE      
+        </div>     
         <div class="hero-unit">
+            <h3>Discuss {{resource_name}}</h3>
         {% if want2talk %}
-        
-            <p>People willing to organise discussion about {{resource_name}}:</p>
             <div class="table-responsive">
                 <table id="wanttotalk" class="table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
                         <tr>
                             <th>Teacher</th>
-                            <th>Comment</th>
+                            <!--<th>Comment</th>-->
                         </tr>
                     </thead>
                     <tbody>
                         {% for record in want2talk %}
                             <tr class="teacherLabel">
-                                <td>{{record.teacher}}</td>
-                                <td>{{record.comment}}</td>
+                                <td>{{record.teacher}}. {% ifequal record.teacher user_teacher%}<a href="./talk/no/">Remove</a>{%endifequal%}</td>
+                                <!--<td>{{record.comment}}</td>-->
                             </tr>
                         {% endfor %}
-                        <tr class="teacherLabel">
-                            <td>+ADD SELF</td>
-                            <td>-Pending Form to add self-</td>
-                        </tr>
                     </tbody>
                  </table>
             </div>
-        </div>
         {% else %}
-            <p>Nobody declared interest in organising a discussion about {{resource_name}} yet. <a href="">Be the first</a></p>
+            <p><a href="./talk/yes/">I am happy to discuss about it.</a></p>
         {% endif %}
         </div>
--->
 
 
         <!-- todo: put issues here -->
