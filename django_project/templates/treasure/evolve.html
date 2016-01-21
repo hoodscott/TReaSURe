@@ -1,6 +1,7 @@
 {% extends 'treasure/base.html' %}
 
 {% load static %}
+{% load render_help %}
 
 {% block title %}
     Evolve
@@ -28,7 +29,7 @@
 
                     {% for field in resource_form.visible_fields %}
                         {{ field.errors }}
-                        {{ field.help_text }}<br/>
+                        {{ field.label }}{% render_help_text field %}<br/>
                         {{ field }}<br/>
                     {% endfor %}
                     
@@ -38,7 +39,7 @@
 
                     {% for field in file_form.visible_fields %}
                         {{ field.errors }}
-                        {{ field.help_text }}<br/>
+                        {{ field.label }}{% render_help_text field %}<br/>
                         {{ field }}<br/>
                     {% endfor %}
                     <br/>
@@ -57,7 +58,7 @@
 
                     {% for field in resource_form.visible_fields %}
                         {{ field.errors }}
-                        {{ field.help_text }}<br/>
+                        {{ field.label }}{% render_help_text field %}<br/>
                         {{ field }}<br/>
                     {% endfor %}
                     
@@ -67,7 +68,7 @@
 
                     {% for field in web_form.visible_fields %}
                         {{ field.errors }}
-                        {{ field.help_text }}<br/>
+                        {{ field.label }}{% render_help_text field %}<br/>
                         {{ field }}<br/>
                     {% endfor %}
                     <br/>
