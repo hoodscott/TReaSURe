@@ -18,14 +18,13 @@
 						{% if forloop.counter0|divisibleby:"2" %}
 			              <li class="span4">
 						{% endif %}
-			                <div class="thumbnail">
+			                <button class="thumbnail" onclick="location.href ='/treasure/packs/{{ pack.id }}';">
 			                  <img src="{{pack.image}}" style="width: 300px; height: 200px;" data-src="holder.js/300x200" alt="300x200">
 			                  <div class="caption">
 			                    <h3>{{pack.name}}</h3>
 			                    <p>{{pack.summary}}</p>
-			                    <p><a href="/../treasure/packs/{{ pack.id }}" class="btn btn-primary">View Pack</a></p>
 			                  </div>
-			                </div>
+			                </button>
 						{% if forloop.counter|divisibleby:"2" %}
 			              </li>
 						{% endif %}
