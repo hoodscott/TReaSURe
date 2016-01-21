@@ -13,7 +13,11 @@
       <a href="../{% ifequal timeline 'timeline' %}../{% endifequal%}usage/{% ifequal timeline 'timeline' %}timeline/{% endifequal%}" class="btn">{% if used %}<strong>Usage</strong>{% else %}Usage{% endif %}</a>
       <a href="../{% ifequal timeline 'timeline' %}../{% endifequal%}rating/{% ifequal timeline 'timeline' %}timeline/{% endifequal%}" class="btn">{% if rated %}<strong>Feedback</strong>{% else %}Feedback{% endif %}</a>
     </div>
-     <div class='btn' onclick='window.location.assign('{% ifequal timeline 'timeline' %}../ {% else %}./timeline/{% endifequal%}')'>Timeline Animation <input type="checkbox"  onclick='window.location.assign("{% ifequal timeline 'timeline' %}../')' checked="checked" {% else %}./timeline/")'{% endifequal%}/></div>
+    {% ifequal timeline 'timeline' %} 
+     <div class='btn' onclick='window.location.assign("../")'>Timeline Animation <input type="checkbox" checked="checked"/></div>
+     {% else %}
+     <div class='btn' onclick='window.location.assign("./timeline/")'>Timeline Animation <input type="checkbox"/></div>
+     {% endifequal%}
         <div id="map" style="height: 100%; min-height: 640px; width: 100%"><div style="text-align:center;">
 			<span style="color:Gray;">Loading map...</span>
 		</div>
