@@ -1863,6 +1863,11 @@ def home(request):
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
     
+    # get if teacher has pending actions
+    this_user = request.user.id
+    need2rate=TeacherDownloadsResource.objects.all().filter(teacher=this_user, rated=0)
+    context_dict['need2rate'] = need2rate.filter(teacher=this_user)
+    
     # get newest resources
     context_dict['new_resources'] = Resource.objects.all().order_by('-id')[:5]
     
