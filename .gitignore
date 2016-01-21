@@ -2,3 +2,7 @@
 *~
 *.db
 django_project/media
+
+django_project/scriptTemp.sql
+
+django_project/treasurePythonAnywhere2.db-journal

@@ -116,7 +116,7 @@ def index(request):
     return render_to_response('treasure/user_home.html', context_dict, context)
    
 # view for the homepage
-def history(request):
+def contribution(request):
     # get context of request
     context = RequestContext(request)
 
@@ -124,12 +124,18 @@ def history(request):
     context_dict = sidebar(request)
 
 
-    downloads=TeacherDownloadsResource.objects.all()
-    context_dict['downloads'] = downloads.filter(teacher=request.user.id)
-
+    downloaded=TeacherDownloadsResource.objects.all().filter(teacher=request.user.id, used=0, rated=0)
+    context_dict['downloaded'] = downloaded
+    used=TeacherDownloadsResource.objects.all().filter(teacher=request.user.id, used=1)
+    context_dict['used'] = used
+    rated=TeacherDownloadsResource.objects.all().filter(teacher=request.user.id, rated=1)
+    context_dict['rated'] = rated
+    uploaded=Resource.objects.all().filter(author=request.user.id)
+    context_dict['uploaded'] = uploaded
+    link='treasure/contribution.html'
 
     # return response object
-    return render_to_response('treasure/history.html', context_dict, context)
+    return render_to_response(link, context_dict, context)
 
 
 # view for the about page
@@ -1749,7 +1755,7 @@ def newpack_initial(request, resource_id):
 
 # view for the user's history (list of all actions) page
 @login_required
-def download(request, resource_id):
+def download(request, resource_id, bypass=0):
     # get context of request
     context = RequestContext(request)
 
@@ -1786,9 +1792,11 @@ def download(request, resource_id):
     except Resource.DoesNotExist:
 	# No Resource
 	pass
-
-    # Render the template updating the context dictionary.
-    return redirect(url)
+    if bypass==0:
+        # IfDownload Resource
+        return redirect(url)
+    else:
+        return redirect("/treasure/resource/"+resource_id+"/rate/")
 
 
 @login_required

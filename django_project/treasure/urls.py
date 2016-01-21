@@ -6,7 +6,7 @@ urlpatterns = patterns('',
     
         url(r'^$', views.home, name='home'),
         url(r'^about/$', views.about, name='about'),
-        url(r'^history/$', views.history, name='history'),
+        url(r'^contribution/$', views.contribution, name='contribution'),
         url(r'^me/$', views.index, name='my_homepage'),
         url(r'^help/$', views.help, name='help'),
         
@@ -35,7 +35,7 @@ urlpatterns = patterns('',
         url(r'^schools/$', views.schools, name='schools'),
        
         url(r'^resource/(?P<resource_id>\w+)/$', views.resource_view, name='resource_view'),
-       	url(r'^resource/(?P<resource_id>\w+)/download/$', download, name='download'),
+       	url(r'^resource/(?P<resource_id>\w+)/download/(?P<bypass>\w+)/$', download, name='download'),
         url(r'^resource/(?P<resource_id>\w+)/versions/$', views.versions, name='versions'),
         url(r'^resource/(?P<parent_id>\w+)/evolve/$', views.evolve, name='evolve'),
         url(r'^resource/(?P<resource_id>\w+)/use/(?P<red>\w+)/$', views.use, name='use'),

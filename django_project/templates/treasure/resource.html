@@ -55,7 +55,8 @@
                 <hr>
                 
 					                
-                    {% if downloaded and not rating_exists %}<a class="btn btn-block btn-primary" href="./rate/">Rate Resource</a>{% endif %}  
+                    {% if downloaded and not rating_exists %}<a class="btn btn-block btn-primary" href="./rate/">Rate Resource</a>
+                    {% elif not rating_exists %}<a class="btn btn-block btn-primary" href="./download/not">Rate Resource</a>{% endif %}  
                     {% if label %}
                         <a class="btn btn-block btn-primary" href="/../treasure/resource/{{resource.id}}/download/">{% if downloaded %}Re-{% endif %}{{label}}</a>
 					{% endif %}
