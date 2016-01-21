@@ -109,7 +109,7 @@ def index(request):
     want2talk=TeacherWantstoTalkResource.objects.all()
     context_dict['want2talk'] = want2talk.filter(resource__author=this_user)
     
-    need2rate=TeacherDownloadsResource.objects.all()
+    need2rate=TeacherDownloadsResource.objects.all().filter(teacher=this_user, rated=0)
     context_dict['need2rate'] = need2rate.filter(teacher=this_user)
     
     # return response object

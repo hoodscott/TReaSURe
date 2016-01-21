@@ -13,14 +13,12 @@
 
 		<header>
 			<h2 class="alt">Welcome back, {{ user_teacher.firstname }}</a></h2>
-			<p>You have pending actions.
-				Please remember to share your opinion about the resources that you used recently.</p>
+			<p>The community values your opinion.
+				Please remember to rate the resources you download.</p>
 		</header>
-
 		<footer>
 			<a href="#MainPage" class="button scrolly" id="continue-browsing">Continue Browsing</a>
 		</footer>
-
 	</div>
 </section>
 {% endif %}
@@ -118,8 +116,8 @@
 	                        <tr class="studentLabel">
 	                            <td><a href="/treasure/resource/{{entry.resource.id }}">{{entry.resource.name}}</a></td>
 								<td>{{entry.datetime}}</td>
-                                <td>{% if entry.used %} Yes{% else %} No. (<a href="/treasure/resource/{{entry.resource.id }}/use/home"> Yes?</a>){% endif %}</td>
-                                <td>{% if entry.rated %} Yes{% else %} No. (<a href="/treasure/resource/{{entry.resource.id }}/rate/"> Rate it</a>){% endif %}</td>
+                                <td>{% if entry.used %} Yes{% else %} No. <a href="/treasure/resource/{{entry.resource.id }}/use/home"> Yes?</a>{% endif %}</td>
+                                <td>{% if entry.rated %} Yes{% else %} No. <a href="/treasure/resource/{{entry.resource.id }}/rate/">Rate it</a>{% endif %}</td>
                         </tr>
                     {% endfor %}
 
