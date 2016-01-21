@@ -162,7 +162,7 @@
                  </table>
             </div>
         {% else %}
-            <p>There is no feedback for resource {{resource_name}} yet. {% if downloaded and not rating_exists %}<a href="./rate/">Be the first!</a>{% elif not downloaded %}<a href="./rate/">Download Resource!</a>{% endif %}</p>
+            <p>There is no feedback for resource {{resource_name}} yet. {% if downloaded and not rating_exists %}<a href="./rate/">Be the first!</a>{% elif not downloaded %}<a href="./download/not/">Be the first!</a>{% endif %}</p>
         {% endif %}
         </div>     
 
