@@ -58,7 +58,7 @@
                     {% if downloaded and not rating_exists %}<a class="btn btn-block btn-primary" href="./rate/">Rate Resource</a>
                     {% elif not rating_exists %}<a class="btn btn-block btn-primary" href="./download/not">Rate Resource</a>{% endif %}  
                     {% if label %}
-                        <a class="btn btn-block btn-primary" href="/../treasure/resource/{{resource.id}}/download/">{% if downloaded %}Re-{% endif %}{{label}}</a>
+                        <a {% if files_resource %}download{% endif %} class="btn btn-block btn-primary" href="/../treasure/resource/{{resource.id}}/download/">{% if downloaded %}Re-{% endif %}{{label}}</a>
 					{% endif %}
                     <a class="btn btn-block btn-warning" href="/../treasure/resource/{{ resource.id}}/evolve">Evolve Resource</a>                    
                     <a class="btn btn-block btn-success" href="./track/downloads" target="_blank">Track Resource</a>                
