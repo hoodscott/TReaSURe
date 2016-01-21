@@ -149,137 +149,6 @@ def about(request):
     # return response object
     return render_to_response('treasure/about.html', context_dict, context)
     
-    
-# view for the search page
-@login_required
-def search(request):
-    # get context of request
-    context = RequestContext(request)
-    
-    # create dictionary to pass data to templates
-    context_dict = sidebar(request)
-    
-    searched = False
-
-    # A HTTP POST?
-    if request.method == 'POST':
-        form = SearchForm(request.POST)
-
-        # Have we been provided with a valid form?
-        if form.is_valid():
-            # get tags from form
-            level_tags = form.cleaned_data['level_tags']
-            topic_tags = form.cleaned_data['topic_tags']
-            other_tags = form.cleaned_data['other_tags']
-                    
-            search_type = form.cleaned_data['searchtype']
-            
-            # if search type is 'resources'
-            if search_type == '0':
-                # initialise search results
-                all_resources = Resource.objects.all()
-                
-                # if tags have been entered
-                if level_tags | topic_tags | other_tags:
-                    # initialise the queryset
-                    found_resources = all_resources.filter(tags__name="")
-                
-                    # filter to get the matching resources for level
-                    if level_tags:
-                        level_resources = all_resources.filter(tags__in=level_tags).distinct()
-                        
-                    # filter to get the matching resources for topic
-                    if topic_tags:
-                        topic_resources = all_resources.filter(tags__in=topic_tags).distinct()
-                            
-                    # filter to get the matching resources for level
-                    if other_tags:
-                        other_resources = all_resources.filter(tags__in=other_tags).distinct()
-                    
-                    # combine search results (ew)
-                    if level_tags and topic_tags and other_tags:
-                        found_resources = level_resources & topic_resources & other_resources
-                    elif level_tags and topic_tags:
-                        found_resources = level_resources & topic_resources
-                    elif level_tags and other_tags:
-                        found_resources = level_resources & other_resources
-                    elif topic_tags and other_tags:
-                        found_resources = topic_resources & other_resources
-                    elif level_tags:
-                        found_resources = level_resources
-                    elif topic_tags:
-                        found_resources = topic_resources
-                    elif other_tags:
-                        found_resources = level_resources       
-                                                     
-                    context_dict['results'] = found_resources
-                    
-                    # set flag so template knows which url to use
-                    context_dict['resource'] = True
-                else:
-                    # if no tags are entered, do nothing
-                    # template handles error message
-                    pass
-            
-            # if search type is 'packs'
-            if search_type == '1':
-                # initialise search results
-                all_packs = Pack.objects.all()
-                
-                # if tags have been entered
-                if level_tags | topic_tags | other_tags:
-                    # initialise the queryset
-                    found_packs = all_packs.filter(tags__name="")
-                
-                    # filter to get the matching resources for level
-                    if level_tags:
-                        level_packs = all_packs.filter(tags__in=level_tags).distinct()
-                        
-                    # filter to get the matching resources for topic
-                    if topic_tags:
-                        topic_packs = all_packs.filter(tags__in=topic_tags).distinct()
-                            
-                    # filter to get the matching resources for level
-                    if other_tags:
-                        other_packs = all_packs.filter(tags__in=other_tags).distinct()
-                    
-                    # combine search results (ew)
-                    if level_tags and topic_tags and other_tags:
-                        found_packs = level_packs & topic_packs & other_packs
-                    elif level_tags and topic_tags:
-                        found_packs = level_packs & topic_packs
-                    elif level_tags and other_tags:
-                        found_packs = level_packs & other_packs
-                    elif topic_tags and other_tags:
-                        found_packs = topic_packs & other_packs
-                    elif level_tags:
-                        found_packs = level_packs
-                    elif topic_tags:
-                        found_packs = topic_packs
-                    elif other_tags:
-                        found_packs = level_packs       
-                                                     
-                    context_dict['results'] = found_packs
-                else:
-                    # if no tags are entered, do nothing
-                    # template handles error message
-                    pass                    
-            
-            searched = True
-            
-        else:
-            # The supplied form contained errors - just print them to the terminal.
-            print form.errors
-    else:
-        # If the request was not a POST, display the form to enter details.
-        form = SearchForm()
-    
-    context_dict['form'] = form
-    context_dict['searched'] = searched
-    
-    # return response object
-    return render_to_response('treasure/search.html', context_dict, context)
-    
 # view for the user's profile page
 @login_required
 def profile(request):
@@ -938,6 +807,69 @@ def resources(request):
     resource_list = Resource.objects.all()
     context_dict['resources'] = resource_list
     
+    # do a search
+        # A HTTP POST?
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+
+        # Have we been provided with a valid form?
+        if form.is_valid():
+            # get tags from form
+            level_tags = form.cleaned_data['level_tags']
+            topic_tags = form.cleaned_data['topic_tags']
+            other_tags = form.cleaned_data['other_tags']                    
+        
+            # initialise search results
+            all_resources = Resource.objects.all()
+            
+            # if tags have been entered
+            if level_tags | topic_tags | other_tags:
+                # initialise the queryset
+                found_resources = all_resources.filter(tags__name="")
+            
+                # filter to get the matching resources for level
+                if level_tags:
+                    level_resources = all_resources.filter(tags__in=level_tags).distinct()
+                    
+                # filter to get the matching resources for topic
+                if topic_tags:
+                    topic_resources = all_resources.filter(tags__in=topic_tags).distinct()
+                        
+                # filter to get the matching resources for level
+                if other_tags:
+                    other_resources = all_resources.filter(tags__in=other_tags).distinct()
+                
+                # combine search results (ew)
+                if level_tags and topic_tags and other_tags:
+                    found_resources = level_resources & topic_resources & other_resources
+                elif level_tags and topic_tags:
+                    found_resources = level_resources & topic_resources
+                elif level_tags and other_tags:
+                    found_resources = level_resources & other_resources
+                elif topic_tags and other_tags:
+                    found_resources = topic_resources & other_resources
+                elif level_tags:
+                    found_resources = level_resources
+                elif topic_tags:
+                    found_resources = topic_resources
+                elif other_tags:
+                    found_resources = level_resources       
+                                                 
+                context_dict['resources'] = found_resources
+            else:
+                # if no tags are entered, do nothing
+                # template handles error message
+                pass
+            
+        else:
+            # The supplied form contained errors - just print them to the terminal.
+            print form.errors
+    else:
+        # If the request was not a POST, display the form to enter details.
+        form = SearchForm()
+    
+    context_dict['form'] = form
+    
     # Render the template depending on the context.
     return render_to_response('treasure/resources.html', context_dict, context)
 
@@ -1221,6 +1153,70 @@ def packs(request):
     # get list of all packs
     pack_list = Pack.objects.all()
     context_dict['packs'] = pack_list
+    
+        # A HTTP POST?
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+
+        # Have we been provided with a valid form?
+        if form.is_valid():
+            # get tags from form
+            level_tags = form.cleaned_data['level_tags']
+            topic_tags = form.cleaned_data['topic_tags']
+            other_tags = form.cleaned_data['other_tags']
+            
+            # initialise search results
+            all_packs = Pack.objects.all()
+            
+            # if tags have been entered
+            if level_tags | topic_tags | other_tags:
+                # initialise the queryset
+                found_packs = all_packs.filter(tags__name="")
+            
+                # filter to get the matching resources for level
+                if level_tags:
+                    level_packs = all_packs.filter(tags__in=level_tags).distinct()
+                    
+                # filter to get the matching resources for topic
+                if topic_tags:
+                    topic_packs = all_packs.filter(tags__in=topic_tags).distinct()
+                        
+                # filter to get the matching resources for level
+                if other_tags:
+                    other_packs = all_packs.filter(tags__in=other_tags).distinct()
+                
+                # combine search results (ew)
+                if level_tags and topic_tags and other_tags:
+                    found_packs = level_packs & topic_packs & other_packs
+                elif level_tags and topic_tags:
+                    found_packs = level_packs & topic_packs
+                elif level_tags and other_tags:
+                    found_packs = level_packs & other_packs
+                elif topic_tags and other_tags:
+                    found_packs = topic_packs & other_packs
+                elif level_tags:
+                    found_packs = level_packs
+                elif topic_tags:
+                    found_packs = topic_packs
+                elif other_tags:
+                    found_packs = level_packs       
+                                                 
+                context_dict['packs'] = found_packs
+            else:
+                # if no tags are entered, do nothing
+                # template handles error message
+                pass                    
+            
+            searched = True
+            
+        else:
+            # The supplied form contained errors - just print them to the terminal.
+            print form.errors
+    else:
+        # If the request was not a POST, display the form to enter details.
+        form = SearchForm()
+    
+    context_dict['form'] = form
 
     # Render the template depending on the context.
     return render_to_response('treasure/packs.html', context_dict, context)

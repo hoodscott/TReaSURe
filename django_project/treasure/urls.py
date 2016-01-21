@@ -64,7 +64,6 @@ urlpatterns = patterns('',
 
         url(r'^explore/$', views.explore, name='explore'),
                 
-        url(r'^search/$', views.search, name='search'),
         url(r'^auth/', include('social.apps.django_app.urls', namespace='social')),
         url(r'^auth/new/', views.newSocialAuthentication, name='new'),
         

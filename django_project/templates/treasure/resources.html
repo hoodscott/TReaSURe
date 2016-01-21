@@ -1,6 +1,7 @@
 {% extends 'treasure/base.html' %}
 
 {% load static %}
+{% load render_help %}
 
 {% block title %}
     Resources
@@ -13,6 +14,10 @@
         <div class="panel-heading clearfix">
 			<h3>Resources</h3>
         </div>
+        
+        <div class="span5"><a class="btn btn-block btn-primary" href="/treasure/add_file_resource">Add File Resource</a><br></div>
+        <div class="span5"><a class="btn btn-block btn-primary" href="/treasure/add_web_resource">Add Web Resource</a><br></div>
+
         
         <div class="panel-body">
             <div class="table-responsive">
@@ -38,10 +43,31 @@
                     </tbody>
                  </table>
             </div>
-        </div> <!-- close body -->
-        <br><div class="span5"><a class="btn btn-block btn-primary" href="/treasure/add_file_resource">Add File Resource</a><br></div>
-        <div class="span5"><a class="btn btn-block btn-primary" href="/treasure/add_web_resource">Add Web Resource</a><br></div>
-    </div> <!-- close panel -->
+        </div> <!-- close panel -->
+        
+        <div class="hero-unit">
+            <h3>Refine Search</h3>
+            <br/>
+            <div class="container">
+                <form class="span12" id="search_form" method="post" action="/treasure/resources/">            
+        
+                    {% csrf_token %}
+
+                        {% for field in form.visible_fields %}
+                            <div class="span3">
+                                {{ field.errors }}
+                                {{field.label}}{% render_help_text field %}<br/>
+                                {{ field }}<br/>
+                            </div>
+                        {% endfor %}
+                        
+                    <div class="span12"><button class="btn btn-primary" type="submit" name="submit">Search</button></div>
+                </form>
+            </div>
+        </div>        
+        
+    </div> <!-- close body -->
+
 
 	<!-- script for table -->
 	<script type="text/javascript">
