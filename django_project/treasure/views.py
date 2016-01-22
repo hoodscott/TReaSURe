@@ -501,11 +501,11 @@ def talk(request, resource_id, var,red="res"):
     teacher_school = School.objects.get(id=this_teacher.school_id)
 
     if var=="yes":
-        talk=TeacherWantstoTalkResource(resource=this_resource, teacher=this_teacher)
+        talk=TeacherWantstoTalkResource(resource=this_resource, teacher=this_teacher,datetime=datetime.now(), latitude= teacher_school.latitude, longitude= teacher_school.longitude, disable=0)
         talk.save()
     elif var=="no":
         try:
-            wanted = TeacherWantstoTalkResource.objects.get(teacher_id=this_teacher.id, resource_id=this_resource.id,datetime=datetime.now(), latitude= teacher_school.latitude, longitude= teacher_school.longitude, disabled=0)
+            wanted = TeacherWantstoTalkResource.objects.get(teacher_id=this_teacher.id, resource_id=this_resource.id)
             wanted.delete()
         except TeacherWantstoTalkResource.DoesNotExist:
             # This could never happen
@@ -520,6 +520,19 @@ def talk(request, resource_id, var,red="res"):
         link='/treasure/me/'
 
     return HttpResponseRedirect(link)   
+
+def talkHide(request, var):
+    # get the context of request
+    context = RequestContext(request)
+    context_dict = sidebar(request)
+    this_teacher = Teacher.objects.get(id=request.user.id)
+    discuss=TeacherWantstoTalkResource.objects.all().filter(teacher=this_teacher)
+    if var=="yes":
+        discuss.update(disable=0)
+    elif var=="no":
+        discuss.update(disable=1)
+    return HttpResponseRedirect('/treasure/me/')   
+
 
 def user_login(request):
     # get the context of request

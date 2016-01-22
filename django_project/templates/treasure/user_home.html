@@ -167,7 +167,7 @@
 
 <div id="mytalk" class="hero-unit panel panel-default">
     <div class="panel-heading clearfix">
-        <h4>All resources I am happy to talk about</h4>
+        <h4>Resources I am happy to talk about</h4>
     </div>
 {% if want2talk %}
     <div class="panel-body">
@@ -177,6 +177,7 @@
                     <tr>
                         <th>Resource Name</th>
                         <th>Author</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -184,6 +185,7 @@
                         <tr class="studentLabel">
                             <td><a href="/treasure/resource/{{ record.resource.id }}">{{record.resource.name}}</a>. <a href="/treasure/resource/{{ record.resource.id }}/talk/no/random">Remove</a></td>
                             <td>{{record.resource.author}}</td>
+                            <td>{% ifequal record.disable 0 %}Active{% else%}Inactive{% endifequal%}</td>
                         </tr>
                     {% endfor %}
 
@@ -191,6 +193,8 @@
              </table>
         </div>
     </div> <!-- close body -->
+    <a class="btn btn-primary pull-right" href="/treasure/resources/talk/no/">Deactivate All</a>
+    <a class="btn btn-primary pull-right" href="/treasure/resources/talk/yes/">Activate All</a>
     {% else %}
     <p>No resources selected yet.</p>
     {% endif %}
