@@ -232,12 +232,6 @@ class HubForm(forms.Form):
         
 class SearchForm(forms.Form):
     
-    searchtype = forms.ChoiceField(choices=SEARCHTYPES,
-                                required=True,
-                                label='Search for',
-                                help_text="What do you want to search for",
-                                widget = forms.Select(attrs={'tabindex':'1', 'autofocus':'autofocus'}))
-    
     # tag forms
     level_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=0).order_by('name'),
                                                 required=False,

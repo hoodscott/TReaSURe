@@ -58,7 +58,7 @@
                     {% if downloaded and not rating_exists %}<a class="btn btn-block btn-primary" href="./rate/">Rate Resource</a>
                     {% elif not rating_exists %}<a class="btn btn-block btn-primary" href="./download/not">Rate Resource</a>{% endif %}  
                     {% if label %}
-                        <a class="btn btn-block btn-primary" href="/../treasure/resource/{{resource.id}}/download/">{% if downloaded %}Re-{% endif %}{{label}}</a>
+                        <a {% if files_resource %}download{% endif %} class="btn btn-block btn-primary" href="/../treasure/resource/{{resource.id}}/download/">{% if downloaded %}Re-{% endif %}{{label}}</a>
 					{% endif %}
                     <a class="btn btn-block btn-warning" href="/../treasure/resource/{{ resource.id}}/evolve">Evolve Resource</a>                    
                     <a class="btn btn-block btn-success" href="./track/downloads" target="_blank">Track Resource</a>                
@@ -162,7 +162,7 @@
                  </table>
             </div>
         {% else %}
-            <p>There is no feedback for resource {{resource_name}} yet. {% if downloaded and not rating_exists %}<a href="./rate/">Be the first!</a>{% elif not downloaded %}<a href="./rate/">Download Resource!</a>{% endif %}</p>
+            <p>There is no feedback for resource {{resource_name}} yet. {% if downloaded and not rating_exists %}<a href="./rate/">Be the first!</a>{% elif not downloaded %}<a href="./download/not/">Be the first!</a>{% endif %}</p>
         {% endif %}
         </div>     
 

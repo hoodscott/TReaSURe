@@ -31,7 +31,8 @@ urlpatterns = patterns('',
         url(r'^add_hub/$', views.add_hub, name='add_hub'),
         url(r'^add_school/$', views.add_school, name='add_school'),
         
-        url(r'^resources/$', views.resources, name='resources'),
+        url(r'^resources/$', views.resources, name='resources'),        
+        url(r'^resources/search/$', views.searchBox, name='searchBox'),
         url(r'^hubs/$', views.hubs, name='hubs'),
         url(r'^schools/$', views.schools, name='schools'),
        
@@ -64,7 +65,6 @@ urlpatterns = patterns('',
 
         url(r'^explore/$', views.explore, name='explore'),
                 
-        url(r'^search/$', views.search, name='search'),
         url(r'^auth/', include('social.apps.django_app.urls', namespace='social')),
         url(r'^auth/new/', views.newSocialAuthentication, name='new'),
         
