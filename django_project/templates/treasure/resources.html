@@ -92,6 +92,15 @@
 	    // update form action with query in datatable
 	    // get form
 	    var form = document.getElementById('search_form') || null;
+	    
+	    // function to update form on update
+        $('#Resources').ready(function() {
+            var value = $('.dataTables_filter input').val() || null;
+            // update the action
+            if(form && value) {
+                form.action = '/treasure/resources/?search='+value.replace(' ','+');
+            }
+        });
         // function to update form on update
         $('#Resources').on('search.dt', function() {
             var value = $('.dataTables_filter input').val() || null;
