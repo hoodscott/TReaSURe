@@ -335,24 +335,6 @@ def user_history(request):
     
     # return response object
     return render_to_response('treasure/user_history.html', context_dict, context)# view for the user's history (list of all actions) page
-
-@login_required
-def searchBox(request):
-    # get context of request
-    context = RequestContext(request)
-    
-    if request.method == 'GET': # If the form is submitted
-        search_query = request.GET.get('parameter', None)
-        #TODO: Exit character check
-    # create dictionary to pass data to templates
-    context_dict = sidebar(request)
-    statement="SELECT * FROM treasure_resource WHERE name LIKE '%%{0}%%' OR description LIKE '%%{0}%%' ".format(search_query)
-    print statement
-    resources=Resource.objects.raw(statement)
-    context_dict['resources']=resources
-    context_dict['title']="Search results for '"+search_query+"'"
-    # return response object
-    return render_to_response('treasure/quickSearch.html', context_dict, context)
     
 # register user
 def register(request):

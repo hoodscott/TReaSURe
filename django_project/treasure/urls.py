@@ -32,7 +32,6 @@ urlpatterns = patterns('',
         url(r'^add_school/$', views.add_school, name='add_school'),
         
         url(r'^resources/$', views.resources, name='resources'),        
-        url(r'^resources/search/$', views.searchBox, name='searchBox'),        
         url(r'^resources/talk/(?P<var>\w+)/$', views.talkHide, name='talkHide'),
         url(r'^hubs/$', views.hubs, name='hubs'),
         url(r'^schools/$', views.schools, name='schools'),

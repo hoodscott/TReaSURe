@@ -67,3 +67,8 @@ a.btn {
 #header {
     background: #333
 }
+
+/* making the width of the search bar smaller */
+#searchbar-container{
+    width: 27%;
+}

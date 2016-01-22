@@ -72,7 +72,35 @@
 	<!-- script for table -->
 	<script type="text/javascript">
 	$(document).ready(function(){
-	    $('#Resources').DataTable();
+	    // get the sting after the equals sign
+	    var split = location.search.replace('?', '').split('=')
+	    console.log(split[1])
+	    
+	    // if there is no query in url
+	    if (split[1]==undefined){
+	        // initialise the datatable with no search string
+	        $('#Resources').DataTable();
+	    }
+	    // if there is a query in the url
+	    else {
+	        // initialise tha tabel with the string in the url
+	        $('#Resources').DataTable({
+	            "oSearch": {"sSearch": split[1].replace('+',' ')}
+	        });
+	    }
+	    
+	    // update form action with query in datatable
+	    // get form
+	    var form = document.getElementById('search_form') || null;
+        // function to update form on update
+        $('#Resources').on('search.dt', function() {
+            var value = $('.dataTables_filter input').val() || null;
+            // update the action
+            if(form && value) {
+                form.action = '/treasure/resources/?search='+value.replace(' ','+');
+            }
+        });
+	    
 	});
 	</script>
 
