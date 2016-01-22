@@ -498,13 +498,14 @@ def talk(request, resource_id, var,red="res"):
     context_dict = sidebar(request)
     this_teacher = Teacher.objects.get(id=request.user.id)
     this_resource = Resource.objects.get(id=resource_id)
+    teacher_school = School.objects.get(id=this_teacher.school_id)
 
     if var=="yes":
         talk=TeacherWantstoTalkResource(resource=this_resource, teacher=this_teacher)
         talk.save()
     elif var=="no":
         try:
-            wanted = TeacherWantstoTalkResource.objects.get(teacher_id=this_teacher.id, resource_id=this_resource.id)
+            wanted = TeacherWantstoTalkResource.objects.get(teacher_id=this_teacher.id, resource_id=this_resource.id,datetime=datetime.now(), latitude= teacher_school.latitude, longitude= teacher_school.longitude, disabled=0)
             wanted.delete()
         except TeacherWantstoTalkResource.DoesNotExist:
             # This could never happen
@@ -1586,37 +1587,50 @@ def evolve(request, parent_id):
     
 # view to track a resource
 @login_required
-def track(request, resource_id, trackType, timeline=0):
+def track(request, resource_id, timeline=0):
     # Request the context of the request.
     context = RequestContext(request)
     
     #create context dictionary to send back to template
     context_dict = sidebar(request)
     this_resource = get_object_or_404(Resource, id=resource_id)
-
+    this_teacher = Teacher.objects.get(id=request.user.id)
+    teacher_school = School.objects.get(id=this_teacher.school_id)
+    context_dict['lat']=teacher_school.latitude
+    context_dict['lng']=teacher_school.longitude
+    context_dict['timeline']=timeline
+    markerCt=0
+    animationTimeout=0
     #Track locations
-    if trackType=='downloads':
-        try:
-            downloaded=TeacherDownloadsResource.objects.all().filter(resource=this_resource).order_by('datetime')
-            context_dict['downloaded']=downloaded
-            context_dict['timeline']=timeline
-        except TeacherDownloadsResource.DoesNotExist:
-            pass
-    elif trackType=='usage':
-        try:
-            used=TeacherDownloadsResource.objects.all().filter(resource=this_resource, used=1).order_by('datetime')
-            context_dict['used']=used
-            context_dict['timeline']=timeline
-        except TeacherDownloadsResource.DoesNotExist:
-            pass
-    elif trackType=='rating':
-        try:
-            rated=TeacherDownloadsResource.objects.all().filter(resource=this_resource, rated=1).order_by('datetime')
-            context_dict['rated']=rated
-            context_dict['timeline']=timeline
-        except TeacherDownloadsResource.DoesNotExist:
-            pass
-    
+    try:
+        downloaded=TeacherDownloadsResource.objects.all().filter(resource=this_resource).order_by('datetime')
+        if timeline!=0:
+            downloaded=downloaded.filter(used=0)
+            markerCt=markerCt+downloaded.count()
+        context_dict['downloaded']=downloaded
+    except TeacherDownloadsResource.DoesNotExist:
+        pass
+    try:
+        used=TeacherDownloadsResource.objects.all().filter(resource=this_resource, used=1).order_by('datetime')
+        if timeline!=0:
+            used=used.filter(rated=0)
+            markerCt=markerCt+used.count()
+        context_dict['used']=used
+    except TeacherDownloadsResource.DoesNotExist:
+        pass
+    try:
+        rated=TeacherDownloadsResource.objects.all().filter(resource=this_resource, rated=1).order_by('datetime')
+        context_dict['rated']=rated
+    except TeacherDownloadsResource.DoesNotExist:
+        pass
+    try:
+        discuss=TeacherWantstoTalkResource.objects.all().filter(resource=this_resource, disable=0).order_by('datetime')
+        context_dict['discuss']=discuss
+    except TeacherWantstoTalkResource.DoesNotExist:
+        pass
+    if timeline=='timeline':
+        animationTimeout=10000/markerCt
+    context_dict['animationTimeout']=animationTimeout
     # Render the template depending on the context.
     return render_to_response('treasure/track.html', context_dict, context)
     

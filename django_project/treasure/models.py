@@ -205,7 +205,11 @@ class TeacherWantstoTalkResource(models.Model):
     resource = models.ForeignKey(Resource)
     # comment box
     comment = models.TextField()
-    
+    # lat and long of where it was used
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    datetime = models.DateTimeField()
+    disable = models.IntegerField()
     def __unicode__(self):
         return "%s %s" % (self.teacher.name, self.resource.name)
      

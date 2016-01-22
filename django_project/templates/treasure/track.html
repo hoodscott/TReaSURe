@@ -8,16 +8,29 @@
 
 {% block body_block %}
   <div style="height:100%; width:100%">
-    <div class="btn-group">
-      <a href="../{% ifequal timeline 'timeline' %}../{% endifequal%}downloads/{% ifequal timeline 'timeline' %}timeline/{% endifequal%}" class="btn">{% if downloaded %}<strong>Downloads</strong>{% else %}Downloads{% endif %}</a>
-      <a href="../{% ifequal timeline 'timeline' %}../{% endifequal%}usage/{% ifequal timeline 'timeline' %}timeline/{% endifequal%}" class="btn">{% if used %}<strong>Usage</strong>{% else %}Usage{% endif %}</a>
-      <a href="../{% ifequal timeline 'timeline' %}../{% endifequal%}rating/{% ifequal timeline 'timeline' %}timeline/{% endifequal%}" class="btn">{% if rated %}<strong>Feedback</strong>{% else %}Feedback{% endif %}</a>
-    </div>
-    {% ifequal timeline 'timeline' %} 
-     <div class='btn' onclick='window.location.assign("../")'>Timeline Animation <input type="checkbox" checked="checked"/></div>
-     {% else %}
-     <div class='btn' onclick='window.location.assign("./timeline/")'>Timeline Animation <input type="checkbox"/></div>
-     {% endifequal%}
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDudWkR_tpJ06lIarBZm3qIngNAae1RXNw&scale=1&signed_in=true">
+</script>
+
+        <div>
+          <ul style="margin: 0;">
+            Downloads
+            <input style="margin-right: 5px;" id="DownloadsCheckbox" type="checkbox" onclick="toggleGroup('Downloaded')" {% ifequal timeline 'timeline'%}disabled="disabled"{% endifequal %} checked="checked" />Usage
+            <input style="margin-right: 5px;"  id="UsageCheckbox" type="checkbox" onclick="toggleGroup('Used')" {% ifequal timeline 'timeline'%}disabled="disabled" checked="checked"{% endifequal %} />Feedback
+            <input style="margin-right: 30px;" id="FeedbackCheckbox" type="checkbox" onclick="toggleGroup('Rated')" {% ifequal timeline 'timeline'%}disabled="disabled" checked="checked"{% endifequal %} />People happy to discuss it
+            <input style="margin-right: 30px;" id="DiscussionCheckbox" type="checkbox" onclick="toggleGroup('Discuss')" {% ifequal timeline 'timeline'%}disabled="disabled"{% endifequal %} />
+                {% ifequal timeline 'timeline' %} 
+            <div class='btn' onclick='window.location.assign("../")'>Timeline Animation <input type="checkbox" checked="checked"/></div>
+            {% else %}
+            <div class='btn' onclick='window.location.assign("./timeline/")'>Timeline Animation <input type="checkbox"/></div>
+            {% endifequal%}
+
+            <select id="mapCenter" class="span2" style="margin-top: 10px;">
+                <option value="Scotland" >Scotland</option>
+                <option value="User">MySchool</option>
+                <option value="UK">UK</option>
+              </select>
+          </ul>
+        </div>     
         <div id="map" style="height: 100%; min-height: 640px; width: 100%"><div style="text-align:center;">
 			<span style="color:Gray;">Loading map...</span>
 		</div>
@@ -29,74 +42,140 @@
     </div>
     </div>
     <script type="text/javascript">
-function initMap() {
-  var myLatLng = {lat: 54.53, lng: -4.17};
-  var dlicon="{% static 'images/dlicon.png' %}";
-  var classicon="{% static 'images/classicon.png' %}";
-  var fbicon="{% static 'images/feedback.png' %}";
-  var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 4,
-    center: myLatLng,
-    zIndex: 1,
-    zoom: 5
-  });
-
   var downloaded=[];
   var used=[];
   var rated=[];
-  var markers=[];
-  var loadingTime=12000;
-  var delay= 2500;
-  
-  {% if downloaded %}
+  var discuss=[];  
   {% for download in downloaded %}
   downloaded.push({lat:{{download.latitude}}, lng: {{download.longitude}} })
   {% endfor %}
-  for (i = 0; i < downloaded.length; i++) { 
-	  {% ifequal timeline 'timeline' %}addMarkerWithTimeout(downloaded, i, (loadingTime+i*delay), dlicon, "Downloaded");{% else %}addMarker(downloaded, i, dlicon, "Downloaded");
-    {% endifequal %}
-	}
-  {% endif %}
-
-
-  {% if used %}
   {% for usage in used %}
   used.push({lat:{{usage.latitude}}, lng: {{usage.longitude}} })
   {% endfor %}  
-  for (i = 0; i < used.length; i++) { 
-    {% ifequal timeline 'timeline' %}addMarkerWithTimeout(used, i, (loadingTime+i*delay), classicon, "Used");{% else %}addMarker(used, i, classicon, "Used");
-    {% endifequal %}
-  }
-  {% endif %} 
-
-  {% if rated %}
   {% for rating in rated %}
   rated.push({lat:{{rating.latitude}}, lng: {{rating.longitude}} })
-  {% endfor %}  
-  for (i = 0; i < rated.length; i++) { 
-    {% ifequal timeline 'timeline' %}addMarkerWithTimeout(rated, i, (loadingTime+i*delay), fbicon, "Rated");{% else %}addMarker(rated, i, fbicon, "Rated");
-    {% endifequal %}
-  }
-  {% endif %} 
+  {% endfor %} 
+  {% for person in discuss %}
+  discuss.push({lat:{{person.latitude}}, lng: {{person.longitude}} })
+  {% endfor %} 
+
+  var infoWindow = new google.maps.InfoWindow();
+  var UK = {lat: 54.53, lng: -4.17};
+  var Scotland = {lat: 57.63, lng: -4.25};
+  var User = {lat: {{lat}}, lng: {{lng}}};
+  var dlicon="{% static 'images/dlicon.png' %}";
+  var classicon="{% static 'images/classicon.png' %}";
+  var fbicon="{% static 'images/feedback.png' %}";
+
+
+  var markers={
+    "Downloaded": [],
+    "Used": [],
+    "Rated": [],
+    "Discuss": []
+  };
+
+var map = new google.maps.Map(document.getElementById('map'), {
+  zoom: 4,
+  center: Scotland,
+  zIndex: 1,
+  zoom: 6
+});
+var infoWindow = new google.maps.InfoWindow();
+
+var loadingTime=14000;
+var delay= {{animationTimeout}};
+
+for (i = 0; i < downloaded.length; i++) { 
+  {% ifequal timeline 'timeline' %}addMarkerWithTimeout(downloaded, i, (loadingTime+i*delay), dlicon, "Downloaded");{% else %}addMarker(downloaded, i, dlicon, "Downloaded");
+  {% endifequal %}
+}
+
+for (i = 0; i < used.length; i++) { 
+  {% ifequal timeline 'timeline' %}addMarkerWithTimeout(used, i, (loadingTime+i*delay), classicon, "Used");{% else %}addMarker(used, i, classicon, "Used");
+  {% endifequal %}
+} 
+
+for (i = 0; i < rated.length; i++) { 
+  {% ifequal timeline 'timeline' %}addMarkerWithTimeout(rated, i, (loadingTime+i*delay), fbicon, "Rated");{% else %}addMarker(rated, i, fbicon, "Rated");
+  {% endifequal %}
+}
+
+for (i = 0; i < discuss.length; i++) { 
+  {% ifequal timeline 'timeline' %}addMarkerWithTimeout(discuss, i, (loadingTime+i*delay), fbicon, "Happy to talk about it!");{% else %}addMarker(rated, i, fbicon, "Discuss");
+  {% endifequal %}
+}
+
+{% ifequal timeline 'timeline' %}toggleGroup("Discuss");{% endifequal %}
 
 function addMarkerWithTimeout(array, index, timeout, icon, title) {
   window.setTimeout(function(){addMarker(array, index,icon, title);}, timeout);
 }
 
 function addMarker(array, index, icon, title) {
-    markers.push(new google.maps.Marker({
+    var marker= new google.maps.Marker({
       position: array[index],
       map: map,
       icon: icon,
       animation: google.maps.Animation.DROP,
       title: title,
       zIndex: index+2
-    }));
+    })
+    if (!markers[title]) markers[title] = [];
+    markers[title].push(marker);
+    var html = "<b>" + title + "</b> <br/>";
+    bindInfoWindow(marker, map, infoWindow, html);
+  }
+
+function toggleGroup(type) {
+  for (var i = 0; i < markers[type].length; i++) {
+    var marker = markers[type][i];
+    if (!marker.getVisible()) {
+      marker.setVisible(true);
+    } else {
+      marker.setVisible(false);
+    }
   }
 }
 
+function center(spot) {
+  var location;
+  var zoom;
+  if (spot=='Scotland'){
+    location= Scotland;
+    zoom=6;
+  }else if (spot=='UK'){
+    location= UK;
+    zoom=5;
+  }else{
+    location= User;
+    zoom=6;
+  }
+  map.setCenter(location);
+  map.setZoom(zoom);
+}
+
+function bindInfoWindow(marker, map, infoWindow, html) {
+  google.maps.event.addListener(marker, 'click', function() {
+    infoWindow.setContent(html);
+    infoWindow.open(map, marker);
+
+  });
+}
 </script>
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDudWkR_tpJ06lIarBZm3qIngNAae1RXNw&scale=1&signed_in=true&callback=initMap">
+<script>
+  $('#mapCenter').change(function(){
+    var location = $(this).find('option:selected').attr('value');
+    center(location);
+});
 </script>
+<script async defer type="text/javascript">
+  {% ifequal timeline 0 %}
+  toggleGroup('Rated');
+  toggleGroup('Used');
+  {% endifequal %}
+  toggleGroup('Discuss');
+</script>
+
+
 {% endblock %}
