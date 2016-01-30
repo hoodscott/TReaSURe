@@ -465,11 +465,11 @@ def use(request, resource_id, red):
     download.save()
     link=''
     if red=='res':
-        link= '/treasure/resource/'+resource_id
+        link= '/resource/'+resource_id
     elif red=='hist':
-        link='/treasure/history/'
+        link='/history/'
     else:
-        link='/treasure/me/'
+        link='/me/'
 
     return HttpResponseRedirect(link)     
 
@@ -495,11 +495,11 @@ def talk(request, resource_id, var,red="res"):
 
     link=''
     if red=='res':
-        link= '/treasure/resource/'+resource_id
+        link= '/resource/'+resource_id
     elif red=='hist':
-        link='/treasure/history/'
+        link='/history/'
     else:
-        link='/treasure/me/'
+        link='/me/'
 
     return HttpResponseRedirect(link)   
 
@@ -513,7 +513,7 @@ def talkHide(request, var):
         discuss.update(disable=0)
     elif var=="no":
         discuss.update(disable=1)
-    return HttpResponseRedirect('/treasure/me/')   
+    return HttpResponseRedirect('/me/')   
 
 
 def user_login(request):
@@ -542,7 +542,7 @@ def user_login(request):
                 # If the account is valid and active, we can log the user in.
                 # We'll send the user back to the homepage.
                 login(request, user)
-                return HttpResponseRedirect('/treasure/')
+                return HttpResponseRedirect('/')
             else:
                 # An inactive account was used - no logging in!
                 context_dict['disabled_account'] = "aye"
@@ -559,7 +559,7 @@ def user_logout(request):
     logout(request)
 
     # Take the user back to the homepage.
-    return HttpResponseRedirect('/treasure/')
+    return HttpResponseRedirect('/')
     
     
 # view for the add materials page
@@ -1858,7 +1858,7 @@ def download(request, resource_id, bypass=0):
         # IfDownload Resource
         return redirect(url)
     else:
-        return redirect("/treasure/resource/"+resource_id+"/rate/")
+        return redirect("/resource/"+resource_id+"/rate/")
 
 
 @login_required
@@ -1878,7 +1878,7 @@ def newSocialAuthentication(request):
             pass
 
     # Render the template updating the context dictionary.
-    return redirect('/treasure/profile/edit/soc/')
+    return redirect('/profile/edit/soc/')
 
 
 # View to show a basic homepage to all users

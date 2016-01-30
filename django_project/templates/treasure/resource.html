@@ -29,7 +29,7 @@
                 <h4><strong>Tags:</strong></h4>
                 {% if other_tags %}
                     {% for tag in other_tags %}
-                        <a href="/../treasure/tags/{{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+                        <a href="/../tags/{{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
                     {% endfor %}
                 {% else %}
                     <p>There are no tags.</p>
@@ -41,7 +41,7 @@
                 <h4><strong>Levels:</strong></h4>
                 <ul>
                 {% for level in level_tags %}
-                    <li><a href="/../treasure/tags/{{ level.id }}">{{ level.name }}</a></li>
+                    <li><a href="/../tags/{{ level.id }}">{{ level.name }}</a></li>
                 {% endfor %}
                 </ul>
                 <hr>
@@ -49,7 +49,7 @@
                 <h4><strong>Topics:</strong></h4>
                 <ul>
                 {% for topic in topic_tags %}
-                    <li><a href="/../treasure/tags/{{ topic.id }}">{{ topic.name }}</a></li>
+                    <li><a href="/../tags/{{ topic.id }}">{{ topic.name }}</a></li>
                 {% endfor %}
                 </ul>
                 <hr>
@@ -58,13 +58,13 @@
                     {% if downloaded and not rating_exists %}<a class="btn btn-block btn-primary" href="./rate/">Rate Resource</a>
                     {% elif not rating_exists %}<a class="btn btn-block btn-primary" href="./download/not">Rate Resource</a>{% endif %}  
                     {% if label %}
-                        <a {% if files_resource %}download{% endif %} class="btn btn-block btn-primary" href="/../treasure/resource/{{resource.id}}/download/">{% if downloaded %}Re-{% endif %}{{label}}</a>
+                        <a {% if files_resource %}download{% endif %} class="btn btn-block btn-primary" href="/../resource/{{resource.id}}/download/">{% if downloaded %}Re-{% endif %}{{label}}</a>
 					{% endif %}
-                    <a class="btn btn-block btn-warning" href="/../treasure/resource/{{ resource.id}}/evolve">Evolve Resource</a>                    
+                    <a class="btn btn-block btn-warning" href="/../resource/{{ resource.id}}/evolve">Evolve Resource</a>                    
                     <a class="btn btn-block btn-success" href="./track/" target="_blank">Track Resource</a>                
-                    <a class="btn btn-block btn-info" href="/../treasure/resource/{{ resource.id }}/versions">View Versions</a>
+                    <a class="btn btn-block btn-info" href="/../resource/{{ resource.id }}/versions">View Versions</a>
                     {% if owned %}
-                        <a class="btn btn-block btn-danger" href="/../treasure/resource/{{ resource.id }}/edit">Edit Resource</a>
+                        <a class="btn btn-block btn-danger" href="/../resource/{{ resource.id }}/edit">Edit Resource</a>
                     {% endif %}
                 <hr>
            </div>
@@ -85,7 +85,7 @@
 	                <tbody>
 	                    {% for pack in partofpacks.all %}
 	                        <tr class="packLabel">
-	                            <td><a href="/treasure/packs/{{ pack.id }}">{{ pack.name }}</a></td>
+	                            <td><a href="/packs/{{ pack.id }}">{{ pack.name }}</a></td>
 	                            <td>{{ pack.author }}</td>
    	                            <td>{{ pack.summary }}</td>
 	                        </tr>
@@ -96,7 +96,7 @@
             {% else %}
                 <div>This resource is part of no packs</div>
             {% endif %}
-            <a class="btn btn-primary pull-right" href="/treasure/resource/{{ resource.id }}/addtopack">Add to a Pack</a>
+            <a class="btn btn-primary pull-right" href="/resource/{{ resource.id }}/addtopack">Add to a Pack</a>
        </div>
 
         <div class="hero-unit">
@@ -120,7 +120,7 @@
                     </tbody>
                  </table>
             </div>
-                        {% if not iWant2Talk %}<a class="btn btn-primary pull-right" href="/treasure/resource/{{ resource.id }}/talk/yes/">I am happy to talk</a>{% endif %}
+                        {% if not iWant2Talk %}<a class="btn btn-primary pull-right" href="/resource/{{ resource.id }}/talk/yes/">I am happy to talk</a>{% endif %}
         {% else %}
             <p><a href="./talk/yes/">I am happy to discuss about it.</a></p>
         {% endif %}

@@ -29,9 +29,9 @@
                 <tbody>
                     {% for entry in uploaded %}
                         <tr>
-                            <td> -  <a href="/treasure/resource/{{entry.resource.id }}">{{entry.resource.name}}</a></td>
-<!--                            <td>{% if entry.used %} Yes{% else %} No. (<a href="/treasure/resource/{{entry.resource.id }}/use/hist"> Yes?</a>){% endif %}</td>
-                            <td>{% if entry.rated %} Yes{% else %} No. (<a href="/treasure/resource/{{entry.resource.id }}/rate/"> Rate it</a>){% endif %}</td> -->
+                            <td> -  <a href="/resource/{{entry.resource.id }}">{{entry.resource.name}}</a></td>
+<!--                            <td>{% if entry.used %} Yes{% else %} No. (<a href="/resource/{{entry.resource.id }}/use/hist"> Yes?</a>){% endif %}</td>
+                            <td>{% if entry.rated %} Yes{% else %} No. (<a href="/resource/{{entry.resource.id }}/rate/"> Rate it</a>){% endif %}</td> -->
                         </tr>
                     {% endfor %}
 
@@ -62,10 +62,10 @@
                 <tbody>
                     {% for entry in used %}
                         <tr>
-                            <td> -  <a href="/treasure/resource/{{entry.resource.id }}">{{entry.resource.name}}</a></td>
+                            <td> -  <a href="/resource/{{entry.resource.id }}">{{entry.resource.name}}</a></td>
                             <td>{{entry.datetime}}</td>
-<!--                            <td>{% if entry.used %} Yes{% else %} No. (<a href="/treasure/resource/{{entry.resource.id }}/use/hist"> Yes?</a>){% endif %}</td>
-                            <td>{% if entry.rated %} Yes{% else %} No. (<a href="/treasure/resource/{{entry.resource.id }}/rate/"> Rate it</a>){% endif %}</td> -->
+<!--                            <td>{% if entry.used %} Yes{% else %} No. (<a href="/resource/{{entry.resource.id }}/use/hist"> Yes?</a>){% endif %}</td>
+                            <td>{% if entry.rated %} Yes{% else %} No. (<a href="/resource/{{entry.resource.id }}/rate/"> Rate it</a>){% endif %}</td> -->
                         </tr>
                     {% endfor %}
 
@@ -96,10 +96,10 @@
                 <tbody>
                     {% for entry in rated %}
                         <tr>
-                            <td> -  <a href="/treasure/resource/{{entry.resource.id }}">{{entry.resource.name}}</a></td>
+                            <td> -  <a href="/resource/{{entry.resource.id }}">{{entry.resource.name}}</a></td>
                             <td>{{entry.datetime}}</td>
-<!--                            <td>{% if entry.used %} Yes{% else %} No. (<a href="/treasure/resource/{{entry.resource.id }}/use/hist"> Yes?</a>){% endif %}</td>
-                            <td>{% if entry.rated %} Yes{% else %} No. (<a href="/treasure/resource/{{entry.resource.id }}/rate/"> Rate it</a>){% endif %}</td> -->
+<!--                            <td>{% if entry.used %} Yes{% else %} No. (<a href="/resource/{{entry.resource.id }}/use/hist"> Yes?</a>){% endif %}</td>
+                            <td>{% if entry.rated %} Yes{% else %} No. (<a href="/resource/{{entry.resource.id }}/rate/"> Rate it</a>){% endif %}</td> -->
                         </tr>
                     {% endfor %}
 
@@ -129,10 +129,10 @@
                 <tbody>
                     {% for entry in downloaded %}
                         <tr>
-                            <td> -  <a href="/treasure/resource/{{entry.resource.id }}">{{entry.resource.name}}</a></td>
+                            <td> -  <a href="/resource/{{entry.resource.id }}">{{entry.resource.name}}</a></td>
                             <td>{{entry.datetime}}</td>
-<!--                            <td>{% if entry.used %} Yes{% else %} No. (<a href="/treasure/resource/{{entry.resource.id }}/use/hist"> Yes?</a>){% endif %}</td>
-                            <td>{% if entry.rated %} Yes{% else %} No. (<a href="/treasure/resource/{{entry.resource.id }}/rate/"> Rate it</a>){% endif %}</td> -->
+<!--                            <td>{% if entry.used %} Yes{% else %} No. (<a href="/resource/{{entry.resource.id }}/use/hist"> Yes?</a>){% endif %}</td>
+                            <td>{% if entry.rated %} Yes{% else %} No. (<a href="/resource/{{entry.resource.id }}/rate/"> Rate it</a>){% endif %}</td> -->
                         </tr>
                     {% endfor %}
 

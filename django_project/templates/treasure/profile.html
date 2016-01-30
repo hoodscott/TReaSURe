@@ -17,7 +17,7 @@
 			<li><input type="text" value="{{user_email}}" disabled="disabled"></li>
 			<li>Password</li>
 			<li><input type="text" value="************" disabled="disabled">
-			    <a href="/treasure/change_password/">Change your password?</a>
+			    <a href="/change_password/">Change your password?</a>
 			</li>
 			<li>First Name</li>
 			<li><input type="text" value="{{user_firstname}}" disabled="disabled"></li>
@@ -25,18 +25,18 @@
 			<li><input type="text" value="{{user_lastname}}" disabled="disabled"></li>
 			<li>School</li>
 			<li>
-				<ul><li>{% if user_school %}<a href="/treasure/school/{{ user_school.id }}">{{ user_school.name }}</a>{% else %} You have not added any schools in your profile.{% endif %}</li></ul>
+				<ul><li>{% if user_school %}<a href="/school/{{ user_school.id }}">{{ user_school.name }}</a>{% else %} You have not added any schools in your profile.{% endif %}</li></ul>
 			</li>
 			<li>Hub</li>
 			<li>{% if user_hubs %}
 				<ul>
 				{% for hub in user_hubs %}
-					<li><a href="/treasure/hub/{{ hub.id }}">{{ hub.name }}</a></li>
+					<li><a href="/hub/{{ hub.id }}">{{ hub.name }}</a></li>
 				{% endfor %}
 				</ul>
 				{% else %} You have not added any hubs in your profile.{% endif %}</li>
 		</ul>
-		<a class="btn btn-primary" href="/treasure/profile/edit">Edit Profile</a>
+		<a class="btn btn-primary" href="/profile/edit">Edit Profile</a>
     </div>
 {% else %}
 	<div class="hero-unit">
