@@ -2394,9 +2394,9 @@
 				display: block;
 				margin-top:-9px;
 				height:3.25em;
-				left: 93px;
+				left: 132px;
 				position: fixed;
-				top: 0;
+				top: 6px;
 				width: 3.25em;
 				z-index: 10001;
 			}
@@ -2445,7 +2445,7 @@
 				-moz-transform: translateX(275px);
 				-webkit-transform: translateX(275px);
 				-ms-transform: translateX(275px);
-				transform: translateX(172px);
+				transform: translateX(139px);
 			}
 
 			body.header-visible #header {

@@ -23,6 +23,10 @@ form input[type="text"], form input[type="email"], form input[type="password"], 
     color:firebrick !important;
 }
 
+.navbar .nav {
+    margin-top:6px;
+}
+
 /* hide elements from display */
 .hidden {
     display:none;
