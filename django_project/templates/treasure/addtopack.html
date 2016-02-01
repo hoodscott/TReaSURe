@@ -12,14 +12,14 @@
     <br>
     <div class="container">
         {% for pack in packs %}
-        <form class="span12" id="upload_form" method="post" action="/treasure/resource/{{ resource_id }}/addtopack/">
+        <form class="span12" id="upload_form" method="post" action="/resource/{{ resource_id }}/addtopack/">
             {% csrf_token %}
             <input type="hidden" name="packid" value="{{ pack.id }}">
             <button class="btn btn-info" type="submit" name="{{ pack.id }}" tabindex='1'>{{ pack.name }}</button>
         </form>
         {% endfor %}
         
-        <div class="span12"><a class="btn btn-primary pull-left" href="/treasure/packs/new/{{ resource_id }}" tabindex='1'>New Pack</a></div>
+        <div class="span12"><a class="btn btn-primary pull-left" href="/packs/new/{{ resource_id }}" tabindex='1'>New Pack</a></div>
     </div>
 </div>
 {% endblock %}

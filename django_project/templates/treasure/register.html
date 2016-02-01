@@ -14,12 +14,12 @@
 <div class="hero-unit">
     {% if registered %}
         <h3>Thank you for registering</h3>
-        <h4>You are being automatically redirected to the login page. If nothing happens, please <a href="/treasure/login/" tabindex='1'>click here</a>!</h4>
+        <h4>You are being automatically redirected to the login page. If nothing happens, please <a href="/login/" tabindex='1'>click here</a>!</h4>
     {% else %}
         <h2>Teacher Registration</h2>
         <br/>
         <div class="container">
-            <form class="span6" id="register_teacher_form" method="post" action="/treasure/register/" enctype="multipart/form-data">
+            <form class="span6" id="register_teacher_form" method="post" action="/register/" enctype="multipart/form-data">
 	
                 {% csrf_token %}
             

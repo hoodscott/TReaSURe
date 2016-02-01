@@ -14,7 +14,7 @@
 		<header>
 			<h2 class="alt">Welcome back, {{ user_teacher.firstname }}</a></h2>
 			<p>The community values your opinion.
-				Please remember to <a href="/treasure/me/#myratings">rate</a> the resources you download.</p>
+				Please remember to <a href="/me/#myratings">rate</a> the resources you download.</p>
 		</header>
 		<footer>
 			<a href="#MainPage" class="button scrolly" id="continue-browsing">Continue Browsing</a>
@@ -30,15 +30,15 @@
 {% if user.is_authenticated %}
 <div class="span12">
     <div class="span7 hero-unit">
-        <h1>TReaSURe</h1>
-        <h4>Welcome to treasure, blah bla......</h4><br>
+        <h1>Plan C - Sharing</h1>
+        <h4>Welcome to Plan C Sharing, blah bla......</h4><br>
         <h5>Quick Links</h5>
         <ul>
-            <li><a href="/treasure/add_file_resource/">Upload a File Resource</a></li>
-            <li><a href="/treasure/add_web_resource/">Link to a Web Resource</a></li>
-            <li><a href="/treasure/search">Search for a Resource or a Pack of Resources</a></li>
-            <li><a href="/treasure/packs/new">Create a New Pack of Resources</a></li>
-            <li><a href="/treasure/history">View My Contributions</a></li>
+            <li><a href="/add_file_resource/">Upload a File Resource</a></li>
+            <li><a href="/add_web_resource/">Link to a Web Resource</a></li>
+            <li><a href="/search">Search for a Resource or a Pack of Resources</a></li>
+            <li><a href="/packs/new">Create a New Pack of Resources</a></li>
+            <li><a href="/history">View My Contributions</a></li>
         </ul>
     </div>
     
@@ -47,7 +47,7 @@
         <h3>Top Resources</h3>
         <ol>
         {% for r in top_resources %}
-            <li><a href="/treasure/resource/{{ r.id }}">{{ r }}; {{r.num_downloads}} Downloads</a></li>
+            <li><a href="/resource/{{ r.id }}">{{ r }}; {{r.num_downloads}} Downloads</a></li>
         {% endfor %}
         </ol>
     </div>
@@ -60,7 +60,7 @@
         <h3>Newest Resources</h3>
         <ol>
         {% for r in new_resources %}
-            <li><a href="/treasure/resource/{{ r.id }}">{{ r }}</a></li>
+            <li><a href="/resource/{{ r.id }}">{{ r }}</a></li>
         {% endfor %}
         </ol>
     </div>
@@ -73,7 +73,7 @@
         <h3>Newest Packs</h3>
         <ol>
         {% for p in new_packs %}
-            <li><a href="/treasure/packs/{{ p.id }}">{{ p }}</a></li>
+            <li><a href="/packs/{{ p.id }}">{{ p }}</a></li>
         {% endfor %}
         </ol>
     </div>
@@ -86,7 +86,7 @@
         <ol>
             {% for rating in new_ratings %}
                 <li>
-                    {{ rating.teacher.user.username }} rated <a href="/treasure/resource/{{ rating.resource.id }}">
+                    {{ rating.teacher.user.username }} rated <a href="/resource/{{ rating.resource.id }}">
                     {{ rating.resource.name }}</a> {{ rating.measure1 }}, {{ rating.measure2 }}, {{ rating.measure3 }}
                 </li>
             {% endfor %}
@@ -103,7 +103,7 @@
 
 {% else %}
     <div class="hero-unit">
-        <h3>Please <a href="/treasure/login">Login</a> or <a href="/treasure/register">Register</a>.</h3>
+        <h3>Please <a href="/login">Login</a> or <a href="/register">Register</a>.</h3>
     </div>
 {% endif %}
 

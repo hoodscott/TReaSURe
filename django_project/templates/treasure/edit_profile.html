@@ -2,7 +2,7 @@
 
 {% load static %}
 {% load render_help %}
-{% block head_block %}{% if updated %}<meta http-equiv="refresh" content="2; url=/treasure/" />{% endif %}{% endblock %}
+{% block head_block %}{% if updated %}<meta http-equiv="refresh" content="2; url=/" />{% endif %}{% endblock %}
 {% block title %}
     Edit Profile
 {% endblock %}
@@ -10,7 +10,7 @@
 	<div class="container">
 
 		<header>
-			<h2 class="alt">Welcome to TReaSURe, {{ user_teacher.firstname }}</a></h2>
+			<h2 class="alt">Welcome to Plan C - Sharing, {{ user_teacher.firstname }}</a></h2>
 			<p>Add your school to complete your profile.</p>
 		</header>
 
@@ -28,10 +28,10 @@
     <h2>Edit Profile</h2>
     <br/>
     <div class="container">
-        <form class="span6" id="edit_teacher_form" method="post" action="/treasure/profile/edit/" enctype="multipart/form-data">
+        <form class="span6" id="edit_teacher_form" method="post" action="/profile/edit/" enctype="multipart/form-data">
         	{% if updated %}
             	<h4>Profile Successfuly Updated.</h4>
-            	<p>You are being redirected to the homepage. If nothing happens, <a href="/treasure/">click here</a></p>
+            	<p>You are being redirected to the homepage. If nothing happens, <a href="/">click here</a></p>
         	{% else %}	
 	
 				{% csrf_token %}
