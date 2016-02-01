@@ -120,7 +120,7 @@ class Resource(models.Model):
     evolution_type = models.CharField(max_length=128)
     
     # stores the reasoning for making an evolution
-    evolution_explanation = models.TextField()
+    evolution_explanation = models.TextField(null=True)
     
     # should the resource be shown (basically deleted if not)
     hidden = models.IntegerField()

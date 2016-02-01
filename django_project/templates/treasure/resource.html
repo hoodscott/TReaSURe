@@ -29,7 +29,7 @@
                 <h4><strong>Tags:</strong></h4>
                 {% if other_tags %}
                     {% for tag in other_tags %}
-                        <a href="/../tags/{{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+                        <a href="/tags/{{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
                     {% endfor %}
                 {% else %}
                     <p>There are no tags.</p>
@@ -41,7 +41,7 @@
                 <h4><strong>Levels:</strong></h4>
                 <ul>
                 {% for level in level_tags %}
-                    <li><a href="/../tags/{{ level.id }}">{{ level.name }}</a></li>
+                    <li><a href="/tags/{{ level.id }}">{{ level.name }}</a></li>
                 {% endfor %}
                 </ul>
                 <hr>
@@ -49,22 +49,22 @@
                 <h4><strong>Topics:</strong></h4>
                 <ul>
                 {% for topic in topic_tags %}
-                    <li><a href="/../tags/{{ topic.id }}">{{ topic.name }}</a></li>
+                    <li><a href="/tags/{{ topic.id }}">{{ topic.name }}</a></li>
                 {% endfor %}
                 </ul>
                 <hr>
                 
 					                
-                    {% if downloaded and not rating_exists %}<a class="btn btn-block btn-primary" href="./rate/">Rate Resource</a>
-                    {% elif not rating_exists %}<a class="btn btn-block btn-primary" href="./download/not">Rate Resource</a>{% endif %}  
+                    {% if downloaded and not rating_exists %}<a class="btn btn-block btn-primary" href="/resource/{{ resource.id }}/rate/">Rate Resource</a>
+                    {% elif not rating_exists %}<a class="btn btn-block btn-primary" href="/resource/{{ resource.id }}/download/not">Rate Resource</a>{% endif %}  
                     {% if label %}
-                        <a {% if files_resource %}download{% endif %} class="btn btn-block btn-primary" href="/../resource/{{resource.id}}/download/">{% if downloaded %}Re-{% endif %}{{label}}</a>
+                        <a {% if files_resource %}download{% endif %} class="btn btn-block btn-primary" href="/resource/{{resource.id}}/download/">{% if downloaded %}Re-{% endif %}{{label}}</a>
 					{% endif %}
-                    <a class="btn btn-block btn-warning" href="/../resource/{{ resource.id}}/evolve">Evolve Resource</a>                    
-                    <a class="btn btn-block btn-success" href="./track/" target="_blank">Track Resource</a>                
-                    <a class="btn btn-block btn-info" href="/../resource/{{ resource.id }}/versions">View Versions</a>
+                    <a class="btn btn-block btn-warning" href="/resource/{{ resource.id}}/evolve">Evolve Resource</a>                    
+                    <a class="btn btn-block btn-success" href="/resource/{{ resource.id}}/track/" target="_blank">Track Resource</a>                
+                    <a class="btn btn-block btn-info" href="/resource/{{ resource.id }}/versions">View Versions</a>
                     {% if owned %}
-                        <a class="btn btn-block btn-danger" href="/../resource/{{ resource.id }}/edit">Edit Resource</a>
+                        <a class="btn btn-block btn-danger" href="/resource/{{ resource.id }}/edit">Edit Resource</a>
                     {% endif %}
                 <hr>
            </div>
@@ -162,7 +162,7 @@
                  </table>
             </div>
         {% else %}
-            <p>There is no feedback for resource {{resource_name}} yet. {% if downloaded and not rating_exists %}<a href="./rate/">Be the first!</a>{% elif not downloaded %}<a href="./download/not/">Be the first!</a>{% endif %}</p>
+            <p>There is no feedback for resource {{resource_name}} yet. {% if downloaded and not rating_exists %}<a href="/resource/{{ resource.id}}/rate/">Be the first!</a>{% elif not downloaded %}<a href="/resource/{{ resource.id}}/download/not/">Be the first!</a>{% endif %}</p>
         {% endif %}
         </div>     
 

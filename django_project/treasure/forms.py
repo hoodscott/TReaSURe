@@ -18,7 +18,12 @@ RESTRICTED = (
 
 # define types for evolutions
 EVOLUTIONS = (
-    'TYPES1','DF','DF','DF','DF','FD'
+    ('1', 'Amendments'),
+    ('2', 'Style'),
+    ('3', 'Translation'),
+    ('4', 'Recontext'),
+    ('5', 'New Difficulty'),        
+    ('6', 'New Format')
 )
 
 countries= (("Scotland", "Scotland"),
@@ -41,13 +46,7 @@ class RatingForm(forms.Form):
 
 class ResourceForm(forms.ModelForm):
 
-    # stores the form of evolution (creation, amendment, etc.)
-    evolution_type = forms.CharField(widget = forms.HiddenInput(), required=False)
-    
-    evolution_explanation = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
-                            help_text="In what way have you \"evolved\" this resource?",
-                            required=False,
-                            label='Explanation of Evolution')
+
         
     name = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
                             max_length=128,
@@ -66,6 +65,9 @@ class ResourceForm(forms.ModelForm):
                             
     tree = forms.CharField(widget = forms.HiddenInput(), required=False)
     user = forms.CharField(widget = forms.HiddenInput(), required=False) 
+    
+    evolution_type = forms.CharField(widget = forms.HiddenInput(), required=False)
+    evolution_explanation = forms.CharField(widget = forms.HiddenInput(), required=False)
     
     # should the resource be shown (basically deleted if not)
     hidden = forms.IntegerField(widget = forms.HiddenInput(), required=False)
@@ -98,7 +100,7 @@ class ResourceForm(forms.ModelForm):
         # wrap the model widget in the wrapper        
         self.fields['other_tags'].widget = CustomRelatedFieldWidgetWrapper(
                                                 forms.SelectMultiple(attrs={'tabindex':'1'}),
-                                                '/treasure/tags/new/',
+                                                '/tags/new/',
                                                 True,)
                                                 
         self.fields['other_tags'].queryset=Tag.objects.filter(type=2).order_by('name')
@@ -111,8 +113,28 @@ class ResourceForm(forms.ModelForm):
     
     class Meta:
         model = Resource
-        fields = ('name', 'summary', 'description', 'tree', 'user', 'evolution_type', 'hidden', 'restricted', 'resource_type')
+        fields = ('evolution_type', 'evolution_explanation', 'name', 'summary', 'description', 'tree', 'user', 'hidden', 'restricted', 'resource_type')
         exclude = []
+
+# extends the resource form to add the evolution types        
+class EvolveResourceForm(ResourceForm):
+    # stores the form of evolution (creation, amendment, etc.)
+    evolution_type = forms.ChoiceField(widget=forms.Select(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
+                            choices=EVOLUTIONS,
+                            required=True,
+                            label='Evolution Type',
+                            help_text="What is the evolution type?")
+    
+    evolution_explanation = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
+                            help_text="In what way have you \"evolved\" this resource?",
+                            required=False,
+                            label='Explanation of Evolution')
+                            
+    name = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
+                            max_length=128,
+                            help_text="The resource name.",
+                            label='Name')                            
+
         
 class FileForm(forms.ModelForm):
     path = forms.FileField(widget = forms.ClearableFileInput(attrs={'tabindex':'1'}),
@@ -187,14 +209,14 @@ class TeacherForm(forms.ModelForm):
         # wrap the model widget in the wrapper        
         self.fields['school'].widget = CustomRelatedFieldWidgetWrapper(
                                                forms.Select(attrs={'tabindex':'1'}),
-                                               '/treasure/add_school/',
+                                               '/add_school/',
                                                 True,)
         self.fields['school'].queryset=School.objects.all().order_by('name')
         
         # do the same for hubs
         self.fields['hubs'].widget = CustomRelatedFieldWidgetWrapper(
                                                forms.SelectMultiple(attrs={'tabindex':'1'}),
-                                               '/treasure/add_hub/',
+                                               '/add_hub/',
                                                 True,)
         self.fields['hubs'].queryset=Hub.objects.all().order_by('name')
         
@@ -314,7 +336,7 @@ class PackForm(forms.ModelForm):
         # wrap the model widget in the wrapper        
         self.fields['other_tags'].widget = CustomRelatedFieldWidgetWrapper(
                                                 forms.SelectMultiple(attrs={'tabindex':'1'}),
-                                                '/treasure/tags/new/',
+                                                '/tags/new/',
                                                 True,)
                                                 
         self.fields['other_tags'].queryset=Tag.objects.filter(type=2).order_by('name')
@@ -376,7 +398,7 @@ class EditResourceForm(forms.ModelForm):
         # wrap the model widget in the wrapper        
         self.fields['other_tags'].widget = CustomRelatedFieldWidgetWrapper(
                                                 forms.SelectMultiple(attrs={'tabindex':'1'}),
-                                                '/treasure/tags/new/',
+                                                '/tags/new/',
                                                 True,)                                        
         self.fields['other_tags'].queryset=Tag.objects.filter(type=2).order_by('name')
         
@@ -436,7 +458,7 @@ class EditPackForm(forms.ModelForm):
         # wrap the model widget in the wrapper        
         self.fields['other_tags'].widget = CustomRelatedFieldWidgetWrapper(
                                                 forms.SelectMultiple(attrs={'tabindex':'1'}),
-                                                '/treasure/tags/new/',
+                                                '/tags/new/',
                                                 True,)
                                                 
         self.fields['other_tags'].queryset=Tag.objects.filter(type=2).order_by('name')        

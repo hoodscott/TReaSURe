@@ -400,7 +400,7 @@ def rate(request, resource_id):
     # get the context of request
     context = RequestContext(request)
     context_dict = sidebar(request)
-    this_teacher = Teacher.objects.get(id=request.user.id)
+    this_teacher = Teacher.objects.get(user=request.user)
     this_resource = Resource.objects.get(id=resource_id)
     try:
         condition = TeacherRatesResource.objects.get(teacher_id=this_teacher.id, resource_id=this_resource.id)
@@ -452,7 +452,7 @@ def use(request, resource_id, red):
     # get the context of request
     context = RequestContext(request)
     context_dict = sidebar(request)
-    this_teacher = Teacher.objects.get(id=request.user.id)
+    this_teacher = Teacher.objects.get(user=request.user)
     this_resource = Resource.objects.get(id=resource_id)
 
     try:
@@ -478,7 +478,7 @@ def talk(request, resource_id, var,red="res"):
     # get the context of request
     context = RequestContext(request)
     context_dict = sidebar(request)
-    this_teacher = Teacher.objects.get(id=request.user.id)
+    this_teacher = Teacher.objects.get(user=request.user)
     this_resource = Resource.objects.get(id=resource_id)
     teacher_school = School.objects.get(id=this_teacher.school_id)
 
@@ -507,7 +507,7 @@ def talkHide(request, var):
     # get the context of request
     context = RequestContext(request)
     context_dict = sidebar(request)
-    this_teacher = Teacher.objects.get(id=request.user.id)
+    this_teacher = Teacher.objects.get(user=request.user)
     discuss=TeacherWantstoTalkResource.objects.all().filter(teacher=this_teacher)
     if var=="yes":
         discuss.update(disable=0)
@@ -586,7 +586,7 @@ def add_web_resource(request):
             resource.author = Teacher.objects.get(id = teacher.id)
             
             # this is a creation
-            resource.evolution_type = "creation"
+            resource.evolution_type = "0"
             
             # default values for hidden
             resource.hidden = 0
@@ -666,7 +666,7 @@ def add_file_resource(request):
             resource.author = Teacher.objects.get(id = teacher.id)
                         
             # this is a creation
-            resource.evolution_type = "creation"
+            resource.evolution_type = "0"
             
             # default values for hidden
             resource.hidden = 0
@@ -928,7 +928,7 @@ def resource_view(request, resource_id):
     
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
-    this_teacher = Teacher.objects.get(id=request.user.id)
+    this_teacher = Teacher.objects.get(user=request.user)
     this_resource = Resource.objects.get(id=resource_id)
     try:
         rating_exists = TeacherRatesResource.objects.get(teacher_id=this_teacher.id, resource_id=this_resource.id)
@@ -1443,7 +1443,7 @@ def evolve(request, parent_id):
     # A HTTP POST?
     if request.method == 'POST':
         
-        resource_form = ResourceForm(selected_tags,request.POST)
+        resource_form = EvolveResourceForm(selected_tags,request.POST)
         file_form = FileForm(request.POST, request.FILES)
         web_form = WebForm(request.POST)
         
@@ -1458,10 +1458,6 @@ def evolve(request, parent_id):
                 userid = request.user.id
                 teacher = Teacher.objects.get(user = userid)
                 resource.author = Teacher.objects.get(id = teacher.id)
-                
-                # todo: elaborate
-                # simply 'evolution' for now
-                resource.evolution_type = "evolution"
                 
                 #default hidden
                 resource.hidden = 0
@@ -1566,7 +1562,7 @@ def evolve(request, parent_id):
         
     else:
         # If the request was not a POST, display the form to enter details.
-        resource_form = ResourceForm(selected_tags)
+        resource_form = EvolveResourceForm(selected_tags)
         file_form = FileForm()
         web_form = WebForm()
     
@@ -1589,7 +1585,7 @@ def track(request, resource_id, timeline=0):
     #create context dictionary to send back to template
     context_dict = sidebar(request)
     this_resource = get_object_or_404(Resource, id=resource_id)
-    this_teacher = Teacher.objects.get(id=request.user.id)
+    this_teacher = Teacher.objects.get(user=request.user)
     teacher_school = School.objects.get(id=this_teacher.school_id)
     context_dict['lat']=teacher_school.latitude
     context_dict['lng']=teacher_school.longitude
@@ -1825,7 +1821,7 @@ def download(request, resource_id, bypass=0):
     context_dict = sidebar(request)
 
     try:
-        this_teacher = Teacher.objects.get(id=request.user.id)
+        this_teacher = Teacher.objects.get(user=request.user)
         this_resource = get_object_or_404(Resource, id=resource_id)
         teacher_school = School.objects.get(id=this_teacher.school_id)
 
