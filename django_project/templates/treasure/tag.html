@@ -10,10 +10,10 @@
 <div>
     {% if tag %}
         <div class="hero-unit">
-		    <h2>{% if tag.type = "0" %}Level Tag		                            
-		        {% elif tag.type == "1" %}Topic Tag
-		        {% else %}Other Tag
-		        {% endif %} - {{ tag.name}}</h2>
+		    <h2>{{ tag.name }} {% if tag.type = "0" %}(<a href="/tags/#leveltags">Level</a>)
+		        {% elif tag.type == "1" %}(<a href="/tags/#topictags">Topic</a>)
+		        {% else %}(<a href="/tags/#othertags">Other Tag</a>)
+		        {% endif %}</h2>
 		</div>  
 		<div class="hero-unit">                     
 	        <h3>Resources:</h3>
