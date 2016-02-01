@@ -8,15 +8,20 @@
 {% endblock %}
 
 {% block body_block %}
-    <div class="panel panel-default hero-unit">
-        <div class="panel-heading clearfix">
-			<h3>Packs</h3>
+<div class="span12">
+    <div class="row" id="toprow">
+    <div class="span9 hero-unit container panel panel-default">
+        <div class="row panel-heading clearfix">
+        <h3>Packs</h3>
         </div>
+        <div class="span5"><a class="btn btn-block btn-primary" href="/packs/new/">Add Pack</a></div>
+        <br/>
+        <hr>
+
+
         
-        <div class="span5"><a class="btn btn-block btn-primary" href="/treasure/packs/new">Create New Pack</a><br></div><br>
-                
-        <div class="panel-body">
-            <div class="table-responsive">
+        <div class="row panel-body">
+            <div class="span8 table-responsive" style="margin-left:0px">
                 <table id="Packs" class="table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
                         <tr>
@@ -27,11 +32,11 @@
                     </thead>
                     <tbody>
                         {% for pack in packs %}
-                            {% if pack.hidden != 1 and pack.restricted != 1 %}                        
-                            <tr class="packLabel">
-                                <td><a href="../packs/{{ pack.id }}">{{ pack.name }}</a></td>
-                                <td>{{ pack.author }}</td>
-                                <td>{{ pack.summary }}</td>
+                            {% if pack.hidden != 1 and pack.restricted != 1 %}
+                            <tr class="studentLabel">
+                                <td><a href="/pack/{{ pack.id }}">{{ pack.name }}</a></td>
+                                <td>{{pack.author}}</td>
+                                <td>{{pack.summary}}</td>
                             </tr>
                             {% endif %}
                         {% endfor %}
@@ -39,35 +44,70 @@
                     </tbody>
                  </table>
             </div>
-        </div> <!-- close panel -->
+        </div> <!-- close panel -->       
         
-        <div class="hero-unit">
-            <h3>Refine Search</h3>
-            <br/>
-            <div class="container">
-                <form class="span12" id="search_form" method="post" action="/treasure/resources/">            
+    </div> <!-- close body -->
+    <div class="span3 hero-unit">
+                        <form id="search_form" method="post" action="/packs/">            
         
                     {% csrf_token %}
-
+                        <div class="span3" style="margin-left:-2em">
+                            <h3 class="span2">Refine Search</h3>
                         {% for field in form.visible_fields %}
-                            <div class="span3">
+                            <div class="span2">
                                 {{ field.errors }}
                                 {{field.label}}{% render_help_text field %}<br/>
                                 {{ field }}<br/>
                             </div>
                         {% endfor %}
-                        
-                    <div class="span12"><button class="btn btn-primary" type="submit" name="submit">Search</button></div>
+                        </div>
+                    <div class="span12" style="margin-left:-0.3em"><button class="btn btn-primary" type="submit" name="submit">Search</button></div>
                 </form>
-            </div>
-        </div>  
-
-    </div> <!-- close body -->
+    </div>
+    </div>
+</div>
 
 	<!-- script for table -->
 	<script type="text/javascript">
 	$(document).ready(function(){
-	    $('#Packs').DataTable();
+	    // get the sting after the equals sign
+	    var split = location.search.replace('?', '').split('=')
+	    console.log(split[1])
+	    
+	    // if there is no query in url
+	    if (split[1]==undefined){
+	        // initialise the datatable with no search string
+	        $('#Packs').DataTable();
+	    }
+	    // if there is a query in the url
+	    else {
+	        // initialise tha tabel with the string in the url
+	        $('#Packs').DataTable({
+	            "oSearch": {"sSearch": split[1].replace('+',' ')}
+	        });
+	    }
+	    
+	    // update form action with query in datatable
+	    // get form
+	    var form = document.getElementById('search_form') || null;
+	    
+	    // function to update form on update
+        $('#Packs').ready(function() {
+            var value = $('.dataTables_filter input').val() || null;
+            // update the action
+            if(form && value) {
+                form.action = '/packs/?search='+value.replace(' ','+');
+            }
+        });
+        // function to update form on update
+        $('#Packs').on('search.dt', function() {
+            var value = $('.dataTables_filter input').val() || null;
+            // update the action
+            if(form && value) {
+                form.action = '/packs/?search='+value.replace(' ','+');
+            }
+        });
+	    
 	});
 	</script>
 

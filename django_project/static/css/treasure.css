@@ -35,6 +35,7 @@ form input[type="text"], form input[type="email"], form input[type="password"], 
 /* Smaller padding on hero-units */
 .hero-unit{
     padding: 40px;
+    background: #ddd;
 }
 
 /* brightening up nav bar */
@@ -75,4 +76,9 @@ a.btn {
 /* making the width of the search bar smaller */
 #searchbar-container{
     width: 27%;
+}
+
+/* adding a small gap between the header and the content */
+#toprow {
+    margin-top: 1px;
 }
