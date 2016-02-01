@@ -870,7 +870,7 @@ def resources(request):
                 elif topic_tags:
                     found_resources = topic_resources
                 elif other_tags:
-                    found_resources = level_resources       
+                    found_resources = other_resources       
                                                  
                 context_dict['resources'] = found_resources
             else:
@@ -1216,7 +1216,7 @@ def packs(request):
                 elif topic_tags:
                     found_packs = topic_packs
                 elif other_tags:
-                    found_packs = level_packs       
+                    found_packs = other_packs       
                                                  
                 context_dict['packs'] = found_packs
             else:
