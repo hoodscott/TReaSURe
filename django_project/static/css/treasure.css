@@ -82,3 +82,7 @@ a.btn {
 #toprow {
     margin-top: 1px;
 }
+
+#main > section {
+    margin-top: 1%;
+}
