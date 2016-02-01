@@ -16,12 +16,11 @@ RESTRICTED = (
     ('1', 'Scottish Teachers Only'),
 )
 
-#define types of search
-SEARCHTYPES = (
-    ('0', 'Resources'),
-    ('1', 'Packs'),
-    
-) 
+# define types for evolutions
+EVOLUTIONS = (
+    'TYPES1','DF','DF','DF','DF','FD'
+)
+
 countries= (("Scotland", "Scotland"),
         ("England", "England"),("NorthernIreland", "NorthernIreland"),
         ("Wales", "Wales"))
@@ -41,6 +40,14 @@ class RatingForm(forms.Form):
 
 
 class ResourceForm(forms.ModelForm):
+
+    # stores the form of evolution (creation, amendment, etc.)
+    evolution_type = forms.CharField(widget = forms.HiddenInput(), required=False)
+    
+    evolution_explanation = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
+                            help_text="In what way have you \"evolved\" this resource?",
+                            required=False,
+                            label='Explanation of Evolution')
         
     name = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
                             max_length=128,
@@ -59,9 +66,6 @@ class ResourceForm(forms.ModelForm):
                             
     tree = forms.CharField(widget = forms.HiddenInput(), required=False)
     user = forms.CharField(widget = forms.HiddenInput(), required=False) 
-
-    # stores the form of evolution (creation, amendment, etc.)
-    evolution_type = forms.CharField(widget = forms.HiddenInput(), required=False)
     
     # should the resource be shown (basically deleted if not)
     hidden = forms.IntegerField(widget = forms.HiddenInput(), required=False)

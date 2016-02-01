@@ -119,6 +119,9 @@ class Resource(models.Model):
     # stores the form of evolution (creation, amendment, etc.)
     evolution_type = models.CharField(max_length=128)
     
+    # stores the reasoning for making an evolution
+    evolution_explanation = models.TextField()
+    
     # should the resource be shown (basically deleted if not)
     hidden = models.IntegerField()
     
