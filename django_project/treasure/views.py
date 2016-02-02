@@ -88,6 +88,14 @@ def populate_tag_dict(resource_id, object_type):
     
     return selected_tags
     
+# functino to return a dtring of the evolution type from an integer
+def convert_to_evotype(number):
+    print number
+    number = int(number)
+    EVOLUTIONS = ['Creation', 'Amendments', 'Style', 'Translation', 'Recontext', 'New Difficulty', 'New Format']
+    return EVOLUTIONS[number]
+    
+    
 # view for the homepage
 def index(request):
     # get context of request
@@ -986,7 +994,7 @@ def resource_view(request, resource_id):
             web_resource = WebResource.objects.get(resource = this_resource)
             
             # add fields to dict
-            context_dict['label'] = 'Visit Resource'
+            context_dict['label'] = 'Visit'
             context_dict['web_resource'] = True
             
         except WebResource.DoesNotExist:
@@ -998,7 +1006,7 @@ def resource_view(request, resource_id):
             files_resource = FilesResource.objects.get(resource = this_resource)
             
             # add label to dict
-            context_dict['label'] = 'Download Resource'
+            context_dict['label'] = 'Download'
             context_dict['files_resource'] = True
             
         except FilesResource.DoesNotExist:
@@ -1014,16 +1022,17 @@ def resource_view(request, resource_id):
         
         # get changelog
         changelog = []
-        previous_versions = this_resource.tree.split()[0].split(",")
+        previous_versions = this_resource.tree.split()[0].split(",")# unicode (ew)
         i = 0
-        print "len ", previous_versions[0]
+
         while i<len(previous_versions)-1:
-            changelog += [previous_versions[i], Resource.objects.get(id = previous_versions[i+1]).evolution_explanation, Resource.objects.get(id = previous_versions[i+1]).evolution_type]
-            print "versions: ", previous_versions[i]
-            print "explanatins", Resource.objects.get(id = previous_versions[i+1]).evolution_explanation
+            prev_resource = Resource.objects.get(id = previous_versions[i])
+            next_resource = Resource.objects.get(id = previous_versions[i+1])
+            evo_type = convert_to_evotype(next_resource.evolution_type)
+            changelog += [[previous_versions[i], prev_resource.name, evo_type, next_resource.evolution_explanation]]
             i += 1
         changelog += [previous_versions[-1]]
-        print changelog
+        
         context_dict["changelog"] = changelog
         
          # used to verify it exists

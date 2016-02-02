@@ -55,16 +55,16 @@
                 <hr>
                 
 					                
-                    {% if downloaded and not rating_exists %}<a class="btn btn-block btn-primary" href="/resource/{{ resource.id }}/rate/">Rate Resource</a>
-                    {% elif not rating_exists %}<a class="btn btn-block btn-primary" href="/resource/{{ resource.id }}/download/not">Rate Resource</a>{% endif %}
+                    {% if downloaded and not rating_exists %}<a class="btn btn-block btn-primary" href="/resource/{{ resource.id }}/rate/">Rate</a>
+                    {% elif not rating_exists %}<a class="btn btn-block btn-primary" href="/resource/{{ resource.id }}/download/not">Rate</a>{% endif %}
                     {% if label %}
                         <a {% if files_resource %}download{% endif %} class="btn btn-block btn-primary" href="/resource/{{resource.id}}/download/">{% if downloaded %}Re-{% endif %}{{label}}</a>
 					{% endif %}
-                    <a class="btn btn-block btn-warning" href="/resource/{{ resource.id}}/evolve">Evolve Resource</a>
-                    <a class="btn btn-block btn-success" href="/resource/{{ resource.id}}/track/" target="_blank">Track Resource</a>
-                    <a class="btn btn-block btn-info" href="/resource/{{ resource.id }}/versions">View Versions</a>
+                    <a class="btn btn-block btn-warning" href="/resource/{{ resource.id}}/evolve">Evolve</a>
+                    <a class="btn btn-block btn-success" href="/resource/{{ resource.id}}/track/" target="_blank">Track</a>
+                    <!-- todo: "make this page better" a class="btn btn-block btn-info" href="/resource/{{ resource.id }}/versions">View Versions</a-->
                     {% if owned %}
-                        <a class="btn btn-block btn-danger" href="/resource/{{ resource.id }}/edit">Edit Resource</a>
+                        <a class="btn btn-block btn-danger" href="/resource/{{ resource.id }}/edit">Edit</a>
                     {% endif %}
                 <hr>
            </div>
@@ -171,7 +171,15 @@
             <h3>Changelog</h3>
             <ul>
                 {% for change in changelog %}
-                    <li><p>{{ change }}</p></li>
+                    {% if change.1 == null %}
+                        <li><h4>&#9658;This Resource</h4></li>
+                    {% else %}
+                        <li><h4>&#9660;<a href="/resource/{{ change.0 }}">{{ change.1 }}</a></h4></li>
+                        <li><p>&nbsp;&nbsp;Evolution Type: {{ change.2 }}</p></li>
+                        {% if change.3 != null  %}
+                        <li><p>&nbsp;&nbsp;Reason for Change: {{ change.3 }}</p></li>
+                        {% endif %}
+                    {% endif %}                                      
                 {% endfor %}
             </ul>
         </div>
