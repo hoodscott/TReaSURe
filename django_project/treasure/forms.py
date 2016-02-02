@@ -96,12 +96,6 @@ class ResourceForm(forms.ModelForm):
     def __init__(self,tags,*args,**kwargs):
         self.tag_ids = tags
         super(ResourceForm, self).__init__(*args,**kwargs)
-
-        # wrap the model widget in the wrapper        
-        self.fields['other_tags'].widget = CustomRelatedFieldWidgetWrapper(
-                                                forms.SelectMultiple(attrs={'tabindex':'1'}),
-                                                '/tags/new/',
-                                                True,)
                                                 
         self.fields['other_tags'].queryset=Tag.objects.filter(type=2).order_by('name')
         
@@ -206,18 +200,10 @@ class TeacherForm(forms.ModelForm):
                                             help_text="The teaching hubs that you are member of (eg. Plan C)")                                                
     def __init__(self,*args,**kwargs):
         super(TeacherForm, self).__init__(*args,**kwargs)
-        # wrap the model widget in the wrapper        
-        self.fields['school'].widget = CustomRelatedFieldWidgetWrapper(
-                                               forms.Select(attrs={'tabindex':'1'}),
-                                               '/add_school/',
-                                                True,)
+
         self.fields['school'].queryset=School.objects.all().order_by('name')
         
-        # do the same for hubs
-        self.fields['hubs'].widget = CustomRelatedFieldWidgetWrapper(
-                                               forms.SelectMultiple(attrs={'tabindex':'1'}),
-                                               '/add_hub/',
-                                                True,)
+
         self.fields['hubs'].queryset=Hub.objects.all().order_by('name')
         
     class Meta:
@@ -332,12 +318,6 @@ class PackForm(forms.ModelForm):
     def __init__(self,tags,*args,**kwargs):
         self.tag_ids = tags
         super(PackForm, self).__init__(*args,**kwargs)
-
-        # wrap the model widget in the wrapper        
-        self.fields['other_tags'].widget = CustomRelatedFieldWidgetWrapper(
-                                                forms.SelectMultiple(attrs={'tabindex':'1'}),
-                                                '/tags/new/',
-                                                True,)
                                                 
         self.fields['other_tags'].queryset=Tag.objects.filter(type=2).order_by('name')
         
@@ -394,12 +374,7 @@ class EditResourceForm(forms.ModelForm):
     def __init__(self,tags,*args,**kwargs):
         self.tag_ids = tags
         super(EditResourceForm, self).__init__(*args,**kwargs)
-        
-        # wrap the model widget in the wrapper        
-        self.fields['other_tags'].widget = CustomRelatedFieldWidgetWrapper(
-                                                forms.SelectMultiple(attrs={'tabindex':'1'}),
-                                                '/tags/new/',
-                                                True,)                                        
+                                              
         self.fields['other_tags'].queryset=Tag.objects.filter(type=2).order_by('name')
         
         # set initial selected tags
@@ -454,12 +429,6 @@ class EditPackForm(forms.ModelForm):
     def __init__(self,tags,*args,**kwargs):
         self.tag_ids = tags
         super(EditPackForm, self).__init__(*args,**kwargs)
-        
-        # wrap the model widget in the wrapper        
-        self.fields['other_tags'].widget = CustomRelatedFieldWidgetWrapper(
-                                                forms.SelectMultiple(attrs={'tabindex':'1'}),
-                                                '/tags/new/',
-                                                True,)
                                                 
         self.fields['other_tags'].queryset=Tag.objects.filter(type=2).order_by('name')        
         
