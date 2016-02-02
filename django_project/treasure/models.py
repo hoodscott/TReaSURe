@@ -42,7 +42,7 @@ class Teacher(models.Model):
     # creates a foreign key relationship with school
     school = models.ForeignKey(School, null=True)
     # creates a many to many relationship with hubs
-    hubs = models.ManyToManyField(Hub, null=True)
+    hubs = models.ManyToManyField(Hub)
 	
     def __unicode__(self):
         return "%s %s" % (self.firstname, self.surname)
@@ -68,7 +68,7 @@ class Tag(models.Model):
 
 # model for a pack of resources
 class Pack(models.Model):
-    explore  = models.IntegerField(max_length=1)
+    explore  = models.IntegerField()
     name = models.CharField(max_length=128)
     image = models.CharField(max_length=128)
 
@@ -88,7 +88,7 @@ class Pack(models.Model):
     restricted = models.IntegerField()
 
     # creates a many to many relationship with tags
-    tags = models.ManyToManyField(Tag, null=True)
+    tags = models.ManyToManyField(Tag)
 
     class Meta:
         db_table = 'treasure_pack'
@@ -107,8 +107,8 @@ class Resource(models.Model):
     author = models.ForeignKey(Teacher)
     
     # creates a many to many relationship with tags
-    tags = models.ManyToManyField(Tag, null=True)
-    packs = models.ManyToManyField(Pack, null=True, blank=True)
+    tags = models.ManyToManyField(Tag)
+    packs = models.ManyToManyField(Pack, blank=True)
     
     # long description
     description = models.TextField()

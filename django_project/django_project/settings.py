@@ -212,9 +212,9 @@ SOCIAL_AUTH_PIPELINE = (
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '311715279832-ap5o1pknkg1c7b1ec3fo34i246pk5oq2'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'tjWUyPO6Bn3Sdiuf6Ty5G9U_'
-LOGIN_URL = '/treasure/login/'
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/treasure/'
-SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/treasure/auth/new/'
+LOGIN_URL = '/login/'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/auth/new/'
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
