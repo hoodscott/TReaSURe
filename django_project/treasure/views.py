@@ -5,7 +5,7 @@ from treasure.forms import *
 from treasure.models import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ValidationError 
+from django.core.exceptions import ValidationError
 from django.core import validators
 from string import split, upper
 from datetime import datetime
@@ -64,25 +64,25 @@ def get_list(relation):
     return objects
     
 # function to initialise a blank dictionary to pass into forms
-# used to preset the tags in the forms    
+# used to preset the tags in the forms
 def blank_tag_dict():
     return {'level':[], 'topic':[], 'other':[]}
     
 # function to return a list of the current tags
 # used to preset the tags in the forms
 # object type can be resource or pack
-def populate_tag_dict(resource_id, object_type):    
+def populate_tag_dict(resource_id, object_type):
     selected_tags = blank_tag_dict()
     
-    level_tags = object_type.objects.get(id=resource_id).tags.filter(type='0')   
+    level_tags = object_type.objects.get(id=resource_id).tags.filter(type='0')
     for tag in level_tags:
         selected_tags['level'] += [tag.id]
     
-    topic_tags = object_type.objects.get(id=resource_id).tags.filter(type='1')   
+    topic_tags = object_type.objects.get(id=resource_id).tags.filter(type='1')
     for tag in topic_tags:
         selected_tags['topic'] += [tag.id]
     
-    other_tags = object_type.objects.get(id=resource_id).tags.filter(type='2')   
+    other_tags = object_type.objects.get(id=resource_id).tags.filter(type='2')
     for tag in other_tags:
         selected_tags['other'] += [tag.id]
     
@@ -224,13 +224,13 @@ def edit_profile(request,soc=0):
             teacher.user = user
 
             # Now we save the UserProfile model instance.
-            teacher.save()  
+            teacher.save()
 
             # save the hubs the user has selected
             hubs = teacher_form.cleaned_data['hubs']
             for hub in hubs:
                 teacher.hubs.add(hub)
-            teacher.save()            
+            teacher.save()
             
             # Update our variable to tell the template registration was successful.
             updated = True
@@ -240,7 +240,7 @@ def edit_profile(request,soc=0):
             print "ERROR", user_form.errors, teacher_form.errors
 
     # Not a HTTP POST, so we render our form using two ModelForm instances.
-    else: 
+    else:
         # pass the current records to initially populate the forms
         user_form = UserFormNoPW(instance = my_user_record)
         teacher_form = TeacherForm(instance = my_teacher_record)
@@ -311,7 +311,7 @@ def edit_resource(request, resource_id):
                 print "ERROR", form.errors
 
         # Not a HTTP POST, so we render our form using two ModelForm instances.
-        else: 
+        else:
             # pass the current records to initially populate the forms
             form = EditResourceForm(selected_tags, instance = this_resource)
         
@@ -365,13 +365,13 @@ def register(request):
             teacher.user = user
 
             # Now we save the UserProfile model instance.
-            teacher.save()  
+            teacher.save()
 
             # save the hubs the user has selected
             hubs = teacher_form.cleaned_data['hubs']
             for hub in hubs:
                 teacher.hubs.add(hub)
-            teacher.save()            
+            teacher.save()
             
             # Update our variable to tell the template registration was successful.
             registered = True
@@ -407,12 +407,12 @@ def rate(request, resource_id):
         context_dict['condition'] = condition
     except TeacherRatesResource.DoesNotExist:
             # do nothing
-            pass 
+            pass
     try:
         download = TeacherDownloadsResource.objects.get(teacher_id=this_teacher.id, resource_id=this_resource.id)
     except TeacherDownloadsResource.DoesNotExist:
             # This could never happen
-            pass 
+            pass
     rated = False
 
     # If it's a HTTP POST, we're interested in processing form data.
@@ -459,7 +459,7 @@ def use(request, resource_id, red):
         download = TeacherDownloadsResource.objects.get(teacher_id=this_teacher.id, resource_id=this_resource.id)
     except TeacherDownloadsResource.DoesNotExist:
             # This could never happen
-            pass 
+            pass
 
     download.used='1'
     download.save()
@@ -471,7 +471,7 @@ def use(request, resource_id, red):
     else:
         link='/me/'
 
-    return HttpResponseRedirect(link)     
+    return HttpResponseRedirect(link)
 
 
 def talk(request, resource_id, var,red="res"):
@@ -491,7 +491,7 @@ def talk(request, resource_id, var,red="res"):
             wanted.delete()
         except TeacherWantstoTalkResource.DoesNotExist:
             # This could never happen
-            pass 
+            pass
 
     link=''
     if red=='res':
@@ -501,7 +501,7 @@ def talk(request, resource_id, var,red="res"):
     else:
         link='/me/'
 
-    return HttpResponseRedirect(link)   
+    return HttpResponseRedirect(link)
 
 def talkHide(request, var):
     # get the context of request
@@ -513,7 +513,7 @@ def talkHide(request, var):
         discuss.update(disable=0)
     elif var=="no":
         discuss.update(disable=1)
-    return HttpResponseRedirect('/me/')   
+    return HttpResponseRedirect('/me/')
 
 
 def user_login(request):
@@ -679,7 +679,7 @@ def add_file_resource(request):
             resource.resource_type = "file"
             
             # save the instance before we add tags / set tree
-            resource.save()            
+            resource.save()
             
             # combine the tags into one queryset
             tags =  resource_form.cleaned_data['level_tags'] | \
@@ -729,11 +729,11 @@ def add_hub(request):
     context = RequestContext(request)
     
     # create dictionary to pass data to templates
-    context_dict = sidebar(request)    
+    context_dict = sidebar(request)
     
     # check if form is in a popup
     if ('_popup' in request.GET):
-        context_dict['popup'] = True    
+        context_dict['popup'] = True
 
     # A HTTP POST?
     if request.method == 'POST':
@@ -744,14 +744,14 @@ def add_hub(request):
             # Save the new category to the database.
             geolocationDict=postcodeLocation(form.cleaned_data['country'],form.cleaned_data['postcode'])
             if geolocationDict!=-1:
-                hub = Hub(name=form.cleaned_data['name'], address=form.cleaned_data['address'], longitude=geolocationDict['long'],latitude=geolocationDict['lat'])     
+                hub = Hub(name=form.cleaned_data['name'], address=form.cleaned_data['address'], longitude=geolocationDict['long'],latitude=geolocationDict['lat'])
                 hub.save()
                 # if addition was in a popup
                 ## This will fire the script to close the popup and update the list
                 if "_popup" in request.POST:
                     return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % \
                         (escape(hub.pk), escapejs(hub)))
-                ## No popup, so return the normal response            
+                ## No popup, so return the normal response
                 return hub_view(request, hub.id)
             else:
                 form._errors['postcode'] = '--Invalid Postcode. '
@@ -788,7 +788,7 @@ def add_school(request):
             # Save the new category to the database.
             geolocationDict=postcodeLocation(form.cleaned_data['country'],form.cleaned_data['postcode'])
             if geolocationDict!=-1:
-                school= School(name=form.cleaned_data['name'], town=form.cleaned_data['town'], address=form.cleaned_data['address'], latitude=geolocationDict['lat'], longitude=geolocationDict['long'])       
+                school= School(name=form.cleaned_data['name'], town=form.cleaned_data['town'], address=form.cleaned_data['address'], latitude=geolocationDict['lat'], longitude=geolocationDict['long'])
                 school.save()
                 # if addition was in a popup
                 ## This will fire the script to close the popup and update the list
@@ -834,7 +834,7 @@ def resources(request):
             # get tags from form
             level_tags = form.cleaned_data['level_tags']
             topic_tags = form.cleaned_data['topic_tags']
-            other_tags = form.cleaned_data['other_tags']                    
+            other_tags = form.cleaned_data['other_tags']
         
             # initialise search results
             all_resources = Resource.objects.all()
@@ -870,7 +870,7 @@ def resources(request):
                 elif topic_tags:
                     found_resources = topic_resources
                 elif other_tags:
-                    found_resources = other_resources       
+                    found_resources = other_resources
                                                  
                 context_dict['resources'] = found_resources
             else:
@@ -935,19 +935,19 @@ def resource_view(request, resource_id):
         context_dict['rating_exists'] = rating_exists
     except TeacherRatesResource.DoesNotExist:
             # do nothing
-            pass 
+            pass
     try:
         downloaded = TeacherDownloadsResource.objects.get(teacher_id=this_teacher.id, resource_id=this_resource.id)
         context_dict['downloaded'] = downloaded
     except TeacherDownloadsResource.DoesNotExist:
             # do nothing
-            pass 
+            pass
     try:
         iWant2Talk = TeacherWantstoTalkResource.objects.get(teacher_id=this_teacher.id, resource_id=this_resource.id)
         context_dict['iWant2Talk'] = iWant2Talk
     except TeacherWantstoTalkResource.DoesNotExist:
             # do nothing
-            pass 
+            pass
     try:
         # Can we find a resource with the given id?
         this_resource = Resource.objects.get(id=resource_id)
@@ -1008,11 +1008,25 @@ def resource_view(request, resource_id):
         # get packs
         context_dict['partofpacks'] = this_resource.packs.filter(name__isnull=False)
 
-        # get interactions            
+        # get interactions
         want2talk=TeacherWantstoTalkResource.objects.all()
         context_dict['want2talk'] = want2talk.filter(resource_id=resource_id)
-
-        # used to verify it exists
+        
+        # get changelog
+        changelog = []
+        previous_versions = this_resource.tree.split()[0].split(",")
+        i = 0
+        print "len ", previous_versions[0]
+        while i<len(previous_versions)-1:
+            changelog += [previous_versions[i], Resource.objects.get(id = previous_versions[i+1]).evolution_explanation, Resource.objects.get(id = previous_versions[i+1]).evolution_type]
+            print "versions: ", previous_versions[i]
+            print "explanatins", Resource.objects.get(id = previous_versions[i+1]).evolution_explanation
+            i += 1
+        changelog += [previous_versions[-1]]
+        print changelog
+        context_dict["changelog"] = changelog
+        
+         # used to verify it exists
         context_dict['resource'] = this_resource
     except Resource.DoesNotExist:
         # We get here if we didn't find the specified resource.
@@ -1107,7 +1121,7 @@ def tags(request):
         context_dict['other_tags'] = get_list(filtered_tags)
     
     # Render the template depending on the context.
-    return render_to_response('treasure/tags.html', context_dict, context) 
+    return render_to_response('treasure/tags.html', context_dict, context)
 
 # view to add a tag to the database
 @login_required
@@ -1156,7 +1170,7 @@ def add_tag(request):
     context_dict['form'] = form
     
     # Render the template depending on the context.
-    return render_to_response('treasure/add_tag.html', context_dict, context)    
+    return render_to_response('treasure/add_tag.html', context_dict, context)
 
 # view to see all packs in the database
 @login_required
@@ -1216,13 +1230,13 @@ def packs(request):
                 elif topic_tags:
                     found_packs = topic_packs
                 elif other_tags:
-                    found_packs = other_packs       
+                    found_packs = other_packs
                                                  
                 context_dict['packs'] = found_packs
             else:
                 # if no tags are entered, do nothing
                 # template handles error message
-                pass                    
+                pass
             
             searched = True
             
@@ -1253,12 +1267,12 @@ def tag(request, tag_id):
         
         # get resources (if available)
         filtered_resources = Resource.objects.filter(tags__id=tag_id)
-        if filtered_resources: 
+        if filtered_resources:
             context_dict['tagged_resources'] = filtered_resources
             
         # get packs (if available)
         filtered_packs = Pack.objects.filter(tags__id=tag_id)
-        if filtered_packs: 
+        if filtered_packs:
             context_dict['tagged_packs'] = filtered_packs
             
         # used to verify tag exists
@@ -1370,7 +1384,7 @@ def edit_pack(request, pack_id):
                 print "ERROR", form.errors
 
         # Not a HTTP POST, so we render our form using two ModelForm instances.
-        else: 
+        else:
             # pass the current records to initially populate the forms
             form = EditPackForm(selected_tags, instance = this_pack)
         
@@ -1467,7 +1481,7 @@ def evolve(request, parent_id):
                 resource.restricted = 0
                 
                 # set type of resource
-                resource.resource_type = 'file'                
+                resource.resource_type = 'file'
                 
                 # save the resource before we add tags / set tree
                 resource.save()
@@ -1491,7 +1505,7 @@ def evolve(request, parent_id):
                 files.resource = resource
                 
                 # save the instance
-                files.save()     
+                files.save()
                 
                 # show user the new materials page
                 return resource_view(request, resource.id)
@@ -1502,7 +1516,7 @@ def evolve(request, parent_id):
                 context_dict['error'] = 'file'
 
 
-        # if evolution is a web upload   
+        # if evolution is a web upload
         elif 'web_evolve' in request.POST:
             # Have we been provided with a valid form?
             if resource_form.is_valid() and web_form.is_valid():
@@ -1550,7 +1564,7 @@ def evolve(request, parent_id):
                 web.resource = resource
                 
                 # save the instance
-                web.save()     
+                web.save()
                 
                 # Now show the new materials page
                 return resource_view(request, resource.id)
@@ -1732,7 +1746,7 @@ def newpack(request):
     context_dict['form'] = form
     
     # Render the template depending on the context.
-    return render_to_response('treasure/add_pack.html', context_dict, context)    
+    return render_to_response('treasure/add_pack.html', context_dict, context)
     
 # view to add a pack to the database
 # initialises the new pack with the resource the new pack button was selected on
@@ -1791,7 +1805,7 @@ def newpack_initial(request, resource_id):
             this_resource = Resource.objects.get(id=resource_id)
         
             # add resource to pack
-            this_resource.packs.add(this_pack)            
+            this_resource.packs.add(this_pack)
             this_resource.save()
                         
             # Now show the new pack page
@@ -1809,7 +1823,7 @@ def newpack_initial(request, resource_id):
     context_dict['form'] = form
     
     # Render the template depending on the context.
-    return render_to_response('treasure/add_pack.html', context_dict, context)    
+    return render_to_response('treasure/add_pack.html', context_dict, context)
 
 # view for the user's history (list of all actions) page
 @login_required
@@ -1921,4 +1935,4 @@ def help(request):
     context_dict = sidebar(request)
     
      # Render the template updating the context dictionary.
-    return render_to_response('treasure/help.html', context_dict, context) 
+    return render_to_response('treasure/help.html', context_dict, context)

@@ -56,12 +56,12 @@
                 
 					                
                     {% if downloaded and not rating_exists %}<a class="btn btn-block btn-primary" href="/resource/{{ resource.id }}/rate/">Rate Resource</a>
-                    {% elif not rating_exists %}<a class="btn btn-block btn-primary" href="/resource/{{ resource.id }}/download/not">Rate Resource</a>{% endif %}  
+                    {% elif not rating_exists %}<a class="btn btn-block btn-primary" href="/resource/{{ resource.id }}/download/not">Rate Resource</a>{% endif %}
                     {% if label %}
                         <a {% if files_resource %}download{% endif %} class="btn btn-block btn-primary" href="/resource/{{resource.id}}/download/">{% if downloaded %}Re-{% endif %}{{label}}</a>
 					{% endif %}
-                    <a class="btn btn-block btn-warning" href="/resource/{{ resource.id}}/evolve">Evolve Resource</a>                    
-                    <a class="btn btn-block btn-success" href="/resource/{{ resource.id}}/track/" target="_blank">Track Resource</a>                
+                    <a class="btn btn-block btn-warning" href="/resource/{{ resource.id}}/evolve">Evolve Resource</a>
+                    <a class="btn btn-block btn-success" href="/resource/{{ resource.id}}/track/" target="_blank">Track Resource</a>
                     <a class="btn btn-block btn-info" href="/resource/{{ resource.id }}/versions">View Versions</a>
                     {% if owned %}
                         <a class="btn btn-block btn-danger" href="/resource/{{ resource.id }}/edit">Edit Resource</a>
@@ -164,9 +164,17 @@
         {% else %}
             <p>There is no feedback for resource {{resource_name}} yet. {% if downloaded and not rating_exists %}<a href="/resource/{{ resource.id}}/rate/">Be the first!</a>{% elif not downloaded %}<a href="/resource/{{ resource.id}}/download/not/">Be the first!</a>{% endif %}</p>
         {% endif %}
-        </div>     
+        </div>
 
-
+        
+        <div class="hero-unit">
+            <h3>Changelog</h3>
+            <ul>
+                {% for change in changelog %}
+                    <li><p>{{ change }}</p></li>
+                {% endfor %}
+            </ul>
+        </div>
         <!-- todo: put issues here -->
         
     {% else %}
