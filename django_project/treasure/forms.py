@@ -22,7 +22,7 @@ EVOLUTIONS = (
     ('2', 'Style'),
     ('3', 'Translation'),
     ('4', 'Recontext'),
-    ('5', 'New Difficulty'),        
+    ('5', 'New Difficulty'),
     ('6', 'New Format')
 )
 
@@ -64,7 +64,7 @@ class ResourceForm(forms.ModelForm):
                             label='Description')
                             
     tree = forms.CharField(widget = forms.HiddenInput(), required=False)
-    user = forms.CharField(widget = forms.HiddenInput(), required=False) 
+    user = forms.CharField(widget = forms.HiddenInput(), required=False)
     
     evolution_type = forms.CharField(widget = forms.HiddenInput(), required=False)
     evolution_explanation = forms.CharField(widget = forms.HiddenInput(), required=False)
@@ -79,16 +79,16 @@ class ResourceForm(forms.ModelForm):
     resource_type = forms.CharField(widget = forms.HiddenInput(), required=False)
     
     level_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
-                                                queryset=Tag.objects.filter(type=0).order_by('name'),
+                                                queryset=Tag.objects.filter(tagtype=0).order_by('name'),
                                                 required=True,
                                                 label='Level Tags',
                                                 help_text="Tags that describe the Level that this material concerns")
     topic_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
-                                                queryset=Tag.objects.filter(type=1).order_by('name'),
+                                                queryset=Tag.objects.filter(tagtype=1).order_by('name'),
                                                 required=True,
                                                 label='Topic Tags',
                                                 help_text="Tags that describe the Topic that this material covers")
-    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
+    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(tagtype=2).order_by('name'),
                                                 required=False,
                                                 label='Other Tags',
                                                 help_text="Any other tags not falling under the Level and Topic categories (optional)")
@@ -97,12 +97,12 @@ class ResourceForm(forms.ModelForm):
         self.tag_ids = tags
         super(ResourceForm, self).__init__(*args,**kwargs)
                                                 
-        self.fields['other_tags'].queryset=Tag.objects.filter(type=2).order_by('name')
+        self.fields['other_tags'].queryset=Tag.objects.filter(tagtype=2).order_by('name')
         
         # set initial selected tags
         self.fields['level_tags'].initial = tags['level']
         self.fields['topic_tags'].initial = tags['topic']
-        self.fields['other_tags'].initial = tags['other']   
+        self.fields['other_tags'].initial = tags['other']
 
     
     class Meta:
@@ -110,7 +110,7 @@ class ResourceForm(forms.ModelForm):
         fields = ('evolution_type', 'evolution_explanation', 'name', 'summary', 'description', 'tree', 'user', 'hidden', 'restricted', 'resource_type')
         exclude = []
 
-# extends the resource form to add the evolution types        
+# extends the resource form to add the evolution types
 class EvolveResourceForm(ResourceForm):
     # stores the form of evolution (creation, amendment, etc.)
     evolution_type = forms.ChoiceField(widget=forms.Select(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
@@ -127,7 +127,7 @@ class EvolveResourceForm(ResourceForm):
     name = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
                             max_length=128,
                             help_text="The resource name.",
-                            label='Name')                            
+                            label='Name')
 
         
 class FileForm(forms.ModelForm):
@@ -193,11 +193,11 @@ class TeacherForm(forms.ModelForm):
     school = forms.ModelChoiceField(queryset=School.objects.all().order_by('name'),
                                     required=False,
                                     label='School',
-                                    help_text="The school you work for")                                   
+                                    help_text="The school you work for")
     hubs = forms.ModelMultipleChoiceField(queryset=Hub.objects.all().order_by('name'),
                                             required=False,
                                             label='Hubs',
-                                            help_text="The teaching hubs that you are member of (eg. Plan C)")                                                
+                                            help_text="The teaching hubs that you are member of (eg. Plan C)")
     def __init__(self,*args,**kwargs):
         super(TeacherForm, self).__init__(*args,**kwargs)
 
@@ -245,16 +245,16 @@ class HubForm(forms.Form):
 class SearchForm(forms.Form):
     
     # tag forms
-    level_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=0).order_by('name'),
+    level_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(tagtype=0).order_by('name'),
                                                 required=False,
                                                 label='Level Tags',
                                                 help_text="Tags that describe the Level that this material concerns",
                                                 widget = forms.SelectMultiple(attrs={'tabindex':'1'}))
-    topic_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=1).order_by('name'),
+    topic_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(tagtype=1).order_by('name'),
                                                 required=False,
                                                 help_text="Tags that describe the Topic that his material covers",
                                                 widget = forms.SelectMultiple(attrs={'tabindex':'1'}))
-    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
+    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(tagtype=2).order_by('name'),
                                                 required=False,
                                                 help_text="Any other tags not falling into Level or Topic category (optional)",
                                                 widget = forms.SelectMultiple(attrs={'tabindex':'1'}))
@@ -264,11 +264,11 @@ class TagForm(forms.ModelForm):
                             help_text="The name of the new tag (Should be Descriptive)",
                             label='Name',
                             widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}))
-    type = forms.CharField(widget = forms.HiddenInput(), required=False)               
+    tagtype = forms.CharField(widget = forms.HiddenInput(), required=False)
     
     class Meta:
         model = Tag
-        fields = ('name','type')
+        fields = ('name','tagtype')
         exclude = []
         
 class PackForm(forms.ModelForm):
@@ -303,14 +303,14 @@ class PackForm(forms.ModelForm):
     restricted = forms.IntegerField(widget = forms.HiddenInput(), required=False)
     
     level_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
-                                                queryset=Tag.objects.filter(type=0).order_by('name'),
+                                                queryset=Tag.objects.filter(tagtype=0).order_by('name'),
                                                 required=False, help_text="Tags that describe the Level that this material concerns",
                                                 label='Level Tags')
     topic_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
-                                                queryset=Tag.objects.filter(type=1).order_by('name'),
+                                                queryset=Tag.objects.filter(tagtype=1).order_by('name'),
                                                 required=False, help_text="Tags that describe the Topic that his material covers",
                                                 label='Topic Tags')
-    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
+    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(tagtype=2).order_by('name'),
                                                 required=False,
                                                 help_text="Any other tags not falling into Level or Topic category (optional)",
                                                 label='Other Tags')
@@ -319,7 +319,7 @@ class PackForm(forms.ModelForm):
         self.tag_ids = tags
         super(PackForm, self).__init__(*args,**kwargs)
                                                 
-        self.fields['other_tags'].queryset=Tag.objects.filter(type=2).order_by('name')
+        self.fields['other_tags'].queryset=Tag.objects.filter(tagtype=2).order_by('name')
         
         # set initial selected tags
         self.fields['level_tags'].initial = tags['level']
@@ -344,16 +344,16 @@ class EditResourceForm(forms.ModelForm):
                             label='Description')
                             
     level_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
-                                                queryset=Tag.objects.filter(type=0).order_by('name'),
+                                                queryset=Tag.objects.filter(tagtype=0).order_by('name'),
                                                 required=True,
                                                 label='Level Tags',
                                                 help_text="Tags that describe the Level that this material concerns")
     topic_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
-                                                queryset=Tag.objects.filter(type=1).order_by('name'),
+                                                queryset=Tag.objects.filter(tagtype=1).order_by('name'),
                                                 required=True,
                                                 label='Topic Tags',
                                                 help_text="Tags that describe the Topic that this material covers")
-    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
+    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(tagtype=2).order_by('name'),
                                                 required=False,
                                                 label='Other Tags',
                                                 help_text="Any other tags not falling under the Level and Topic categories (optional)")
@@ -375,7 +375,7 @@ class EditResourceForm(forms.ModelForm):
         self.tag_ids = tags
         super(EditResourceForm, self).__init__(*args,**kwargs)
                                               
-        self.fields['other_tags'].queryset=Tag.objects.filter(type=2).order_by('name')
+        self.fields['other_tags'].queryset=Tag.objects.filter(tagtype=2).order_by('name')
         
         # set initial selected tags
         self.fields['level_tags'].initial = tags['level']
@@ -401,14 +401,14 @@ class EditPackForm(forms.ModelForm):
                             label='Image URL')
     
     level_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
-                                                queryset=Tag.objects.filter(type=0).order_by('name'),
+                                                queryset=Tag.objects.filter(tagtype=0).order_by('name'),
                                                 required=False, help_text="Tags that describe the Level that this material concerns",
                                                 label='Level Tags')
     topic_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
-                                                queryset=Tag.objects.filter(type=1).order_by('name'),
+                                                queryset=Tag.objects.filter(tagtype=1).order_by('name'),
                                                 required=False, help_text="Tags that describe the Topic that his material covers",
                                                 label='Topic Tags')
-    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(type=2).order_by('name'),
+    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(tagtype=2).order_by('name'),
                                                 required=False,
                                                 help_text="Any other tags not falling into Level or Topic category (optional)",
                                                 label='Other Tags')
@@ -419,7 +419,7 @@ class EditPackForm(forms.ModelForm):
                                 help_text="Should this be visible or hidden?",
                                 widget = forms.Select(attrs={'tabindex':'1'}))
     
-    ''' todo: implement restrictions    
+    ''' todo: implement restrictions
     visible = forms.ChoiceField(choices=VISIBLE,
                             required=True,
                             label='Visible',
@@ -430,7 +430,7 @@ class EditPackForm(forms.ModelForm):
         self.tag_ids = tags
         super(EditPackForm, self).__init__(*args,**kwargs)
                                                 
-        self.fields['other_tags'].queryset=Tag.objects.filter(type=2).order_by('name')        
+        self.fields['other_tags'].queryset=Tag.objects.filter(tagtype=2).order_by('name')
         
         # set initial selected tags
         self.fields['level_tags'].initial = tags['level']

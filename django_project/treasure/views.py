@@ -74,15 +74,15 @@ def blank_tag_dict():
 def populate_tag_dict(resource_id, object_type):
     selected_tags = blank_tag_dict()
     
-    level_tags = object_type.objects.get(id=resource_id).tags.filter(type='0')
+    level_tags = object_type.objects.get(id=resource_id).tags.filter(tagtype='0')
     for tag in level_tags:
         selected_tags['level'] += [tag.id]
     
-    topic_tags = object_type.objects.get(id=resource_id).tags.filter(type='1')
+    topic_tags = object_type.objects.get(id=resource_id).tags.filter(tagtype='1')
     for tag in topic_tags:
         selected_tags['topic'] += [tag.id]
     
-    other_tags = object_type.objects.get(id=resource_id).tags.filter(type='2')
+    other_tags = object_type.objects.get(id=resource_id).tags.filter(tagtype='2')
     for tag in other_tags:
         selected_tags['other'] += [tag.id]
     
@@ -605,6 +605,9 @@ def add_web_resource(request):
             
             # this is a web resource
             resource.resource_type = "web"
+            
+            # save the time the resource was created
+            resource.datetime = datetime.now()
 
             # save resource before we add tags / set tree
             resource.save()
@@ -686,6 +689,9 @@ def add_file_resource(request):
             # this is a file resource
             resource.resource_type = "file"
             
+            # set the time the resource was created
+            resource.datetime = datetime.now()
+            
             # save the instance before we add tags / set tree
             resource.save()
             
@@ -738,10 +744,6 @@ def add_hub(request):
     
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
-    
-    # check if form is in a popup
-    if ('_popup' in request.GET):
-        context_dict['popup'] = True
 
     # A HTTP POST?
     if request.method == 'POST':
@@ -754,12 +756,7 @@ def add_hub(request):
             if geolocationDict!=-1:
                 hub = Hub(name=form.cleaned_data['name'], address=form.cleaned_data['address'], longitude=geolocationDict['long'],latitude=geolocationDict['lat'])
                 hub.save()
-                # if addition was in a popup
-                ## This will fire the script to close the popup and update the list
-                if "_popup" in request.POST:
-                    return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % \
-                        (escape(hub.pk), escapejs(hub)))
-                ## No popup, so return the normal response
+
                 return hub_view(request, hub.id)
             else:
                 form._errors['postcode'] = '--Invalid Postcode. '
@@ -783,10 +780,6 @@ def add_school(request):
     
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
-    
-    # check if form is in a popup
-    if ('_popup' in request.GET):
-        context_dict['popup'] = True
 
     # A HTTP POST?
     if request.method == 'POST':
@@ -798,12 +791,7 @@ def add_school(request):
             if geolocationDict!=-1:
                 school= School(name=form.cleaned_data['name'], town=form.cleaned_data['town'], address=form.cleaned_data['address'], latitude=geolocationDict['lat'], longitude=geolocationDict['long'])
                 school.save()
-                # if addition was in a popup
-                ## This will fire the script to close the popup and update the list
-                if "_popup" in request.POST:
-                    return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % \
-                        (escape(school.pk), escapejs(school)))
-                ## No popup, so return the normal response
+
                 return school_view(request, school.id)
             else:
                 form._errors['postcode'] = '--Invalid Postcode. '
@@ -977,15 +965,15 @@ def resource_view(request, resource_id):
             context_dict['owned'] = True
             
         # get tags
-        filtered_tags = this_resource.tags.filter(type='0')
+        filtered_tags = this_resource.tags.filter(tagtype='0')
         if filtered_tags:
             context_dict['level_tags'] = get_list(filtered_tags)
         
-        filtered_tags = this_resource.tags.filter(type='1')
+        filtered_tags = this_resource.tags.filter(tagtype='1')
         if filtered_tags:
             context_dict['topic_tags'] = get_list(filtered_tags)
         
-        filtered_tags = this_resource.tags.filter(type='2')
+        filtered_tags = this_resource.tags.filter(tagtype='2')
         if filtered_tags:
             context_dict['other_tags'] = get_list(filtered_tags)
                     
@@ -1117,15 +1105,15 @@ def tags(request):
     tag_list = Tag.objects.all()
     
     # get tags
-    filtered_tags = tag_list.filter(type='0')
+    filtered_tags = tag_list.filter(tagtype='0')
     if filtered_tags:
         context_dict['level_tags'] = get_list(filtered_tags)
     
-    filtered_tags = tag_list.filter(type='1')
+    filtered_tags = tag_list.filter(tagtype='1')
     if filtered_tags:
         context_dict['topic_tags'] = get_list(filtered_tags)
     
-    filtered_tags = tag_list.filter(type='2')
+    filtered_tags = tag_list.filter(tagtype='2')
     if filtered_tags:
         context_dict['other_tags'] = get_list(filtered_tags)
     
@@ -1141,10 +1129,6 @@ def add_tag(request):
     #create context dictionary to send back to template
     context_dict = sidebar(request)
     
-    # check if form is in a popup
-    if ('_popup' in request.GET):
-        context_dict['popup'] = True
-    
     # A HTTP POST?
     if request.method == 'POST':
         form = TagForm(request.POST)
@@ -1156,17 +1140,11 @@ def add_tag(request):
             
             # only allow 'other tags' to be created using the form
             # 'levels' and 'topics' should be predefined by admins
-            tag.type = '2'
+            tag.tagtype = '2'
             
             # now save the tag in the database
             tag.save()
                         
-            # if addition was in a popup
-            ## This will fire the script to close the popup and update the list
-            if "_popup" in request.POST:
-                return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % \
-                    (escape(tag.pk), escapejs(tag)))
-            ## No popup, so return the normal response
             return tags(request)
             
         else:
@@ -1316,15 +1294,15 @@ def pack(request, pack_id):
             context_dict['owned'] = True
 
         # get tags
-        filtered_tags = this_pack.tags.filter(type='0')
+        filtered_tags = this_pack.tags.filter(tagtype='0')
         if filtered_tags:
             context_dict['level_tags'] = get_list(filtered_tags)
         
-        filtered_tags = this_pack.tags.filter(type='1')
+        filtered_tags = this_pack.tags.filter(tagtype='1')
         if filtered_tags:
             context_dict['topic_tags'] = get_list(filtered_tags)
         
-        filtered_tags = this_pack.tags.filter(type='2')
+        filtered_tags = this_pack.tags.filter(tagtype='2')
         if filtered_tags:
             context_dict['other_tags'] = get_list(filtered_tags)
 
@@ -1492,6 +1470,9 @@ def evolve(request, parent_id):
                 # set type of resource
                 resource.resource_type = 'file'
                 
+                # set the time the resource was created
+                resource.datetime = datetime.now()
+                
                 # save the resource before we add tags / set tree
                 resource.save()
                 
@@ -1550,6 +1531,9 @@ def evolve(request, parent_id):
                 
                 # set type of resource
                 resource.resource_type = 'web'
+                
+                # set the time the resource was created
+                resource.datetime = datetime.now()
                 
                 # save resource so that tree / tags can be set
                 resource.save()

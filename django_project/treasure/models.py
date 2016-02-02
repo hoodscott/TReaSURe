@@ -19,9 +19,9 @@ class School(models.Model):
     longitude = models.FloatField()
 
     def __unicode__(self):
-        return self.name       
+        return self.name
 
-# model for hubs        
+# model for hubs
 class Hub(models.Model):
     name = models.CharField(max_length=128)
     address = models.TextField()
@@ -51,7 +51,7 @@ class Teacher(models.Model):
 
 ''' start of material models '''
 
-# model for tags of resources and packs    
+# model for tags of resources and packs
 class Tag(models.Model):
     name = models.CharField(max_length=128)
     
@@ -61,7 +61,7 @@ class Tag(models.Model):
         ('1', 'topic'),
         ('2', 'other'),
     )
-    type = models.CharField(max_length=1, choices=TAGTYPES)
+    tagtype = models.CharField(max_length=1, choices=TAGTYPES)
     
     def __unicode__(self):
         return self.name
@@ -101,7 +101,7 @@ class Resource(models.Model):
     name = models.CharField(max_length=128)
     
     # comma separated field for easier tree searching
-    tree = models.TextField(null=True)
+    tree = models.TextField()
   
     # creates foreign key to teacher
     author = models.ForeignKey(Teacher)
@@ -131,10 +131,14 @@ class Resource(models.Model):
     # what type of resource is this (file, web, something else?)
     resource_type = models.CharField(max_length=128)
     
+    # store the time the resource was made?
+    datetime = models.DateTimeField()
+
+    
     def __unicode__(self):
         return self.name
         
-# model for subclass of resource for files        
+# model for subclass of resource for files
 class FilesResource(models.Model):
     # one to one relationship with abstract resource
     resource = models.OneToOneField(Resource)
@@ -144,7 +148,7 @@ class FilesResource(models.Model):
     def __unicode__(self):
         return self.resource.name
 
-# model for subclass of resource for web pages   
+# model for subclass of resource for web pages
 class WebResource(models.Model):
     # one to one relationship with abstract resource
     resource = models.OneToOneField(Resource)
@@ -160,18 +164,18 @@ class TemplateResource(models.Model):
     # one to one relationship with abstract resource
     resource = models.OneToOneField(Resource)
 
-    # your resource properties go here 
+    # your resource properties go here
 
     def __unicode__(self):
         return self.resource.name
-''' 
+'''
 
         
 ''' end of material models '''
 
 ''' start of material relationship models '''
 
-# model to store whether users downloaded a resource        
+# model to store whether users downloaded a resource
 class TeacherDownloadsResource(models.Model):
     teacher = models.ForeignKey(Teacher)
     resource = models.ForeignKey(Resource)
@@ -187,7 +191,7 @@ class TeacherDownloadsResource(models.Model):
     def __unicode__(self):
         return "%s %s" % (self.teacher.name, self.resource.name)
         
-# model to store a users rating of a resource        
+# model to store a users rating of a resource
 class TeacherRatesResource(models.Model):
     id = models.AutoField(primary_key=True)
     teacher = models.ForeignKey(Teacher)
@@ -202,7 +206,7 @@ class TeacherRatesResource(models.Model):
     def __unicode__(self):
         return "%s %s" % (self.teacher, self.resource.name)
         
-# model to indicate if users want to talk about a resource        
+# model to indicate if users want to talk about a resource
 class TeacherWantstoTalkResource(models.Model):
     teacher = models.ForeignKey(Teacher)
     resource = models.ForeignKey(Resource)
@@ -216,12 +220,12 @@ class TeacherWantstoTalkResource(models.Model):
     def __unicode__(self):
         return "%s %s" % (self.teacher.name, self.resource.name)
      
-''' end of material relationship models '''    
+''' end of material relationship models '''
 
 ''' start of discussion relationship models '''
 
 ''' Don't know what this is
-# model to disucssions of a resource        
+# model to disucssions of a resource
 class TeacherRatesResource(models.Model):
     owner = models.ForeignKey(Teacher)
     resource = models.ForeignKey(Resource)
@@ -242,7 +246,9 @@ class TeacherRatesResource(models.Model):
 
 ''' end of discussion relationship models '''
 
-# postcode Models        
+''' start of postcode models '''
+
+# postcode Models
 class ScotlandPostcodes(models.Model):
     Postcode = models.TextField(primary_key=True)
     Latitude = models.FloatField()
@@ -250,7 +256,7 @@ class ScotlandPostcodes(models.Model):
     
     def __unicode__(self):
         return "%s" % (self.Postcode)
-# postcode Models        
+# postcode Models
 class EnglandPostcodes(models.Model):
     Postcode = models.TextField(primary_key=True)
     Latitude = models.FloatField()
@@ -258,7 +264,7 @@ class EnglandPostcodes(models.Model):
     
     def __unicode__(self):
         return "%s" % (self.Postcode)
-# postcode Models        
+# postcode Models
 class WalesPostcodes(models.Model):
     Postcode = models.TextField(primary_key=True)
     Latitude = models.FloatField()
@@ -266,8 +272,7 @@ class WalesPostcodes(models.Model):
     
     def __unicode__(self):
         return "%s" % (self.Postcode)
-
-# postcode Models        
+# postcode Models
 class NorthernIrelandPostcodes(models.Model):
     Postcode = models.TextField(primary_key=True)
     Latitude = models.FloatField()
@@ -275,3 +280,49 @@ class NorthernIrelandPostcodes(models.Model):
     
     def __unicode__(self):
         return "%s" % (self.Postcode)
+        
+''' end of postcode models '''
+
+''' start of forum models '''
+
+# model for the board
+class Board(models.Model):
+    # can be null if board is not attached to any resource
+    resource = models.ForeignKey(Resource, null=True)
+
+# model for threads
+class Thread(models.Model):
+    # basic information about thread
+    board = models.ForeignKey(Board)
+    datetime = models.DateTimeField()
+    author = models.ForeignKey(Teacher)
+    
+    # title of thread
+    title = models.CharField(max_length=128)
+    
+    # content of thread
+    content = models.TextField(null=True)
+
+    # type of thread
+    # define types of threads
+    THREADTYPES = (
+        ('0', 'Rating'),
+        ('1', 'Question'),
+        ('2', 'Discuss'),
+    )
+    threadtype = models.CharField(max_length=1, choices=THREADTYPES)
+    
+    # optional rating attached
+    rating = models.OneToOneField(TeacherRatesResource, null=True)
+    
+# models for posts
+class Post(models.Model):
+    # basic information about post
+    thread = models.ForeignKey(Thread)
+    datetime = models.DateTimeField()
+    author = models.ForeignKey(Teacher)
+    
+    # content of thread
+    content = models.TextField()
+    
+''' end of forum models '''
