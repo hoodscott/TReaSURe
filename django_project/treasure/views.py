@@ -1938,14 +1938,19 @@ def forum(request):
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
     
-    # todo: add boards to context dict (in smart way?(how to sort?))
+    boards = Board.objects.all()
+    
+    # todo:add more detail to dict (number of posts on each board
+    # todo: maybe sort the boards in order of last post (show times of last posts?)
+    
+    context_dict['forum'] = boards
     
     # Render the template updating the context dictionary.
     return render_to_response('treasure/forum.html', context_dict, context)
    
 # view to show board
 @login_required
-def board(request):
+def board(request, board_url):
   
     # get context of request
     context = RequestContext(request)
@@ -1953,42 +1958,246 @@ def board(request):
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
     
-    #todo: determine if other or resourceboard
+    # add url to contextdict
+    context_dict['board_url']=board_url
     
-    #todo: add threads in board to context dict
+    #determine if other or resourceboard
+    # check if url is a number
+    try: 
+        int(board_url)
+        isNumber = True
+    except ValueError:
+        isNumber= False
+    
+    if isNumber:
+        try:
+            # check resource has a forum attached
+            this_resource = Resource.objects.all().get(id=board_url)
+            context_dict['resource'] = this_resource
+            print "1"
+            this_board = Board.objects.all().get(resource = this_resource)
+            try:
+                # get the threads on the forum
+                board = Thread.objects.all().filter(board = this_board)
+                context_dict['board'] = board
+            except Thread.DoesNotExist:
+                # do not pass a board object to template as there are no threads
+                print "no threads", board_url
+                pass
+        except Resource.DoesNotExist:
+             # no board here
+            context_dict['invalid'] = True
+    else:
+        try:
+            # check the word has a url attached
+            this_board = Board.objects.all().get(title=board_url)
+            context_dict['title'] = board_url
+            try:
+                # get the threads on the forum
+                board = Thread.objects.all().filter(board = this_board)
+                context_dict['board'] = board
+            except Thread.DoesNotExist:
+                # do not pass a board object to template as there are no threads
+                print "no threads", board_url
+                pass
+        except Board.DoesNotExist:
+            context_dict['invalid'] = True
+            
+    # todo: maybe sort the threads in created/lastpostedin order?
     
     # Render the template updating the context dictionary.
     return render_to_response('treasure/board.html', context_dict, context)
     
 @login_required
-def new_thread(request):
+def new_thread(request, board_url):
     # get context of request
     context = RequestContext(request)
 
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
     
-    # todo: link form to page
+    # add board url to dict
+    context_dict['board_url'] = board_url
     
-    # todo: deal with respose from form
+    # check board_url coresponds to a board
+    try: 
+        int(board_url)
+        isNumber = True
+    except ValueError:
+        isNumber= False
+    if isNumber:
+        try:
+            # if url is number, get board relating to that object
+            this_board = Board.objects.all().get(resource = Resource.objects.all().get(id=board_url))
+        except (Board.DoesNotExist, Resource.DoesNotExist) as e:
+            # no board at this url
+            context_dict['invalid'] = "invalid"
+    else:
+        try:
+            # otherwise get board associated with the word
+            this_board = Board.objects.all().get(title=board_url)
+        except Board.DoesNotExist:
+            # no board at this url
+            context_dict['invalid'] = "invalid"
+    
+    # If it's a HTTP POST, we're interested in processing form data.
+    if request.method == 'POST':
+        # Attempt to grab information from the raw form information.
+        # pass in instance of the record to be updated
+        form = PostThreadForm(request.POST)
+
+        # If the form is valid...
+        if form.is_valid():
+            # hold off on saving to avoid integrity errors.
+            new_thread = form.save(commit=False)
+            
+            # get board
+            # check if url is a number
+            try: 
+                int(board_url)
+                isNumber = True
+            except ValueError:
+                isNumber= False
+            if isNumber:
+                try:
+                    # if url is number, get board relating to that object
+                    print "1"
+                    this_board = Board.objects.all().get(resource = Resource.objects.all().get(id=board_url))
+                except Board.DoesNotExist:
+                    # no board at this url
+                    context_dict['invalid'] = "invalid"
+                    print "2"
+            else:
+                try:
+                    # otherwise get board associated with the word
+                    this_board = Board.objects.all().get(title=board_url)
+                    print "3"
+                except Board.DoesNotExist:
+                    # no board at this url
+                    context_dict['invalid'] = "invalid"
+                    print "4"
+            new_thread.board = this_board
+            
+            # set author
+            new_thread.author = Teacher.objects.all().get(user = request.user)
+            
+            # set time of threadposting
+            new_thread.datetime = datetime.now()
+            
+            # set threadtype to 2 (from forum so not rrating, could maybe be question)
+            # todo: maybe allow users to choose type of forum to submit
+            new_thread.threadtype = 2
+                            
+            # save the new resource
+            new_thread.save()
+            
+            # show user the updated page
+            return HttpResponseRedirect('/forum/'+str(board_url)+'/'+str(new_thread.id))
+
+        # Invalid form or forms print problems to the terminal.
+        else:
+            print "ERROR", form.errors
+
+    # Not a HTTP POST, so we render our form using two ModelForm instances.
+    else:
+        # pass the current records to initially populate the forms
+        form = PostThreadForm()
+    
+    context_dict['form'] = form
     
     # Render the template updating the context dictionary.
     return render_to_response('treasure/new_thread.html', context_dict, context)
 
 # view to show thread
 @login_required
-def thread(request):
+def thread(request, board_url, thread_id):
     # get context of request
     context = RequestContext(request)
 
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
     
-    # todo: add posts to contextdict
+    # pass url to form
+    context_dict['board_url'] = board_url
+    context_dict['thread_id'] = thread_id
+        
+    # get thread
+    try:
+        this_thread = Thread.objects.all().get(id=thread_id)
+        context_dict['thread'] = this_thread
+    except Thread.DoesNotExist:
+        # do not pass a thread object to the template
+        pass
     
-    # todo: add form at bottom to post to the thread
+    # add posts to contextdict
+    the_posts = Post.objects.all().filter(thread = this_thread)
+    context_dict['posts'] = the_posts
     
-    # todo: deal with form submission
+    # check url is properly formed
+    # (thread id, belongs to the object pointed to by board_url)
+    # first get board from url
+    try: 
+        int(board_url)
+        isNumber = True
+    except ValueError:
+        isNumber= False
+    if isNumber:
+        try:
+            # if url is number, get board relating to that object
+            this_board = Board.objects.all().get(resource = Resource.objects.all().get(id=board_url))
+        except (Board.DoesNotExist, Resource.DoesNotExist) as e:
+            # no board at this url
+            context_dict['invalid'] = "invalid"
+    else:
+        try:
+            # otherwise get board associated with the word
+            this_board = Board.objects.all().get(title=board_url)
+        except Board.DoesNotExist:
+            # no board at this url
+            context_dict['invalid'] = "invalid"
+    # then check that thread is part of this board
+    if this_thread.board != this_board:
+        context_dict['invalid'] = "invalid"
+    
+    # If it's a HTTP POST, we're interested in processing form data.
+    if request.method == 'POST':
+        # Attempt to grab information from the raw form information.
+        # pass in instance of the record to be updated
+        form = PostPostForm(request.POST)
+
+        # If the form is valid...
+        # and content is not empty
+        if form.is_valid() and form.cleaned_data['content'] != "":
+            # hold off on saving to avoid integrity errors.
+            new_post = form.save(commit=False)  
+            
+            print form.cleaned_data['content']
+            print form.cleaned_data['content'] == ""
+            
+            new_post.thread = Thread.objects.all().get(id = thread_id)          
+            
+            # set author
+            new_post.author = Teacher.objects.all().get(user = request.user)
+            
+            # set time of threadposting
+            new_post.datetime = datetime.now()
+                            
+            # save the new resource
+            new_post.save()
+            
+            # show user the updated page
+            return HttpResponseRedirect('/forum/'+str(board_url)+'/'+str(thread_id))
+
+        # Invalid form or forms print problems to the terminal.
+        else:
+            print "ERROR", form.errors
+
+    # Not a HTTP POST, so we render our form using two ModelForm instances.
+    else:
+        # pass the current records to initially populate the forms
+        form = PostPostForm()
+    
+    context_dict['form'] = form
     
     # Render the template updating the context dictionary.
     return render_to_response('treasure/thread.html', context_dict, context)

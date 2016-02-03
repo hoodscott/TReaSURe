@@ -1,15 +1,42 @@
 {% extends 'treasure/base.html' %}
 
 {% load static %}
+{% load render_help %}
 
 {% block title %}
-    Help
+    New Thread
 {% endblock %}
 
 {% block body_block %}
 
-<div class="span12 hero-unit">
-    <h2>HELP<h2>
+<div class="hero-unit">
+    {% if invalid %}
+        <h2>No board to post to</h2>
+        <a href="/">Return to Homepage</a>
+        <a href="/forum/">Return to Forum</a>    
+    {% else %}
+        <h2>Add a Thread</h2>
+        <br/>
+        <div class="container">
+            <form class="span6" id="upload_form" method="post" action="/forum/{{ board_url }}/new/">
+	
+	        {% csrf_token %}
+	        
+                {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+
+                {% for field in form.visible_fields %}
+                    {{ field.errors }}
+                    {{field.label}}{% render_help_text field %}<br/>
+                    {{ field }}<br/>
+                {% endfor %}
+
+                <br/>
+                <button class="btn btn-primary" type="submit" name="submit" tabindex='1'>Post Thread</button>
+            </form>
+        </div>
+    {% endif %}
 </div>
 
 {% endblock %}

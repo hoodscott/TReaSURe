@@ -3,13 +3,26 @@
 {% load static %}
 
 {% block title %}
-    Help
+    Forum
 {% endblock %}
 
 {% block body_block %}
 
 <div class="span12 hero-unit">
-    <h2>HELP<h2>
+    <h3>Forum<h3>
+    {% if forum %}
+        <ul>
+        {% for board in forum %}
+            {% if board.resource != null %}
+            <li><a href="/forum/{{ board.resource.id }}/">Resource: {{ board.title }}</a></li>
+            {% else %}
+            <li><a href="/forum/{{ board.title }}/">Misc: {{ board.title }}</a></li>            
+            {% endif %}
+        {% endfor %}
+        </ul>
+    {% else %}
+        <h4>No Boards in Forum</h4>
+    {% endif %}
 </div>
 
 {% endblock %}

@@ -40,9 +40,9 @@ class Teacher(models.Model):
     surname = models.CharField(max_length=128)
     
     # creates a foreign key relationship with school
-    school = models.ForeignKey(School, null=True)
+    school = models.ForeignKey(School, null=True, blank=True)
     # creates a many to many relationship with hubs
-    hubs = models.ManyToManyField(Hub)
+    hubs = models.ManyToManyField(Hub, blank=True)
 	
     def __unicode__(self):
         return "%s %s" % (self.firstname, self.surname)
@@ -288,19 +288,13 @@ class NorthernIrelandPostcodes(models.Model):
 # model for the board
 class Board(models.Model):
     # can be null if board is not attached to any resource
-    resource = models.ForeignKey(Resource, null=True)
+    resource = models.ForeignKey(Resource, null=True, blank=True)
     
-    # can be null if board is attached to any resource
+    # title of the board (the resource name for boards relating to resources)
     title = models.CharField(max_length=128)
     
-    # one of the above should be null
-    # so boards are "resource_boards" or "other_boards"
-    
     def __unicode__(self):
-        if resource.name is null:
-            return "%s" % (self.resource)
-        else:
-            return "%s" % (self.title)
+        return "%s" % (self.title)
 
 # model for threads
 class Thread(models.Model):
@@ -325,7 +319,7 @@ class Thread(models.Model):
     threadtype = models.CharField(max_length=1, choices=THREADTYPES)
     
     # optional rating attached
-    rating = models.OneToOneField(TeacherRatesResource, null=True)
+    rating = models.OneToOneField(TeacherRatesResource, null=True, blank=True)
     
     def __unicode__(self):
         return "%s %s" % (self.board, self.title)
@@ -338,9 +332,9 @@ class Post(models.Model):
     author = models.ForeignKey(Teacher)
     
     # content of thread
-    content = models.TextField()
+    content = models.TextField(null=False, blank=False)
     
     def __unicode__(self):
-        return "%s %s" % (self.board, self.author, self.datatime)
+        return "%s %s" % ( self.author, self.datetime)
     
 ''' end of forum models '''

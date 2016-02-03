@@ -1,15 +1,55 @@
 {% extends 'treasure/base.html' %}
 
 {% load static %}
+{% load render_help %}
 
 {% block title %}
-    Help
+    Thread
 {% endblock %}
 
 {% block body_block %}
 
 <div class="span12 hero-unit">
-    <h2>HELP<h2>
+    {% if invalid %}
+        <h3>Malformed url</h3>
+        <a href="/">Return to Homepage</a>
+        <a href="/forum/">Return to Forum</a> 
+    {% else %}
+        <h2>{{ thread.title }}</h2>
+        <h4>{{ thread.content }}</h4>
+        
+        <br>
+        {% if posts %}
+        <ul>
+            {% for post in posts %}
+            <li><p><i>{{ post.author }}@{{ post.datetime }}</i><br>{{ post.content }}</p></li>        
+            <li></li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <h4>No posts here (yet)</h4>
+        {% endif %}
+        
+        <br>
+        <form class="span6" id="upload_form" method="post" action="/forum/{{ board_url }}/{{ thread_id }}/">
+
+        {% csrf_token %}
+        
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+
+            {% for field in form.visible_fields %}
+                {{ field.errors }}
+                {{field.label}}{% render_help_text field %}<br/>
+                {{ field }}<br/>
+            {% endfor %}
+
+            <br/>
+            <button class="btn btn-primary" type="submit" name="submit" tabindex='1'>Post Comment</button>
+        </form>
+    {% endif %}
+
 </div>
 
 {% endblock %}

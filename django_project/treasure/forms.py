@@ -441,3 +441,45 @@ class EditPackForm(forms.ModelForm):
         model = Pack
         fields = ('summary', 'description', 'image', 'hidden')
         exclude = []
+        
+class PostThreadForm(forms.ModelForm):
+    
+    title = forms.CharField(max_length=128,
+                                help_text="The title of the thread.",
+                                label='Thread Title',
+                                widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}))
+                                
+    content = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
+                            help_text="The body content of the thread.",
+                            required=True,
+                            label='Thread Body')
+    
+    board = forms.CharField(widget = forms.HiddenInput(), required=False)
+    datetime = forms.CharField(widget = forms.HiddenInput(), required=False)
+    author = forms.CharField(widget = forms.HiddenInput(), required=False)
+    threadtype = forms.CharField(widget = forms.HiddenInput(), required=False)
+    rating = forms.CharField(widget = forms.HiddenInput(), required=False)
+    user = forms.CharField(widget = forms.HiddenInput(), required=False)
+    
+    class Meta:
+        model = Thread
+        fields = ('title', 'content')
+        exclude = []
+        
+class PostPostForm(forms.ModelForm):
+    
+        # basic information about post
+    thread = forms.CharField(widget = forms.HiddenInput(), required=False)
+    datetime = forms.CharField(widget = forms.HiddenInput(), required=False)
+    author = forms.CharField(widget = forms.HiddenInput(), required=False)
+    
+    # content of thread
+    content = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
+                            help_text="The content you wish to post.",
+                            required=True,
+                            label='Add to the Discussion:')
+                            
+    class Meta:
+        model = Post
+        fields=('content',)
+        exclude = []

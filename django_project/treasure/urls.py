@@ -69,9 +69,9 @@ urlpatterns = patterns('',
         url(r'^auth/new/$', views.newSocialAuthentication, name='new'),
         
         url(r'^forum/$', views.forum, name='forum'),
-        url(r'^forum/(?P<resource_id>\w+)/$', views.board, name='board'),
-        url(r'^forum/(?P<resource_id>\w+)/new/$', views.new_thread, name='new_thread'),
-        url(r'^forum/(?P<resource_id>\w+)/(?P<thread_id>\w+)/$', views.thread, name='thread'),
+        url(r'^forum/(?P<board_url>\w+)/$', views.board, name='board'),
+        url(r'^forum/(?P<board_url>\w+)/new/$', views.new_thread, name='new_thread'),
+        url(r'^forum/(?P<board_url>\w+)/(?P<thread_id>\w+)/$', views.thread, name='thread'),
         
         #url(r'^profile/(?P<user_id>\w+)/$', views.profile, name='profile'),
         #url(r'^profile/(?P<user_id>\w+)/history/$', views.user_history, name='user_history'),
