@@ -381,6 +381,11 @@ class EditResourceForm(forms.ModelForm):
         self.fields['level_tags'].initial = tags['level']
         self.fields['topic_tags'].initial = tags['topic']
         self.fields['other_tags'].initial = tags['other']
+        
+    class Meta:
+        model = Resource
+        fields = ('name', 'summary', 'description', 'hidden')
+        exclude = []
     
                                                 
 class EditPackForm(forms.ModelForm):
@@ -436,3 +441,8 @@ class EditPackForm(forms.ModelForm):
         self.fields['level_tags'].initial = tags['level']
         self.fields['topic_tags'].initial = tags['topic']
         self.fields['other_tags'].initial = tags['other']
+        
+    class Meta:
+        model = Pack
+        fields = ('summary', 'description', 'image', 'hidden')
+        exclude = []

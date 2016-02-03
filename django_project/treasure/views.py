@@ -144,7 +144,7 @@ def contribution(request):
     rated=TeacherDownloadsResource.objects.all().filter(teacher=this_teacher, rated=1)
     context_dict['rated'] = rated
     uploaded=Resource.objects.all().filter(author=this_teacher)
-    print uploaded
+    #print uploaded
     context_dict['uploaded'] = uploaded
     link='treasure/contribution.html'
 
@@ -315,7 +315,7 @@ def edit_resource(request, resource_id):
                 new_resource.save()
                 
                 # show user the updated page
-                return resource_view(request, new_resource.id)
+                return HttpResponseRedirect('/resource/'+str(new_resource.id))
 
             # Invalid form or forms print problems to the terminal.
             else:
@@ -637,7 +637,7 @@ def add_web_resource(request):
             web.save()
             
             # Now show the new materials page
-            return resource_view(request, resource.id)
+            return HttpResponseRedirect('/resource/'+str(resource.id))
         else:
             # The supplied form contained errors - just print them to the terminal.
             print resource_form.errors
@@ -721,7 +721,7 @@ def add_file_resource(request):
             files.save()
             
             # show user the new materials page
-            return resource_view(request, resource.id)
+            return HttpResponseRedirect('/resource/'+str(resource.id))
         else:
             # The supplied form contained errors - just print them to the terminal.
             print resource_form.errors
@@ -1367,7 +1367,7 @@ def edit_pack(request, pack_id):
                 new_pack.save()
                 
                 # show user the updated page
-                return pack(request, new_pack.id)
+                return HttpResponseRedirect('/packs/'+str(new_pack.id))
 
             # Invalid form or forms print problems to the terminal.
             else:
@@ -1501,7 +1501,7 @@ def evolve(request, parent_id):
                 files.save()
                 
                 # show user the new materials page
-                return resource_view(request, resource.id)
+                return HttpResponseRedirect('/resource/'+str(resource.id))
             else:
                 # The supplied form contained errors - just print them to the terminal.
                 print resource_form.errors
@@ -1520,10 +1520,6 @@ def evolve(request, parent_id):
                 userid = request.user.id
                 teacher = Teacher.objects.get(user = userid)
                 resource.author = Teacher.objects.get(id = teacher.id)
-                
-                # todo: elaborate
-                # simply 'evolution' for now
-                resource.evolution_type = "evolution"
                 
                 #default hidden
                 resource.hidden = 0
@@ -1563,7 +1559,7 @@ def evolve(request, parent_id):
                 web.save()
                 
                 # Now show the new materials page
-                return resource_view(request, resource.id)
+                return HttpResponseRedirect('/resource/'+str(resource.id))
             else:
                 # The supplied form contained errors - just print them to the terminal.
                 print resource_form.errors
@@ -1729,7 +1725,7 @@ def newpack(request):
             this_pack.save()
                         
             # Now show the new pack page
-            return pack(request, this_pack.id)
+            return HttpResponseRedirect('/packs/'+str(this_pack.id))
         else:
             # The supplied form contained errors - just print them to the terminal.
             print form.errors
@@ -1805,7 +1801,7 @@ def newpack_initial(request, resource_id):
             this_resource.save()
                         
             # Now show the new pack page
-            return pack(request, this_pack.id)
+            return HttpResponseRedirect('/packs/'+str(this_pack.id))
         else:
             # The supplied form contained errors - just print them to the terminal.
             print form.errors
