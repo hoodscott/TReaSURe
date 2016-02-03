@@ -289,6 +289,18 @@ class NorthernIrelandPostcodes(models.Model):
 class Board(models.Model):
     # can be null if board is not attached to any resource
     resource = models.ForeignKey(Resource, null=True)
+    
+    # can be null if board is attached to any resource
+    title = models.CharField(max_length=128)
+    
+    # one of the above should be null
+    # so boards are "resource_boards" or "other_boards"
+    
+    def __unicode__(self):
+        if resource.name is null:
+            return "%s" % (self.resource)
+        else:
+            return "%s" % (self.title)
 
 # model for threads
 class Thread(models.Model):
@@ -315,6 +327,9 @@ class Thread(models.Model):
     # optional rating attached
     rating = models.OneToOneField(TeacherRatesResource, null=True)
     
+    def __unicode__(self):
+        return "%s %s" % (self.board, self.title)
+    
 # models for posts
 class Post(models.Model):
     # basic information about post
@@ -324,5 +339,8 @@ class Post(models.Model):
     
     # content of thread
     content = models.TextField()
+    
+    def __unicode__(self):
+        return "%s %s" % (self.board, self.author, self.datatime)
     
 ''' end of forum models '''

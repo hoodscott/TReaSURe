@@ -1914,7 +1914,7 @@ def home(request):
     context_dict['num_packs'] = Pack.objects.all().count()
     context_dict['num_users'] = Teacher.objects.all().count()
     
-     # Render the template updating the context dictionary.
+    # Render the template updating the context dictionary.
     return render_to_response('treasure/index.html', context_dict, context)
     
 
@@ -1927,5 +1927,69 @@ def help(request):
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
     
-     # Render the template updating the context dictionary.
+    # Render the template updating the context dictionary.
     return render_to_response('treasure/help.html', context_dict, context)
+
+# view to show overview of all boards
+@login_required
+def forum(request):
+    # get context of request
+    context = RequestContext(request)
+
+    # create dictionary to pass data to templates
+    context_dict = sidebar(request)
+    
+    # todo: add boards to context dict (in smart way?(how to sort?))
+    
+    # Render the template updating the context dictionary.
+    return render_to_response('treasure/forum.html', context_dict, context)
+   
+# view to show board
+@login_required
+def board(request):
+  
+    # get context of request
+    context = RequestContext(request)
+
+    # create dictionary to pass data to templates
+    context_dict = sidebar(request)
+    
+    #todo: determine if other or resourceboard
+    
+    #todo: add threads in board to context dict
+    
+    # Render the template updating the context dictionary.
+    return render_to_response('treasure/board.html', context_dict, context)
+
+# view to show thread
+@login_required
+def thread(request):
+    # get context of request
+    context = RequestContext(request)
+
+    # create dictionary to pass data to templates
+    context_dict = sidebar(request)
+    
+    # todo: add posts to contextdict
+    
+    # todo: add form at bottom to post to the thread
+    
+    # todo: deal with form submission
+    
+    # Render the template updating the context dictionary.
+    return render_to_response('treasure/thread.html', context_dict, context)
+    
+@login_required
+def new_thread(request):
+    # get context of request
+    context = RequestContext(request)
+
+    # create dictionary to pass data to templates
+    context_dict = sidebar(request)
+    
+    # todo: link form to page
+    
+    # todo: deal with respose from form
+    
+    # Render the template updating the context dictionary.
+    return render_to_response('treasure/new_thread.html', context_dict, context)
