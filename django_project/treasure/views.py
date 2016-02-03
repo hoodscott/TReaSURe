@@ -636,6 +636,10 @@ def add_web_resource(request):
             # save the instance
             web.save()
             
+            # create board for this resource
+            board = Board(resource=resource, title=resource.name)
+            board.save()            
+            
             # Now show the new materials page
             return HttpResponseRedirect('/resource/'+str(resource.id))
         else:
@@ -719,6 +723,10 @@ def add_file_resource(request):
             
             # save the resource
             files.save()
+            
+            # create board for this resource
+            board = Board(resource=resource, title=resource.name)
+            board.save()  
             
             # show user the new materials page
             return HttpResponseRedirect('/resource/'+str(resource.id))
@@ -1500,6 +1508,10 @@ def evolve(request, parent_id):
                 # save the instance
                 files.save()
                 
+                # create board for this resource
+                board = Board(resource=resource, title=resource.name)
+                board.save() 
+                
                 # show user the new materials page
                 return HttpResponseRedirect('/resource/'+str(resource.id))
             else:
@@ -1557,6 +1569,10 @@ def evolve(request, parent_id):
                 
                 # save the instance
                 web.save()
+                
+                # create board for this resource
+                board = Board(resource=resource, title=resource.name)
+                board.save() 
                 
                 # Now show the new materials page
                 return HttpResponseRedirect('/resource/'+str(resource.id))
