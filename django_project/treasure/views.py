@@ -438,6 +438,10 @@ def rate(request, resource_id):
             download.rated='1'
             download.save()
             
+            # create a thread on the resources board
+            thread = Thread(board = Board.objects.all().get(resource=this_resource), datetime = datetime.now(), author= this_teacher, title=this_teacher.firstname+' '+this_teacher.surname+' rated this resource', content=rating.comment, threadtype=0, rating=rating)
+            thread.save()
+            
             # Update our variable to tell the template registration was successful.
             rated = True
 
