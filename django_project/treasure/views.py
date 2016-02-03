@@ -104,24 +104,24 @@ def index(request):
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
     
-    # get user
-    this_user = request.user.id
+    # get teacher
+    this_teacher = Teacher.objects.get(user = request.user)
 
     # get resources to show on homepage
     allresources = Resource.objects.all()
-    context_dict['MyResources'] = allresources.filter(author=this_user)
+    context_dict['MyResources'] = allresources.filter(author=this_teacher)
     
     allpacks = Pack.objects.all()
-    context_dict['MyPacks'] = allpacks.filter(author=this_user)
+    context_dict['MyPacks'] = allpacks.filter(author=this_teacher)
     
     want2talkMine=TeacherWantstoTalkResource.objects.all()
-    context_dict['want2talkMine'] = want2talkMine.filter(resource__author=this_user)
+    context_dict['want2talkMine'] = want2talkMine.filter(resource__author=this_teacher)
  
     want2talk=TeacherWantstoTalkResource.objects.all()
-    context_dict['want2talk'] = want2talk.filter(teacher_id=this_user)
+    context_dict['want2talk'] = want2talk.filter(teacher_id=this_teacher)
     
-    need2rate=TeacherDownloadsResource.objects.all().filter(teacher=this_user, rated=0)
-    context_dict['need2rate'] = need2rate.filter(teacher=this_user)
+    need2rate=TeacherDownloadsResource.objects.all().filter(teacher=this_teacher, rated=0)
+    context_dict['need2rate'] = need2rate.filter(teacher=this_teacher)
     
     # return response object
     return render_to_response('treasure/user_home.html', context_dict, context)
@@ -133,15 +133,18 @@ def contribution(request):
 
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
+    
+    # get teacher
+    this_teacher = Teacher.objects.get(user = request.user)
 
-
-    downloaded=TeacherDownloadsResource.objects.all().filter(teacher=request.user.id, used=0, rated=0)
+    downloaded=TeacherDownloadsResource.objects.all().filter(teacher=this_teacher, used=0, rated=0)
     context_dict['downloaded'] = downloaded
-    used=TeacherDownloadsResource.objects.all().filter(teacher=request.user.id, used=1)
+    used=TeacherDownloadsResource.objects.all().filter(teacher=this_teacher, used=1)
     context_dict['used'] = used
-    rated=TeacherDownloadsResource.objects.all().filter(teacher=request.user.id, rated=1)
+    rated=TeacherDownloadsResource.objects.all().filter(teacher=this_teacher, rated=1)
     context_dict['rated'] = rated
-    uploaded=Resource.objects.all().filter(author=request.user.id)
+    uploaded=Resource.objects.all().filter(author=this_teacher)
+    print uploaded
     context_dict['uploaded'] = uploaded
     link='treasure/contribution.html'
 
@@ -1960,6 +1963,21 @@ def board(request):
     
     # Render the template updating the context dictionary.
     return render_to_response('treasure/board.html', context_dict, context)
+    
+@login_required
+def new_thread(request):
+    # get context of request
+    context = RequestContext(request)
+
+    # create dictionary to pass data to templates
+    context_dict = sidebar(request)
+    
+    # todo: link form to page
+    
+    # todo: deal with respose from form
+    
+    # Render the template updating the context dictionary.
+    return render_to_response('treasure/new_thread.html', context_dict, context)
 
 # view to show thread
 @login_required
@@ -1978,18 +1996,3 @@ def thread(request):
     
     # Render the template updating the context dictionary.
     return render_to_response('treasure/thread.html', context_dict, context)
-    
-@login_required
-def new_thread(request):
-    # get context of request
-    context = RequestContext(request)
-
-    # create dictionary to pass data to templates
-    context_dict = sidebar(request)
-    
-    # todo: link form to page
-    
-    # todo: deal with respose from form
-    
-    # Render the template updating the context dictionary.
-    return render_to_response('treasure/new_thread.html', context_dict, context)

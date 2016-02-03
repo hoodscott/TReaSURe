@@ -6,7 +6,7 @@
     My Profile
 {% endblock %}
 
-{% block notification%}	
+{% block notification%}
 {% if need2rate %}
 <section id="top" class="one dark cover">
 	<div class="container">
@@ -14,7 +14,7 @@
 		<header>
 			<h2 class="alt">Welcome back, {{ user_teacher.firstname }}</a></h2>
 			<p>The community values your opinion.
-				Please remember to <a href="me/#myratings">rate</a> the resources you download.</p>
+				Please remember to <a href="/me/#myratings">rate</a> the resources you download.</p>
 		</header>
 		<footer>
 			<a href="#MainPage" class="button scrolly" id="continue-browsing">Continue Browsing</a>
@@ -42,11 +42,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for resource in MyResources %}                        
+                    {% for resource in MyResources %}
                         <tr class="studentLabel">
-                            <td><a href="resource/{{ resource.id }}">{{ resource.name }}</a></td>
+                            <td><a href="/resource/{{ resource.id }}">{{ resource.name }}</a></td>
                             <td>{{ resource.summary }}</td>
-                        </tr>                        
+                        </tr>
                     {% endfor %}
 
                 </tbody>
@@ -77,11 +77,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for pack in MyPacks %}                        
+                    {% for pack in MyPacks %}
                         <tr class="packlabel">
-                            <td><a href="packs/{{ pack.id }}">{{ pack.name }}</a></td>
+                            <td><a href="/packs/{{ pack.id }}">{{ pack.name }}</a></td>
                             <td>{{ pack.summary }}</td>
-                        </tr>                        
+                        </tr>
                     {% endfor %}
                 </tbody>
              </table>
@@ -114,10 +114,10 @@
 	                <tbody>
 	                    {% for entry in need2rate %}
 	                        <tr class="studentLabel">
-	                            <td><a href="resource/{{entry.resource.id }}">{{entry.resource.name}}</a></td>
+	                            <td><a href="/resource/{{entry.resource.id }}">{{entry.resource.name}}</a></td>
 								<td>{{entry.datetime}}</td>
-                                <td>{% if entry.used %} Yes{% else %} No. <a href="resource/{{entry.resource.id }}/use/home"> Yes?</a>{% endif %}</td>
-                                <td>{% if entry.rated %} Yes{% else %} No. <a href="resource/{{entry.resource.id }}/rate/">Rate it</a>{% endif %}</td>
+                                <td>{% if entry.used %} Yes{% else %} No. <a href="/resource/{{entry.resource.id }}/use/home"> Yes?</a>{% endif %}</td>
+                                <td>{% if entry.rated %} Yes{% else %} No. <a href="/resource/{{entry.resource.id }}/rate/">Rate it</a>{% endif %}</td>
                         </tr>
                     {% endfor %}
 
@@ -149,7 +149,7 @@
                 <tbody>
                     {% for record in want2talkMine %}
                         <tr class="studentLabel">
-                            <td><a href="resource/{{ record.resource.id }}">{{record.resource.name}}</a></td>
+                            <td><a href="/resource/{{ record.resource.id }}">{{record.resource.name}}</a></td>
                             <td>{{record.teacher}}</td>
                             <td>{{record.comment}}</td>
                         </tr>
@@ -183,7 +183,7 @@
                 <tbody>
                     {% for record in want2talk %}
                         <tr class="studentLabel">
-                            <td><a href="resource/{{ record.resource.id }}">{{record.resource.name}}</a>. <a href="resource/{{ record.resource.id }}/talk/no/random">Remove</a></td>
+                            <td><a href="/resource/{{ record.resource.id }}">{{record.resource.name}}</a>. <a href="/resource/{{ record.resource.id }}/talk/no/random">Remove</a></td>
                             <td>{{record.resource.author}}</td>
                             <td>{% ifequal record.disable 0 %}Active{% else%}Inactive{% endifequal%}</td>
                         </tr>
@@ -193,8 +193,8 @@
              </table>
         </div>
     </div> <!-- close body -->
-    <a class="btn btn-primary pull-right" href="resources/talk/no/">Deactivate All</a>
-    <a class="btn btn-primary pull-right" href="resources/talk/yes/">Activate All</a>
+    <a class="btn btn-primary pull-right" href="/resources/talk/no/">Deactivate All</a>
+    <a class="btn btn-primary pull-right" href="/resources/talk/yes/">Activate All</a>
     {% else %}
     <p>No resources selected yet.</p>
     {% endif %}
