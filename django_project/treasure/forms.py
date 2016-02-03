@@ -88,7 +88,8 @@ class ResourceForm(forms.ModelForm):
                                                 required=True,
                                                 label='Topic Tags',
                                                 help_text="Tags that describe the Topic that this material covers")
-    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(tagtype=2).order_by('name'),
+    other_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
+                                                queryset=Tag.objects.filter(tagtype=2).order_by('name'),
                                                 required=False,
                                                 label='Other Tags',
                                                 help_text="Any other tags not falling under the Level and Topic categories (optional)")
@@ -96,8 +97,6 @@ class ResourceForm(forms.ModelForm):
     def __init__(self,tags,*args,**kwargs):
         self.tag_ids = tags
         super(ResourceForm, self).__init__(*args,**kwargs)
-                                                
-        self.fields['other_tags'].queryset=Tag.objects.filter(tagtype=2).order_by('name')
         
         # set initial selected tags
         self.fields['level_tags'].initial = tags['level']
@@ -310,7 +309,8 @@ class PackForm(forms.ModelForm):
                                                 queryset=Tag.objects.filter(tagtype=1).order_by('name'),
                                                 required=False, help_text="Tags that describe the Topic that his material covers",
                                                 label='Topic Tags')
-    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(tagtype=2).order_by('name'),
+    other_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
+                                                queryset=Tag.objects.filter(tagtype=2).order_by('name'),
                                                 required=False,
                                                 help_text="Any other tags not falling into Level or Topic category (optional)",
                                                 label='Other Tags')
@@ -318,9 +318,6 @@ class PackForm(forms.ModelForm):
     def __init__(self,tags,*args,**kwargs):
         self.tag_ids = tags
         super(PackForm, self).__init__(*args,**kwargs)
-                                                
-        self.fields['other_tags'].queryset=Tag.objects.filter(tagtype=2).order_by('name')
-        
         # set initial selected tags
         self.fields['level_tags'].initial = tags['level']
         self.fields['topic_tags'].initial = tags['topic']
@@ -353,7 +350,8 @@ class EditResourceForm(forms.ModelForm):
                                                 required=True,
                                                 label='Topic Tags',
                                                 help_text="Tags that describe the Topic that this material covers")
-    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(tagtype=2).order_by('name'),
+    other_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
+                                                queryset=Tag.objects.filter(tagtype=2).order_by('name'),
                                                 required=False,
                                                 label='Other Tags',
                                                 help_text="Any other tags not falling under the Level and Topic categories (optional)")
@@ -374,8 +372,6 @@ class EditResourceForm(forms.ModelForm):
     def __init__(self,tags,*args,**kwargs):
         self.tag_ids = tags
         super(EditResourceForm, self).__init__(*args,**kwargs)
-                                              
-        self.fields['other_tags'].queryset=Tag.objects.filter(tagtype=2).order_by('name')
         
         # set initial selected tags
         self.fields['level_tags'].initial = tags['level']
@@ -413,7 +409,8 @@ class EditPackForm(forms.ModelForm):
                                                 queryset=Tag.objects.filter(tagtype=1).order_by('name'),
                                                 required=False, help_text="Tags that describe the Topic that his material covers",
                                                 label='Topic Tags')
-    other_tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(tagtype=2).order_by('name'),
+    other_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
+                                                queryset=Tag.objects.filter(tagtype=2).order_by('name'),
                                                 required=False,
                                                 help_text="Any other tags not falling into Level or Topic category (optional)",
                                                 label='Other Tags')
@@ -434,8 +431,6 @@ class EditPackForm(forms.ModelForm):
     def __init__(self,tags,*args,**kwargs):
         self.tag_ids = tags
         super(EditPackForm, self).__init__(*args,**kwargs)
-                                                
-        self.fields['other_tags'].queryset=Tag.objects.filter(tagtype=2).order_by('name')
         
         # set initial selected tags
         self.fields['level_tags'].initial = tags['level']
