@@ -13,7 +13,7 @@
         {% if schools %}
         <ul>
             {% for school in schools %}
-            <li><a href="../school/{{ school.id }}">{{ school.name }}</a></li>
+            <li><a href="{% url 'school_view' school.id %}">{{ school.name }}</a></li>
             {% endfor %}
         </ul>
         {% else %}

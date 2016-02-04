@@ -12,7 +12,7 @@
     <h2>Add a Hub</h2>
     <br/>
     <div class="container">
-        <form class="span6" id="upload_form" method="post" action="/add_hub/">
+        <form class="span6" id="upload_form" method="post" action="{% url 'add_hub' %}">
 	
 	    {% csrf_token %}
 	    
@@ -25,8 +25,6 @@
                 {{field.label}}{% render_help_text field %}<br/>
                 {{ field }}<br/>
             {% endfor %}
-            
-            {% if popup %}<input type="hidden" name="_popup" value="1">{% endif %}
 
             <br/>
             <button class="btn btn-primary" type="submit" name="submit" tabindex='1'>Add Hub</button>

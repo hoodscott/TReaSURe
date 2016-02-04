@@ -32,10 +32,7 @@ urlpatterns = patterns('',
         url(r'^add_school/$', views.add_school, name='add_school'),
         
         url(r'^resources/$', views.resources, name='resources'),
-        url(r'^resources/talk/(?P<var>\w+)/$', views.talkHide, name='talkHide'),
-        url(r'^hubs/$', views.hubs, name='hubs'),
-        url(r'^schools/$', views.schools, name='schools'),
-       
+        url(r'^resources/talk/(?P<var>\w+)/$', views.talkHide, name='talk_hide'),       
         url(r'^resource/(?P<resource_id>\w+)/$', views.resource_view, name='resource_view'),
         url(r'^resource/(?P<resource_id>\w+)/download/(?P<bypass>\w+)/$', download, name='download'),
         url(r'^resource/(?P<resource_id>\w+)/download/$', download, name='download'),
@@ -52,6 +49,8 @@ urlpatterns = patterns('',
         
         url(r'^hub/(?P<hub_id>\w+)/$', views.hub_view, name='hub_view'),
         url(r'^school/(?P<school_id>\w+)/$', views.school_view, name='school_view'),
+        url(r'^hubs/$', views.hubs, name='hubs'),
+        url(r'^schools/$', views.schools, name='schools'),
         
         url(r'^tags/$', views.tags, name='tags'),
         url(r'^tags/new/$', views.add_tag, name='add_tag'),

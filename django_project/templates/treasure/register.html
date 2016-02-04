@@ -3,7 +3,7 @@
 {% load static %}
 {% load render_help %}
 
-{% block head_block %}{% if registered %}<meta http-equiv="refresh" content="2; url=../login/" />{% endif %}{% endblock %}
+{% block head_block %}{% if registered %}<meta http-equiv="refresh" content="2; url={% url 'login' %}" />{% endif %}{% endblock %}
 
 {% block title %}
     Register
@@ -14,12 +14,12 @@
 <div class="hero-unit">
     {% if registered %}
         <h3>Thank you for registering</h3>
-        <h4>You are being automatically redirected to the login page. If nothing happens, please <a href="/login/" tabindex='1'>click here</a>!</h4>
+        <h4>You are being automatically redirected to the login page. If nothing happens, please <a href="{% url 'login' %}" tabindex='1'>click here</a>!</h4>
     {% else %}
         <h2>Teacher Registration</h2>
         <br/>
         <div class="container">
-            <form class="span6" id="register_teacher_form" method="post" action="/register/" enctype="multipart/form-data">
+            <form class="span6" id="register_teacher_form" method="post" action="{% url 'register' %}" enctype="multipart/form-data">
 	
                 {% csrf_token %}
             

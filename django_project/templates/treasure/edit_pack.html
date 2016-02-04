@@ -14,7 +14,7 @@
     <br/>
     <div class="container">
         {% if form %}
-            <form class="span6" id="edit_pack_form" method="post" action="/packs/{{ pack_id }}/edit/">
+            <form class="span6" id="edit_pack_form" method="post" action="{% url 'edit_pack' pack_id %}">
 	
 				    {% csrf_token %}
 			

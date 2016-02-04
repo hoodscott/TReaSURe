@@ -39,7 +39,7 @@
         <ul>
         {% if level_tags %}
             {% for level in level_tags %}
-                <li><a href="/../tags/{{ level.id }}">{{ level.name }}</a></li>
+                <li><a href="{% url 'tag' level.id %}">{{ level.name }}</a></li>
             {% endfor %}
         {% else %}
             <li>No level tags.</li>
@@ -51,7 +51,7 @@
         <ul>
         {% if level_tags %}
             {% for topic in topic_tags %}
-                <li><a href="/../tags/{{ topic.id }}">{{ topic.name }}</a></li>
+                <li><a href="{% url 'tag' topic.id %}">{{ topic.name }}</a></li>
             {% endfor %}
         {% else %}
             <li>No level tags.</li>
@@ -61,7 +61,7 @@
         
         {% if owned %}
             <!--a class="btn btn-block btn-primary" href="">Download Pack?</a-->
-            <a class="btn btn-block btn-danger" href="/packs/{{ pack.id }}/edit">Edit</a>
+            <a class="btn btn-block btn-danger" href="{% url 'edit_pack' pack.id %}">Edit</a>
         <hr>
         {% endif %}
     </div>
@@ -84,7 +84,7 @@
 		                <tbody>
 		                    {% for resource in pack_resources %}
 		                        <tr class="Label">
-		                            <td><a href="/resource/{{ resource.id }}">{{resource.name}}</a></td>
+		                            <td><a href="{% url 'resource_view' resource.id %}">{{resource.name}}</a></td>
 		                            <td>{{resource.author}}</td>
 		                            <td>{{resource.summary}}</td>
 		                        </tr>
@@ -97,7 +97,7 @@
         </div> <!-- close panel -->
     {% else %}
         <h4>There are no resources in this pack.</h4>
-        <a href="/resources/">Return to Resources</a>
+        <a href="{% url 'resources' %}">Return to Resources</a>
     {% endif %}
     
 </div>

@@ -14,9 +14,9 @@
         <ul>
         {% for board in forum %}
             {% if board.resource != null %}
-            <li><a href="/forum/{{ board.resource.id }}/">Resource: {{ board.title }}</a></li>
+            <li><a href="{% url 'board' board.resource.id %}">Resource: {{ board.title }}</a></li>
             {% else %}
-            <li><a href="/forum/{{ board.title }}/">Misc: {{ board.title }}</a></li>            
+            <li><a href="{% url 'board' board.title %}}">Misc: {{ board.title }}</a></li>            
             {% endif %}
         {% endfor %}
         </ul>

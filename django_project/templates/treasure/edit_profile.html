@@ -2,7 +2,7 @@
 
 {% load static %}
 {% load render_help %}
-{% block head_block %}{% if updated %}<meta http-equiv="refresh" content="2; url=/" />{% endif %}{% endblock %}
+{% block head_block %}{% if updated %}<meta http-equiv="refresh" content="2; url="{% url 'home' %}" />{% endif %}{% endblock %}
 {% block title %}
     Edit Profile
 {% endblock %}
@@ -28,10 +28,10 @@
     <h2>Edit Profile</h2>
     <br/>
     <div class="container">
-        <form class="span6" id="edit_teacher_form" method="post" action="/profile/edit/" enctype="multipart/form-data">
+        <form class="span6" id="edit_teacher_form" method="post" action="{% 'edit_profile' %}" enctype="multipart/form-data">
         	{% if updated %}
             	<h4>Profile Successfuly Updated.</h4>
-            	<p>You are being redirected to the homepage. If nothing happens, <a href="/">click here</a></p>
+            	<p>You are being redirected to the homepage. If nothing happens, <a href="{% 'home' %}">click here</a></p>
         	{% else %}	
 	
 				{% csrf_token %}

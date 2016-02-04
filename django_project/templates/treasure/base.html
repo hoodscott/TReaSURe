@@ -25,11 +25,6 @@
         <link href="{% static 'css/treasure.css' %}" rel="stylesheet">
         
         {{ form.media }}
-        <script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
-        <script type="text/javascript" src="/static/admin/js/core.js"></script>
-        
-
-
     </head>
 
     <body>
@@ -42,33 +37,33 @@
                        <span class="icon-bar"></span>
                        <span class="icon-bar"></span>
                    </button>
-                   <a href="/"><img class="brand"  src="{% static 'images/logo2.png' %}"></img></a>
+                   <a href="{% url 'home' %}"><img class="brand"  src="{% static 'images/logo2.png' %}"></img></a>
 
 				
                    <div class="nav-collapse collapse">
                        <ul class="nav pull-right">
                             {% if user.is_authenticated %}
-                                <li><a href="/profile">Profile</a></li> 
-                            	<li><a href="/logout">Logout</a></li>
+                                <li><a href="{% url 'profile' %}">Profile</a></li> 
+                            	<li><a href="{% url 'logout' %}">Logout</a></li>
                             {% else %}
-                            	<li><a href="/login">Login</a></li>
-                              <li><a href="/register">Register</a></li>
+                            	<li><a href="{% url 'login' %}">Login</a></li>
+                              <li><a href="{% url 'logout' %}">Register</a></li>
                               <li><a href="/auth/login/google-oauth2/?next=/">Login with Google</a></li>   
                             {% endif %}                   
                        </ul>
                        <ul class="nav">
                        {% if user.is_authenticated %}
-                           <li id="searchbar-container"><form type='get' class="navbar-search pull-left" action="/resources/">
+                           <li id="searchbar-container"><form type='get' class="navbar-search pull-left" action="{% url 'resources' %}">
 						 		<input id='search' name='search' class="search-query span2" placeholder="Quick Search" type="text">
 						   </form>                       
                            </li>
-                           <li><a href="/forum">Forum</a></li>
-                           <li><a href="/explore">Explore</a></li>
-                           <li><a href="/resources">Resources</a></li>
-                           <li><a href="/packs">Packs</a></li>
-                           <li><a href="/tags">Tags</a></li>
+                           <li><a href="{% url 'forum' %}">Forum</a></li>
+                           <li><a href="{% url 'explore' %}">Explore</a></li>
+                           <li><a href="{% url 'resources' %}">Resources</a></li>
+                           <li><a href="{% url 'packs' %}">Packs</a></li>
+                           <li><a href="{% url 'tags' %}">Tags</a></li>
                        {% endif %}
-                           <li><a href="/about">About</a></li>
+                           <li><a href="{% url 'about' %}">About</a></li>
                        </ul>
                    </div>
                    <!--/.nav-collapse -->
@@ -88,7 +83,7 @@
 							<div id="logo">
 								<span class="image avatar48"><img src="{% static 'images/avatar.jpg' %}" alt="user avatar" /></span>
 								<h1 id="title">{{ user_teacher.firstname }} {{ user_teacher.surname }}</h1>
-								<p>{{ school }}{% ifequal school 'No School' %}, <a href="/profile/edit/">Add?</a>{% endifequal%}</p>
+								<p>{{ school }}{% ifequal school 'No School' %}, <a href="{% url 'edit_profile' %}">Add?</a>{% endifequal%}</p>
 							</div>
 	                   {% endif %}
 
@@ -96,15 +91,15 @@
                         <nav id="nav">
 							<ul>
 								{% if user.is_authenticated %}
-									<li><a href="/me/#" id="home-link" class="skel-layers-ignoreHref"><span>My Page</span></a></li>
-									<li><a href="/me/#myresources" class="skel-layers-ignoreHref"><span>My Resources</span></a></li>
-                                    <li><a href="/me/#mypacks" class="skel-layers-ignoreHref"><span>My Packs</span></a></li>
-									<li><a href="/profile/" class="skel-layers-ignoreHref"><span>My Profile</span></a></li>
-									<li><a href="/contribution/" class="skel-layers-ignoreHref"><span>My Contribution</span></a></li>
-									<li><a href="/help/" class="skel-layers-ignoreHref"><span>Help</span></a></li>
+									<li><a href="{% url 'my_homepage' %}#" id="home-link" class="skel-layers-ignoreHref"><span>My Page</span></a></li>
+									<li><a href="{% url 'my_homepage' %}#myresources" class="skel-layers-ignoreHref"><span>My Resources</span></a></li>
+                                    <li><a href="{% url 'my_homepage' %}#mypacks" class="skel-layers-ignoreHref"><span>My Packs</span></a></li>
+									<li><a href="{% url 'profile' %}/" class="skel-layers-ignoreHref"><span>My Profile</span></a></li>
+									<li><a href="{% url 'contribution' %}/" class="skel-layers-ignoreHref"><span>My Contribution</span></a></li>
+									<li><a href="{% url 'help' %}/" class="skel-layers-ignoreHref"><span>Help</span></a></li>
 								{% else %}									
-									<li><a href="/login/" class="skel-layers-ignoreHref"><span>Login</span></a></li>
-									<li><a href="/register/" class="skel-layers-ignoreHref"><span>Register</span></a></li>
+									<li><a href="{% url 'login' %}/" class="skel-layers-ignoreHref"><span>Login</span></a></li>
+									<li><a href="{% url 'register' %}/" class="skel-layers-ignoreHref"><span>Register</span></a></li>
                                     <li><a href="/auth/login/google-oauth2/"><span>Login with Google</span></a></li>									
 								{% endif %}			         
 							</ul>

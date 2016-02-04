@@ -17,7 +17,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 ## set static path
 STATIC_PATH = os.path.join(PROJECT_PATH,'static')
-STATIC_URL = '/static/'
 
 ## set media path
 MEDIA_PATH = os.path.join(PROJECT_PATH,'media')

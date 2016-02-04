@@ -12,8 +12,8 @@
 <div class="span12 hero-unit">
     {% if invalid %}
         <h3>Malformed url</h3>
-        <a href="/">Return to Homepage</a>
-        <a href="/forum/">Return to Forum</a> 
+        <a href="{% url 'home' %}">Return to Homepage</a>
+        <a href="{% url 'forum' %}">Return to Forum</a> 
     {% else %}
         <h2>{{ thread.title }}</h2>
         <h4>{{ thread.content }}</h4>
@@ -31,7 +31,7 @@
         {% endif %}
         
         <br>
-        <form class="span6" id="upload_form" method="post" action="/forum/{{ board_url }}/{{ thread_id }}/">
+        <form class="span6" id="upload_form" method="post" action="{% url 'thread' board_url thread_id %}">
 
         {% csrf_token %}
         

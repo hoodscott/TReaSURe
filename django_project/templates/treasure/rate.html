@@ -2,7 +2,7 @@
 
 {% load static %}
 {% load render_help %}
-{% block head_block%}{% if rated or condition %}<meta http-equiv="refresh" content="2; url=../" />{% endif %}{% endblock%}
+{% block head_block%}{% if rated or condition %}<meta http-equiv="refresh" content="2; url={% url 'resource_view' resource.id %}" />{% endif %}{% endblock%}
 
 {% block title %}
     Register
@@ -13,16 +13,16 @@
 <div class="hero-unit">
     {% if rated %}
         <h4>Thank you for the feedback, {{ this_teacher.firstname}}</h4>
-        <h4>You will be redirected back to the Resource, if not <a href="../" tabindex='1'>click here.</a></h4>
+        <h4>You will be redirected back to the Resource, if not <a href="{% url 'resource_view' resource.id %}" tabindex='1'>click here.</a></h4>
     {% else %}
         {% if condition %}
         <h4>You have already given feedback for this resource.</h4>
-        <h4>This should not have happened, I am sending you back to <a href="../" tabindex='1'>the Resource</a>!</h4>
+        <h4>This should not have happened, I am sending you back to <a href="{% url 'resource_view' resource.id %}" tabindex='1'>the Resource</a>!</h4>
         {% else %}
         <h2>Rating {{ this_resource.name}}</h2>
         <br/>
         <div class="container">
-            <form class="span6" id="rating_form" method="post" action="." enctype="multipart/form-data">
+            <form class="span6" id="rating_form" method="post" action="{% url 'rate' resource.id %}" enctype="multipart/form-data">
 	
                 {% csrf_token %}
             

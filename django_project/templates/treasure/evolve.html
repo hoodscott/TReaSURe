@@ -20,7 +20,7 @@
         
             <div id="file" class="{% if error == "file" %}active{% endif %} tab-pane container">
                 <h3>File Evolve</h3>
-                <form class="span6" id="file_evolve" method="post" action="/resource/{{ resource_id }}/evolve/" enctype="multipart/form-data">
+                <form class="span6" id="file_evolve" method="post" action="{% url 'evolve' resource_id %}" enctype="multipart/form-data">
                 	{% csrf_token %}
                 
                     {% for hidden in resource_form.hidden_fields %}
@@ -49,7 +49,7 @@
             
             <div id="web" class="{% if error == "web" %}active{% endif %} tab-pane container">
                 <h3>Web Evolve</h3>
-                <form class="span6" id="web_evolve" method="post" action="/resource/{{ resource_id }}/evolve/" enctype="multipart/form-data">
+                <form class="span6" id="web_evolve" method="post" action="{% url 'evolve' resource_id %}" enctype="multipart/form-data">
                 	{% csrf_token %}
                 
                     {% for hidden in resource_form.hidden_fields %}

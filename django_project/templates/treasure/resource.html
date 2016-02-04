@@ -29,7 +29,7 @@
                 <h4><strong>Tags:</strong></h4>
                 {% if other_tags %}
                     {% for tag in other_tags %}
-                        <a href="/tags/{{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+                        <a href="{% url 'tag' tag.id %}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
                     {% endfor %}
                 {% else %}
                     <p>There are no tags.</p>
@@ -41,7 +41,7 @@
                 <h4><strong>Levels:</strong></h4>
                 <ul>
                 {% for level in level_tags %}
-                    <li><a href="/tags/{{ level.id }}">{{ level.name }}</a></li>
+                    <li><a href="{% url 'tag' level.id %}">{{ level.name }}</a></li>
                 {% endfor %}
                 </ul>
                 <hr>
@@ -49,22 +49,22 @@
                 <h4><strong>Topics:</strong></h4>
                 <ul>
                 {% for topic in topic_tags %}
-                    <li><a href="/tags/{{ topic.id }}">{{ topic.name }}</a></li>
+                    <li><a href="{% url 'tag' topic.id %}">{{ topic.name }}</a></li>
                 {% endfor %}
                 </ul>
                 <hr>
                 
 					                
-                    {% if downloaded and not rating_exists %}<a class="btn btn-block btn-primary" href="/resource/{{ resource.id }}/rate/">Rate</a>
-                    {% elif not rating_exists %}<a class="btn btn-block btn-primary" href="/resource/{{ resource.id }}/download/not">Rate</a>{% endif %}
+                    {% if downloaded and not rating_exists %}<a class="btn btn-block btn-primary" href="{% url 'rate' resource.id %}">Rate</a>
+                    {% elif not rating_exists %}<a class="btn btn-block btn-primary" href="{% url 'download' resource.id 'not' %}">Rate</a>{% endif %}
                     {% if label %}
-                        <a {% if files_resource %}download{% endif %} class="btn btn-block btn-primary" href="/resource/{{resource.id}}/download/">{% if downloaded %}Re-{% endif %}{{label}}</a>
+                        <a {% if files_resource %}download{% endif %} class="btn btn-block btn-primary" href="{% url 'download' resource.id %}">{% if downloaded %}Re-{% endif %}{{label}}</a>
 					{% endif %}
-                    <a class="btn btn-block btn-warning" href="/resource/{{ resource.id}}/evolve">Evolve</a>
-                    <a class="btn btn-block btn-success" href="/resource/{{ resource.id}}/track/" target="_blank">Track</a>
+                    <a class="btn btn-block btn-warning" href="{% url 'evolve' resource.id %}">Evolve</a>
+                    <a class="btn btn-block btn-success" href="{% url 'track' resource.id %}" target="_blank">Track</a>
                     <!-- todo: "make this page better" a class="btn btn-block btn-info" href="/resource/{{ resource.id }}/versions">View Versions</a-->
                     {% if owned %}
-                        <a class="btn btn-block btn-danger" href="/resource/{{ resource.id }}/edit">Edit</a>
+                        <a class="btn btn-block btn-danger" href="{% url 'edit_resource' resource.id %}">Edit</a>
                     {% endif %}
                 <hr>
            </div>
@@ -72,7 +72,7 @@
         
         <div class="hero-unit">
             <h3>Forum</h3>
-            <a href="/forum/{{resource.id}}">Link2Forum</a>
+            <a href="{% url 'board' resource.id %}">Link2Forum</a>
         </div>
         
         <div class="hero-unit">
@@ -90,7 +90,7 @@
 	                <tbody>
 	                    {% for pack in partofpacks.all %}
 	                        <tr class="packLabel">
-	                            <td><a href="/packs/{{ pack.id }}">{{ pack.name }}</a></td>
+	                            <td><a href="{% url 'pack' pack.id %}">{{ pack.name }}</a></td>
 	                            <td>{{ pack.author }}</td>
    	                            <td>{{ pack.summary }}</td>
 	                        </tr>
@@ -101,7 +101,7 @@
             {% else %}
                 <div>This resource is part of no packs</div>
             {% endif %}
-            <a class="btn btn-primary pull-right" href="/resource/{{ resource.id }}/addtopack">Add to a Pack</a>
+            <a class="btn btn-primary pull-right" href="{% url 'addtopack' resource.id %}">Add to a Pack</a>
        </div>
 
         <div class="hero-unit">
@@ -118,16 +118,16 @@
                     <tbody>
                         {% for record in want2talk %}
                             <tr class="teacherLabel">
-                                <td>{{record.teacher}}. {% ifequal record.teacher user_teacher%}<a href="./talk/no/">Remove</a>{%endifequal%}</td>
+                                <td>{{record.teacher}}. {% ifequal record.teacher user_teacher%}<a href="{% url 'talk' resource.id 'no' %}">Remove</a>{%endifequal%}</td>
                                 <!--<td>{{record.comment}}</td>-->
                             </tr>
                         {% endfor %}
                     </tbody>
                  </table>
             </div>
-                        {% if not iWant2Talk %}<a class="btn btn-primary pull-right" href="/resource/{{ resource.id }}/talk/yes/">I am happy to talk</a>{% endif %}
+                        {% if not iWant2Talk %}<a class="btn btn-primary pull-right" href="{% url 'talk' resource.id yes %}">I am happy to talk</a>{% endif %}
         {% else %}
-            <p><a href="./talk/yes/">I am happy to discuss about it.</a></p>
+            <p><a href="{% url 'talk' resource.id 'yes' %}">I am happy to discuss about it.</a></p>
         {% endif %}
         </div>
 
@@ -159,7 +159,7 @@
                         {% endfor %}
                         {% if downloaded and not rating_exists %}
                         <tr class="teacherLabel">
-                            <a href="./rate/"><td>Rate Resource</td></a>
+                            <a href="{% url 'rate' resource.id %}"><td>Rate Resource</td></a>
 
                         </tr>
                         {% endif %}
@@ -167,7 +167,7 @@
                  </table>
             </div>
         {% else %}
-            <p>There is no feedback for resource {{resource_name}} yet. {% if downloaded and not rating_exists %}<a href="/resource/{{ resource.id}}/rate/">Be the first!</a>{% elif not downloaded %}<a href="/resource/{{ resource.id}}/download/not/">Be the first!</a>{% endif %}</p>
+            <p>There is no feedback for resource {{resource_name}} yet. {% if downloaded and not rating_exists %}<a href="{% url 'rate' resource.id %}">Be the first!</a>{% elif not downloaded %}<a href="{% url 'download' resource.id 'not' %}">Be the first!</a>{% endif %}</p>
         {% endif %}
         </div>
 
@@ -179,7 +179,7 @@
                     {% if change.1 == null %}
                         <li><h4>&#9658;This Resource</h4></li>
                     {% else %}
-                        <li><h4>&#9660;<a href="/resource/{{ change.0 }}">{{ change.1 }}</a></h4></li>
+                        <li><h4>&#9660;<a href="{% url 'resource_view' change.0 %}">{{ change.1 }}</a></h4></li>
                         <li><p>&nbsp;&nbsp;Evolution Type: {{ change.2 }}</p></li>
                         {% if change.3 != null  %}
                         <li><p>&nbsp;&nbsp;Reason for Change: {{ change.3 }}</p></li>

@@ -14,7 +14,7 @@
         <div class="row panel-heading clearfix">
         <h3>Packs</h3>
         </div>
-        <div class="span5"><a class="btn btn-block btn-primary" href="/packs/new/">Add Pack</a></div>
+        <div class="span5"><a class="btn btn-block btn-primary" href="{% url 'newpack' %}">Add Pack</a></div>
         <br/>
         <hr>
 
@@ -34,7 +34,7 @@
                         {% for pack in packs %}
                             {% if pack.hidden != 1 and pack.restricted != 1 %}
                             <tr class="studentLabel">
-                                <td><a href="/pack/{{ pack.id }}">{{ pack.name }}</a></td>
+                                <td><a href="{% url 'pack' pack.id %}">{{ pack.name }}</a></td>
                                 <td>{{pack.author}}</td>
                                 <td>{{pack.summary}}</td>
                             </tr>
@@ -48,7 +48,7 @@
         
     </div> <!-- close body -->
     <div class="span3 hero-unit">
-                        <form id="search_form" method="post" action="/packs/">            
+                        <form id="search_form" method="post" action="{% url 'packs' %}">            
         
                     {% csrf_token %}
                         <div class="span3" style="margin-left:-2em">

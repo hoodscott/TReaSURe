@@ -12,13 +12,13 @@
 <div class="hero-unit">
     {% if invalid %}
         <h2>No board to post to</h2>
-        <a href="/">Return to Homepage</a>
-        <a href="/forum/">Return to Forum</a>    
+        <a href="{% url 'home' %}">Return to Homepage</a>
+        <a href="{% url 'forum' %}">Return to Forum</a>    
     {% else %}
         <h2>Add a Thread</h2>
         <br/>
         <div class="container">
-            <form class="span6" id="upload_form" method="post" action="/forum/{{ board_url }}/new/">
+            <form class="span6" id="upload_form" method="post" action="{% url 'new_thread' board.url %}">
 	
 	        {% csrf_token %}
 	        

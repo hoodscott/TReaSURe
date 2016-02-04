@@ -14,10 +14,10 @@
         <div class="row panel-heading clearfix">
         <h3>Resources</h3>
         </div>
-        <div class="span3"><a class="btn btn-block btn-primary" href="/add_file_resource">Add File Resource</a></div>
+        <div class="span3"><a class="btn btn-block btn-primary" href="{% url 'add_file_resource' %}">Add File Resource</a></div>
         <div class="span1">
         </div>
-        <div class="span3"><a class="btn btn-block btn-primary" href="/add_web_resource">Add Web Resource</a></div>
+        <div class="span3"><a class="btn btn-block btn-primary" href="{% url 'add_web_resource' %}">Add Web Resource</a></div>
         <br/>
         <hr>
 
@@ -37,7 +37,7 @@
                         {% for resource in resources %}
                             {% if resource.hidden != 1 and resource.restricted != 1 %}
                             <tr class="studentLabel">
-                                <td><a href="/resource/{{ resource.id }}">{{resource.name}}</a></td>
+                                <td><a href="{% url 'resource_view' resource.id %}">{{resource.name}}</a></td>
                                 <td>{{resource.author}}</td>
                                 <td>{{resource.summary}}</td>
                             </tr>
@@ -51,7 +51,7 @@
         
     </div> <!-- close body -->
     <div class="span3 hero-unit">
-                        <form id="search_form" method="post" action="/resources/">            
+                        <form id="search_form" method="post" action="{% url 'resources' %}">            
         
                     {% csrf_token %}
                         <div class="span3" style="margin-left:-2em">

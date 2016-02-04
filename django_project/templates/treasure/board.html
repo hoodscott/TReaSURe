@@ -12,11 +12,11 @@
     
     {% if invalid %}
         <h4>No Board at this URL</h4>
-        <a href="/forum/">Return to the main forum</a>
+        <a href="{% url 'forum' %}/">Return to the main forum</a>
     {% else %}
     
         {% if resource %}
-            <h3>Discussions on: <a href="/resource/{{ resource.id }}">{{ resource.name }}</a><h3>
+            <h3>Discussions on: <a href="{% url 'resource_view' resource.id %}/">{{ resource.name }}</a><h3>
         {% else %}
             <h3>Discussions about: {{ title }}</h3>
         {% endif %}
@@ -24,14 +24,14 @@
         {% if board %}
         <ul>
             {% for thread in board %}
-            <li><a href="/forum/{{ board_url }}/{{ thread.id}}/">{{ thread.title }}</a></li>
+            <li><a href="{% url 'thread' board_url thread.id %}">{{ thread.title }}</a></li>
             {% endfor %}
         </ul>
         {% else %}
             <h4>No Threads on this board</h4>
         {% endif %}
         
-    <a class="btn" href="/forum/{{ board_url }}/new/">New Thread</a>
+    <a class="btn" href="{% url 'new_thread' board_url %}">New Thread</a>
     
     {% endif %}
     

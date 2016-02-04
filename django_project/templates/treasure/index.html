@@ -14,7 +14,7 @@
 		<header>
 			<h2 class="alt">Welcome back, {{ user_teacher.firstname }}</a></h2>
 			<p>The community values your opinion.
-				Please remember to <a href="/me/#myratings">rate</a> the resources you download.</p>
+				Please remember to <a href="{% url 'my_homepage' %}/#myratings">rate</a> the resources you download.</p>
 		</header>
 		<footer>
 			<a href="#MainPage" class="button scrolly" id="continue-browsing">Continue Browsing</a>
@@ -28,7 +28,7 @@
 {% block body_block %}
 
 {% if user.is_authenticated %}
-<div class="span12">
+<!--div class="span12">
     <div class="span7 hero-unit">
         <h1>Plan C - Sharing</h1>
         <h4>Welcome to Plan C Sharing, blah bla......</h4><br>
@@ -102,7 +102,7 @@
         </ol>
     </div>
     
-</div>
+</div--><div class="hero-unit">new main page goes here <!--replaces above--></div>
 
 
 {% else %}

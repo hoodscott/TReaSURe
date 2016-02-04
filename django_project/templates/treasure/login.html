@@ -7,7 +7,7 @@
 {% block body_block %}
 <div class="hero-unit">
     <div class="container">
-    <form class="form-signin span6" id="login_form" method="post" action="/login/">
+    <form class="form-signin span6" id="login_form" method="post" action="{% url 'login' %}">
         <h2 class="form-signin-heading">Please sign in</h2>
         {% csrf_token %}
         {% if bad_details %}
@@ -19,7 +19,7 @@
         Username: <input type="text" class="input-block-level" placeholder="Username" name="username" value="" size="50" tabindex='1' autofocus='autofocus'/>
         <br />
         Password: <input type="password" class="input-block-level" placeholder="Password" name="password" value="" size="50" tabindex='1'/>
-        <a href="/password_reset/" style="font-size: 0.7em">Forgot your password?</a>
+        <a href="{% url 'password_reset' %}" style="font-size: 0.7em">Forgot your password?</a>
         <br/>
         <button class="btn btn-primary" type="submit" tabindex='1'>Sign in</button>
     </form>

@@ -13,7 +13,7 @@
         {% if hubs %}
         <ul>
             {% for hub in hubs %}
-            <li><a href="../hub/{{ hub.id }}">{{ hub.name }}</a></li>
+            <li><a href="{% url 'hub_view' hub.id %}">{{ hub.name }}</a></li>
             {% endfor %}
         </ul>
         {% else %}

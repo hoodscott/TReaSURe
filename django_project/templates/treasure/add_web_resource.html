@@ -13,7 +13,7 @@
     <h2>Link to a Web Resource</h2>
     <br/>
     <div class="container">
-        <form class="span6" id="upload_form" method="post" action="/add_web_resource/">
+        <form class="span6" id="upload_form" method="post" action="{% url 'add_web_resource' %}">
 	
 	    {% csrf_token %}
 	    
