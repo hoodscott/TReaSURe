@@ -11,7 +11,7 @@
     <div class="container">
                 
         <h2>Tags</h2>
-        <a class="btn btn-primary" href="{% 'add_tag' %}">Add New Tag</a>
+        <a class="btn btn-primary" href="{% url 'add_tag' %}">Add New Tag</a>
         
         <div class="span11"><hr></div>
         
@@ -19,7 +19,7 @@
             <h4>Levels</h4>
             <ul>
                 {% for tag in level_tags %}
-                <li><a href="{% 'tag' tag.id %}">{{ tag.name }}</a></li>
+                <li><a href="{% url 'tag' tag.id %}">{{ tag.name }}</a></li>
                 {% endfor %}
             </ul>
             <hr>
@@ -29,7 +29,7 @@
             <h4>Topics</h4>
             <ul>
                 {% for tag in topic_tags %}
-                <li><a href="{% 'tag' tag.id %}">{{ tag.name }}</a></li>
+                <li><a href="{% url 'tag' tag.id %}">{{ tag.name }}</a></li>
                 {% endfor %}
             </ul>
             <hr>
@@ -40,7 +40,7 @@
             <h4>Other Tags</h4>
             <ul>
                 {% for tag in other_tags %}
-                <li><a href="{% 'tag' tag.id %}">{{ tag.name }}</a></li>
+                <li><a href="{% url 'tag' tag.id %}">{{ tag.name }}</a></li>
                 {% endfor %}
             </ul>
         </div>

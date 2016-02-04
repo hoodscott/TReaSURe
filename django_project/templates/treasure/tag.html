@@ -10,9 +10,9 @@
 <div>
     {% if tag %}
         <div class="hero-unit">
-		    <h2>{{ tag.name }} {% if tag.type = "0" %}(<a href="{% 'tags' %}/#leveltags">Level</a>)
-		        {% elif tag.type == "1" %}(<a href="{% 'tags' %}/#topictags">Topic</a>)
-		        {% else %}(<a href="{% 'tags' %}/#othertags">Other Tag</a>)
+		    <h2>{{ tag.name }} {% if tag.type = "0" %}(<a href="{% url 'tags' %}#leveltags">Level</a>)
+		        {% elif tag.type == "1" %}(<a href="{% url 'tags' %}#topictags">Topic</a>)
+		        {% else %}(<a href="{% url 'tags' %}#othertags">Other Tag</a>)
 		        {% endif %}</h2>
 		</div>  
 		<div class="hero-unit">                     
@@ -32,7 +32,7 @@
 	                            {% for resource in tagged_resources %}
                                     {% if resource.hidden != 1 and resource.restricted != 1 %}                                    
 	                                <tr class="resourceLabel">
-	                                    <td><a href="{% 'resource_view' resource.id %}">{{resource.name}}</a></td>
+	                                    <td><a href="{% url 'resource_view' resource.id %}">{{resource.name}}</a></td>
 	                                    <td>{{resource.author}}</td>
 	                                    <td>{{resource.summary}}</td>
 	                                </tr>
@@ -64,7 +64,7 @@
 	                            {% for pack in tagged_packs %}
                                     {% if pack.hidden != 1 and pack.restricted != 1 %}
 	                                <tr class="packLabel">
-	                                    <td><a href="{% 'packs' pack.id %}">{{ pack.name }}</a></td>
+	                                    <td><a href="{% url 'pack' pack.id %}">{{ pack.name }}</a></td>
 	                                    <td>{{pack.author}}</td>
 	                                    <td>{{pack.summary}}</td>
 	                                </tr>
