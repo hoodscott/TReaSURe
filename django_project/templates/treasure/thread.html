@@ -31,7 +31,7 @@
         {% endif %}
         
         <br>
-        <form class="span6" id="upload_form" method="post" action="{% url 'thread' board_url thread_id %}">
+        <form class="span6" id="upload_form" method="post" action="{% url 'thread' board_type board_url thread_id %}">
 
         {% csrf_token %}
         

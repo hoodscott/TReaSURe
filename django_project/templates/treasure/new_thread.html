@@ -18,7 +18,7 @@
         <h2>Add a Thread</h2>
         <br/>
         <div class="container">
-            <form class="span6" id="upload_form" method="post" action="{% url 'new_thread' board_url %}">
+            <form class="span6" id="upload_form" method="post" action="{% url 'new_thread' board_type board_url %}">
 	
 	        {% csrf_token %}
 	        

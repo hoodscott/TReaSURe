@@ -293,6 +293,14 @@ class Board(models.Model):
     # title of the board (the resource name for boards relating to resources)
     title = models.CharField(max_length=128)
     
+    #define types of tags
+    BOARDTYPES = (
+        ('resource', 'resource'),
+        ('level', 'level'),
+        ('general', 'general'),
+    )
+    boardtype = models.CharField(max_length=32, choices=BOARDTYPES)
+    
     def __unicode__(self):
         return "%s" % (self.title)
 

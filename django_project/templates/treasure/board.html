@@ -16,22 +16,22 @@
     {% else %}
     
         {% if resource %}
-            <h3>Discussions on: <a href="{% url 'resource_view' resource.id %}/">{{ resource.name }}</a><h3>
+            <h3>Discussions on: <a href="{% url 'resource_view' resource.id %}">{{ resource.name }}</a><h3>
         {% else %}
-            <h3>Discussions about: {{ title }}</h3>
+            <h3>Discussions about: {{ title|capfirst }}</h3>
         {% endif %}
         
         {% if board %}
         <ul>
             {% for thread in board %}
-            <li><a href="{% url 'thread' board_url thread.id %}">{{ thread.title }}</a></li>
+            <li><a href="{% url 'thread' board_type board_url thread.id %}">{{ thread.title }}</a></li>
             {% endfor %}
         </ul>
         {% else %}
             <h4>No Threads on this board</h4>
         {% endif %}
         
-    <a class="btn" href="{% url 'new_thread' board_url %}">New Thread</a>
+    <a class="btn" href="{% url 'new_thread' board_type board_url %}">New Thread</a>
     
     {% endif %}
     

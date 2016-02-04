@@ -635,7 +635,7 @@ def add_web_resource(request):
             web.save()
             
             # create board for this resource
-            board = Board(resource=resource, title=resource.name)
+            board = Board(resource=resource, title=resource.name, boardtype='resource')
             board.save()            
             
             # Now show the new materials page
@@ -723,7 +723,7 @@ def add_file_resource(request):
             files.save()
             
             # create board for this resource
-            board = Board(resource=resource, title=resource.name)
+            board = Board(resource=resource, title=resource.name, boardtype='resource')
             board.save()  
             
             # show user the new materials page
@@ -1507,7 +1507,7 @@ def evolve(request, parent_id):
                 files.save()
                 
                 # create board for this resource
-                board = Board(resource=resource, title=resource.name)
+                board = Board(resource=resource, title=resource.name, boardtype='resource')
                 board.save() 
                 
                 # show user the new materials page
@@ -1569,7 +1569,7 @@ def evolve(request, parent_id):
                 web.save()
                 
                 # create board for this resource
-                board = Board(resource=resource, title=resource.name)
+                board = Board(resource=resource, title=resource.name, boardtype='resource')
                 board.save() 
                 
                 # Now show the new materials page
@@ -1965,7 +1965,7 @@ def forum(request):
    
 # view to show board
 @login_required
-def board(request, board_url):
+def board(request, board_type, board_url):
   
     # get context of request
     context = RequestContext(request)
@@ -1975,16 +1975,10 @@ def board(request, board_url):
     
     # add url to contextdict
     context_dict['board_url']=board_url
+    context_dict['board_type']=board_type
     
-    #determine if other or resourceboard
-    # check if url is a number
-    try: 
-        int(board_url)
-        isNumber = True
-    except ValueError:
-        isNumber= False
-    
-    if isNumber:
+    #determine if other or resourceboard    
+    if board_type == 'resource':
         try:
             # check resource has a forum attached
             this_resource = Resource.objects.all().get(id=board_url)
@@ -2005,8 +1999,8 @@ def board(request, board_url):
     else:
         try:
             # check the word has a url attached
-            this_board = Board.objects.all().get(title=board_url)
-            context_dict['title'] = board_url
+            this_board = Board.objects.all().get(id=board_url)
+            context_dict['title'] = this_board.title
             try:
                 # get the threads on the forum
                 board = Thread.objects.all().filter(board = this_board)
@@ -2024,7 +2018,7 @@ def board(request, board_url):
     return render_to_response('treasure/board.html', context_dict, context)
     
 @login_required
-def new_thread(request, board_url):
+def new_thread(request, board_type, board_url):
     # get context of request
     context = RequestContext(request)
 
@@ -2033,14 +2027,10 @@ def new_thread(request, board_url):
     
     # add board url to dict
     context_dict['board_url'] = board_url
+    context_dict['board_type'] = board_type
     
     # check board_url coresponds to a board
-    try: 
-        int(board_url)
-        isNumber = True
-    except ValueError:
-        isNumber= False
-    if isNumber:
+    if board_type == "resource":
         try:
             # if url is number, get board relating to that object
             this_board = Board.objects.all().get(resource = Resource.objects.all().get(id=board_url))
@@ -2050,7 +2040,7 @@ def new_thread(request, board_url):
     else:
         try:
             # otherwise get board associated with the word
-            this_board = Board.objects.all().get(title=board_url)
+            this_board = Board.objects.all().get(id=board_url)
         except Board.DoesNotExist:
             # no board at this url
             context_dict['invalid'] = "invalid"
@@ -2068,29 +2058,20 @@ def new_thread(request, board_url):
             
             # get board
             # check if url is a number
-            try: 
-                int(board_url)
-                isNumber = True
-            except ValueError:
-                isNumber= False
-            if isNumber:
+            if board_type == "resource":
                 try:
                     # if url is number, get board relating to that object
-                    print "1"
                     this_board = Board.objects.all().get(resource = Resource.objects.all().get(id=board_url))
                 except Board.DoesNotExist:
                     # no board at this url
                     context_dict['invalid'] = "invalid"
-                    print "2"
             else:
                 try:
-                    # otherwise get board associated with the word
-                    this_board = Board.objects.all().get(title=board_url)
-                    print "3"
+                    # otherwise get board associated with the id
+                    this_board = Board.objects.all().get(id=board_url)
                 except Board.DoesNotExist:
                     # no board at this url
                     context_dict['invalid'] = "invalid"
-                    print "4"
             new_thread.board = this_board
             
             # set author
@@ -2107,7 +2088,7 @@ def new_thread(request, board_url):
             new_thread.save()
             
             # show user the updated page
-            return HttpResponseRedirect(reverse('thread', args=[board_url, new_thread.id]))
+            return HttpResponseRedirect(reverse('thread', args=[board_type, board_url, new_thread.id]))
 
         # Invalid form or forms print problems to the terminal.
         else:
@@ -2125,7 +2106,7 @@ def new_thread(request, board_url):
 
 # view to show thread
 @login_required
-def thread(request, board_url, thread_id):
+def thread(request, board_type, board_url, thread_id):
     # get context of request
     context = RequestContext(request)
 
@@ -2133,7 +2114,9 @@ def thread(request, board_url, thread_id):
     context_dict = sidebar(request)
     
     # pass url to form
+    # add board url to dict
     context_dict['board_url'] = board_url
+    context_dict['board_type'] = board_type
     context_dict['thread_id'] = thread_id
         
     # get thread
@@ -2151,12 +2134,7 @@ def thread(request, board_url, thread_id):
     # check url is properly formed
     # (thread id, belongs to the object pointed to by board_url)
     # first get board from url
-    try: 
-        int(board_url)
-        isNumber = True
-    except ValueError:
-        isNumber= False
-    if isNumber:
+    if board_type == "resource":
         try:
             # if url is number, get board relating to that object
             this_board = Board.objects.all().get(resource = Resource.objects.all().get(id=board_url))
@@ -2165,8 +2143,8 @@ def thread(request, board_url, thread_id):
             context_dict['invalid'] = "invalid"
     else:
         try:
-            # otherwise get board associated with the word
-            this_board = Board.objects.all().get(title=board_url)
+            # otherwise get board associated with the id
+            this_board = Board.objects.all().get(id=board_url)
         except Board.DoesNotExist:
             # no board at this url
             context_dict['invalid'] = "invalid"
@@ -2201,7 +2179,7 @@ def thread(request, board_url, thread_id):
             new_post.save()
             
             # show user the updated page
-            return HttpResponseRedirect(reverse('thread', args=[board_url, this_thread.id]))
+            return HttpResponseRedirect(reverse('thread', args=[board_type, board_url, this_thread.id]))
 
         # Invalid form or forms print problems to the terminal.
         else:
