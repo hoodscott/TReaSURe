@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.core import validators
+from django.core.urlresolvers import reverse
 from string import split, upper
 from datetime import datetime
 from django.utils.html import escape, escapejs
@@ -315,7 +316,7 @@ def edit_resource(request, resource_id):
                 new_resource.save()
                 
                 # show user the updated page
-                return HttpResponseRedirect('/resource/'+str(new_resource.id))
+                return HttpResponseRedirect(reverse('resource_view', args=[str(new_resource.id)]))
 
             # Invalid form or forms print problems to the terminal.
             else:
@@ -473,20 +474,17 @@ def use(request, resource_id, red):
     try:
         download = TeacherDownloadsResource.objects.get(teacher_id=this_teacher.id, resource_id=this_resource.id)
     except TeacherDownloadsResource.DoesNotExist:
-            # This could never happen
-            pass
+        # This could never happen
+        pass
 
     download.used='1'
     download.save()
-    link=''
-    if red=='res':
-        link= '/resource/'+resource_id
-    elif red=='hist':
-        link='/history/'
-    else:
-        link='/me/'
 
-    return HttpResponseRedirect(link)
+    if red=='res':
+        return HttpResponseRedirect(reverse('resource_view', args=[this_resource.id]))
+    else:
+        # link='/me/'
+        return HttpResponseRedirect(reverse('my_homepage'))
 
 
 def talk(request, resource_id, var,red="res"):
@@ -508,15 +506,11 @@ def talk(request, resource_id, var,red="res"):
             # This could never happen
             pass
 
-    link=''
     if red=='res':
-        link= '/resource/'+resource_id
-    elif red=='hist':
-        link='/history/'
+        return HttpResponseRedirect(reverse('resource_view', args=[this_resource.id]))
     else:
-        link='/me/'
-
-    return HttpResponseRedirect(link)
+        # link='/me/'
+        return HttpResponseRedirect(reverse('my_homepage'))
 
 def talkHide(request, var):
     # get the context of request
@@ -528,7 +522,7 @@ def talkHide(request, var):
         discuss.update(disable=0)
     elif var=="no":
         discuss.update(disable=1)
-    return HttpResponseRedirect('/me/')
+    return HttpResponseRedirect(reverse('my_homepage'))
 
 
 def user_login(request):
@@ -557,7 +551,7 @@ def user_login(request):
                 # If the account is valid and active, we can log the user in.
                 # We'll send the user back to the homepage.
                 login(request, user)
-                return HttpResponseRedirect('/')
+                return HttpResponseRedirect(reverse('home'))
             else:
                 # An inactive account was used - no logging in!
                 context_dict['disabled_account'] = "aye"
@@ -574,7 +568,7 @@ def user_logout(request):
     logout(request)
 
     # Take the user back to the homepage.
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect(reverse('home'))
     
     
 # view for the add materials page
@@ -645,7 +639,7 @@ def add_web_resource(request):
             board.save()            
             
             # Now show the new materials page
-            return HttpResponseRedirect('/resource/'+str(resource.id))
+            return HttpResponseRedirect(reverse('resource_view', args=[resource.id]))
         else:
             # The supplied form contained errors - just print them to the terminal.
             print resource_form.errors
@@ -733,7 +727,7 @@ def add_file_resource(request):
             board.save()  
             
             # show user the new materials page
-            return HttpResponseRedirect('/resource/'+str(resource.id))
+            return HttpResponseRedirect(reverse('resource_view', args=[resource.id]))
         else:
             # The supplied form contained errors - just print them to the terminal.
             print resource_form.errors
@@ -1379,7 +1373,7 @@ def edit_pack(request, pack_id):
                 new_pack.save()
                 
                 # show user the updated page
-                return HttpResponseRedirect('/packs/'+str(new_pack.id))
+                return HttpResponseRedirect(reverse('pack', args=[new_pack.id]))
 
             # Invalid form or forms print problems to the terminal.
             else:
@@ -1517,7 +1511,7 @@ def evolve(request, parent_id):
                 board.save() 
                 
                 # show user the new materials page
-                return HttpResponseRedirect('/resource/'+str(resource.id))
+                return HttpResponseRedirect(reverse('resource_view', args=[resource.id]))
             else:
                 # The supplied form contained errors - just print them to the terminal.
                 print resource_form.errors
@@ -1579,7 +1573,7 @@ def evolve(request, parent_id):
                 board.save() 
                 
                 # Now show the new materials page
-                return HttpResponseRedirect('/resource/'+str(resource.id))
+                return HttpResponseRedirect(reverse('resource_view', args=[resource.id]))
             else:
                 # The supplied form contained errors - just print them to the terminal.
                 print resource_form.errors
@@ -1745,7 +1739,7 @@ def newpack(request):
             this_pack.save()
                         
             # Now show the new pack page
-            return HttpResponseRedirect('/packs/'+str(this_pack.id))
+            return HttpResponseRedirect(reverse('pack', args=[this_pack.id]))
         else:
             # The supplied form contained errors - just print them to the terminal.
             print form.errors
@@ -1821,7 +1815,7 @@ def newpack_initial(request, resource_id):
             this_resource.save()
                         
             # Now show the new pack page
-            return HttpResponseRedirect('/packs/'+str(this_pack.id))
+            return HttpResponseRedirect(reverse('pack', args=[this_pack.id]))
         else:
             # The supplied form contained errors - just print them to the terminal.
             print form.errors
@@ -1880,7 +1874,8 @@ def download(request, resource_id, bypass=0):
         # IfDownload Resource
         return redirect(url)
     else:
-        return redirect("/resource/"+resource_id+"/rate/")
+        return redirect(reverse('rate', args=[resource_id]))
+        #"/resource/"+resource_id+"/rate/")
 
 
 @login_required
@@ -2112,7 +2107,7 @@ def new_thread(request, board_url):
             new_thread.save()
             
             # show user the updated page
-            return HttpResponseRedirect('/forum/'+str(board_url)+'/'+str(new_thread.id))
+            return HttpResponseRedirect(reverse('thread', args=[board_url, new_thread.id]))
 
         # Invalid form or forms print problems to the terminal.
         else:
@@ -2206,7 +2201,7 @@ def thread(request, board_url, thread_id):
             new_post.save()
             
             # show user the updated page
-            return HttpResponseRedirect('/forum/'+str(board_url)+'/'+str(thread_id))
+            return HttpResponseRedirect(reverse('thread', args=[board_url, this_thread.id]))
 
         # Invalid form or forms print problems to the terminal.
         else:
