@@ -116,7 +116,7 @@
 	                        <tr class="studentLabel">
 	                            <td><a href="{% url 'resource_view' entry.resource.id %}">{{entry.resource.name}}</a></td>
 								<td>{{entry.datetime}}</td>
-                                <td>{% if entry.used %} Yes{% else %} No. <a href="{% url 'use' entry.resource.id home %}"> Yes?</a>{% endif %}</td>
+                                <td>{% if entry.used %} Yes{% else %} No. <a href="{% url 'use' entry.resource.id 'home' %}"> Yes?</a>{% endif %}</td>
                                 <td>{% if entry.rated %} Yes{% else %} No. <a href="{% url 'rate' entry.resource.id %}">Rate it</a>{% endif %}</td>
                         </tr>
                     {% endfor %}
