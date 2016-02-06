@@ -2,7 +2,7 @@
 
 {% load static %}
 {% load render_help %}
-{% block head_block %}{% if updated %}<meta http-equiv="refresh" content="2; url="{% url 'home' %}" />{% endif %}{% endblock %}
+{% block head_block %}{% if updated %}<meta http-equiv="refresh" content="2; url="{% url 'home' %}""/>{% endif %}{% endblock %}
 {% block title %}
     Edit Profile
 {% endblock %}
@@ -32,7 +32,7 @@
         	{% if updated %}
             	<h4>Profile Successfuly Updated.</h4>
             	<p>You are being redirected to the homepage. If nothing happens, <a href="{% url 'home' %}">click here</a></p>
-        	{% else %}	
+        	{% else %}
 	
 				{% csrf_token %}
 			
@@ -53,7 +53,13 @@
 				{% for field in teacher_form.visible_fields %}
 	                {{ field.errors }}
 	                {{field.label}}{% render_help_text field %}<br/>
-	                {{ field }}<br/>
+                  {{ field }}
+                  {% if field.label == "School" %}
+                  <a class="btn btn-info pull-right" href="{% url 'add_school' %}?editprofile">Add School</a>
+                  {% elif field.label == "Hubs" %}
+                  <a class="btn btn-info pull-right" href="{% url 'add_hub' %}?editprofile">Add Hub</a>
+                  {% endif %}
+                  <br/>
 				{% endfor %}
 				
 				<br/>

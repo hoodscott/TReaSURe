@@ -771,6 +771,9 @@ def add_hub(request):
                 if query == 'register':
                     # redirect usr back to registration page
                     return HttpResponseRedirect(reverse('register'))
+                elif query == 'editprofile':
+                    # redirect usser to edit profile page
+                    return HttpResponseRedirect(reverse('edit_profile'))
                 else:
                     # redirect user to new schoolpage
                     return HttpResponseRedirect(reverse('hub_view', args=[hub.id]))
@@ -813,6 +816,9 @@ def add_school(request):
                 if query == 'register':
                     # redirect usr back to registration page
                     return HttpResponseRedirect(reverse('register'))
+                elif query == 'editprofile':
+                    # redirect user to edit profile page
+                    return HttpResponseRedirect(reverse('edit_profile'))
                 else:
                     # redirect user to new schoolpage
                     return HttpResponseRedirect(reverse('school_view', args=[school.id]))
