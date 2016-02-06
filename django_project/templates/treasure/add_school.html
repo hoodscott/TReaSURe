@@ -32,4 +32,18 @@
         </form>
     </div>
 </div>
+
+<script type="text/javascript">
+$(document).ready(function () {
+    // get form
+    var form = document.getElementById('upload_form') || null;
+    // if there is a search in url
+    var value = location.search || null;
+    if(form && value) {
+        // update action
+        form.action = form.action + value;
+    }
+});
+</script>
+
 {% endblock %}

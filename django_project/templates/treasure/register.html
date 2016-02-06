@@ -40,13 +40,55 @@
                 {% for field in teacher_form.visible_fields %}
                     {{ field.errors }}
                     {{field.label}}{% render_help_text field %}<br/>
-                    {{ field }}<br/>
+                    {{ field }}
+                    {% if field.label == "School" %}
+                    <a class="btn btn-info pull-right" href="{% url 'add_school' %}?register">Add School</a>
+                    {% elif field.label == "Hubs" %}
+                    <a class="btn btn-info pull-right" href="{% url 'add_hub' %}?register">Add Hub</a>
+                    {% endif %}
+                    <br/>
                 {% endfor %}
 
                 <br/>
-                <button class="btn btn-primary" type="submit" name="submit" tabindex='1'>Add Teacher</button>
+                <button class="btn btn-primary" type="submit" name="submit" tabindex='1'>Register</button>
             </form>
         </div>
     {% endif %}
 </div>
+
+<script type="text/javascript">
+$(document).ready(function () {
+    // fill in forms from sessionstorage
+    function init() {
+        if (sessionStorage["username"]) {
+            $('#id_username').val(sessionStorage["username"]);
+        }
+        if (sessionStorage["email"]) {
+            $('#id_email').val(sessionStorage["email"]);
+        }
+        if (sessionStorage["firstname"]) {
+            $('#id_firstname').val(sessionStorage["firstname"]);
+        }
+        if (sessionStorage["surname"]) {
+            $('#id_surname').val(sessionStorage["surname"]);
+        }
+    }
+    init();
+});
+
+$('input').on("keyup change blur", function () {
+    // as long as the form is not soring the password, store it in session storage
+    if (($(this).attr('id'))!='id_password') {
+      sessionStorage[$(this).attr('name')] = $(this).val();
+    }
+});
+
+$('button[name*="submit"]').click(function() {
+    // clear session storage when submitting the form
+    sessionStorage.clear();
+});
+</script>
+
+
+
 {% endblock %}

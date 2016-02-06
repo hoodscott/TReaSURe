@@ -47,11 +47,11 @@
                     </tbody>
                  </table>
             </div>
-        </div> <!-- close panel -->       
+        </div> <!-- close panel -->
         
     </div> <!-- close body -->
     <div class="span3 hero-unit">
-                        <form id="search_form" method="post" action="{% url 'resources' %}">            
+                        <form id="search_form" method="post" action="{% url 'resources' %}">
         
                     {% csrf_token %}
                         <div class="span3" style="margin-left:-2em">
@@ -99,7 +99,7 @@
             var value = $('.dataTables_filter input').val() || null;
             // update the action
             if(form && value) {
-                form.action = '/resources/?search='+value.replace(' ','+');
+                form.action = './?search='+value.replace(' ','+');
             }
         });
         // function to update form on update
@@ -107,7 +107,7 @@
             var value = $('.dataTables_filter input').val() || null;
             // update the action
             if(form && value) {
-                form.action = '/resources/?search='+value.replace(' ','+');
+                form.action = './?search='+value.replace(' ','+');
             }
         });
 	    

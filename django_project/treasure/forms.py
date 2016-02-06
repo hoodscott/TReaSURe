@@ -192,11 +192,15 @@ class TeacherForm(forms.ModelForm):
     school = forms.ModelChoiceField(queryset=School.objects.all().order_by('name'),
                                     required=False,
                                     label='School',
-                                    help_text="The school you work for")
+                                    help_text="The school you work for",
+                                    widget = forms.Select(attrs={'tabindex':'1'}))
+
     hubs = forms.ModelMultipleChoiceField(queryset=Hub.objects.all().order_by('name'),
                                             required=False,
                                             label='Hubs',
-                                            help_text="The teaching hubs that you are member of (eg. Plan C)")
+                                            help_text="The teaching hubs that you are member of (eg. Plan C)",
+                                            widget = forms.SelectMultiple(attrs={'tabindex':'1'}))
+
     def __init__(self,*args,**kwargs):
         super(TeacherForm, self).__init__(*args,**kwargs)
 

@@ -636,7 +636,7 @@ def add_web_resource(request):
             
             # create board for this resource
             board = Board(resource=resource, title=resource.name, boardtype='resource')
-            board.save()            
+            board.save()
             
             # Now show the new materials page
             return HttpResponseRedirect(reverse('resource_view', args=[resource.id]))
@@ -724,7 +724,7 @@ def add_file_resource(request):
             
             # create board for this resource
             board = Board(resource=resource, title=resource.name, boardtype='resource')
-            board.save()  
+            board.save()
             
             # show user the new materials page
             return HttpResponseRedirect(reverse('resource_view', args=[resource.id]))
@@ -766,7 +766,14 @@ def add_hub(request):
                 hub = Hub(name=form.cleaned_data['name'], address=form.cleaned_data['address'], longitude=geolocationDict['long'],latitude=geolocationDict['lat'])
                 hub.save()
 
-                return hub_view(request, hub.id)
+                # if user came from registration page
+                query = request.META['QUERY_STRING']
+                if query == 'register':
+                    # redirect usr back to registration page
+                    return HttpResponseRedirect(reverse('register'))
+                else:
+                    # redirect user to new schoolpage
+                    return HttpResponseRedirect(reverse('hub_view', args=[hub.id]))
             else:
                 form._errors['postcode'] = '--Invalid Postcode. '
                 print form.errors
@@ -789,7 +796,7 @@ def add_school(request):
     
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
-
+    
     # A HTTP POST?
     if request.method == 'POST':
         form = SchoolForm(request.POST)
@@ -800,8 +807,15 @@ def add_school(request):
             if geolocationDict!=-1:
                 school= School(name=form.cleaned_data['name'], town=form.cleaned_data['town'], address=form.cleaned_data['address'], latitude=geolocationDict['lat'], longitude=geolocationDict['long'])
                 school.save()
-
-                return school_view(request, school.id)
+                
+                # if user came from registration page
+                query = request.META['QUERY_STRING']
+                if query == 'register':
+                    # redirect usr back to registration page
+                    return HttpResponseRedirect(reverse('register'))
+                else:
+                    # redirect user to new schoolpage
+                    return HttpResponseRedirect(reverse('school_view', args=[school.id]))
             else:
                 form._errors['postcode'] = '--Invalid Postcode. '
                 print form.errors
@@ -1508,7 +1522,7 @@ def evolve(request, parent_id):
                 
                 # create board for this resource
                 board = Board(resource=resource, title=resource.name, boardtype='resource')
-                board.save() 
+                board.save()
                 
                 # show user the new materials page
                 return HttpResponseRedirect(reverse('resource_view', args=[resource.id]))
@@ -1570,7 +1584,7 @@ def evolve(request, parent_id):
                 
                 # create board for this resource
                 board = Board(resource=resource, title=resource.name, boardtype='resource')
-                board.save() 
+                board.save()
                 
                 # Now show the new materials page
                 return HttpResponseRedirect(reverse('resource_view', args=[resource.id]))
@@ -1977,7 +1991,7 @@ def board(request, board_type, board_url):
     context_dict['board_url']=board_url
     context_dict['board_type']=board_type
     
-    #determine if other or resourceboard    
+    #determine if other or resourceboard
     if board_type == 'resource':
         try:
             # check resource has a forum attached
@@ -2162,12 +2176,12 @@ def thread(request, board_type, board_url, thread_id):
         # and content is not empty
         if form.is_valid() and form.cleaned_data['content'] != "":
             # hold off on saving to avoid integrity errors.
-            new_post = form.save(commit=False)  
+            new_post = form.save(commit=False)
             
             print form.cleaned_data['content']
             print form.cleaned_data['content'] == ""
             
-            new_post.thread = Thread.objects.all().get(id = thread_id)          
+            new_post.thread = Thread.objects.all().get(id = thread_id)
             
             # set author
             new_post.author = Teacher.objects.all().get(user = request.user)
