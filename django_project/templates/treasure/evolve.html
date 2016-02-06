@@ -30,7 +30,10 @@
                     {% for field in resource_form.visible_fields %}
                         {{ field.errors }}
                         {{ field.label }}{% render_help_text field %}<br/>
-                        {{ field }}<br/>
+                        {{ field }}
+                        {% if field.label == "Other Tags" %}
+                        <a class="btn btn-info pull-right" href="{% url 'add_tag' %}?evolve,{{ resource_id }}">Add Tag</a>
+                        {% endif %}
                     {% endfor %}
                     
                     {% for hidden in file_form.hidden_fields %}
@@ -59,7 +62,10 @@
                     {% for field in resource_form.visible_fields %}
                         {{ field.errors }}
                         {{ field.label }}{% render_help_text field %}<br/>
-                        {{ field }}<br/>
+                      {{ field }}
+                      {% if field.label == "Other Tags" %}
+                      <a class="btn btn-info pull-right" href="{% url 'add_tag' %}?evolve,{{ resource_id }}">Add Tag</a>
+                      {% endif %}
                     {% endfor %}
                     
                     {% for hidden in web_form.hidden_fields %}
@@ -83,5 +89,38 @@
         </div>
         
     </div>
+    
+<script type="text/javascript">
+$(document).ready(function () {
+    // fill in forms from sessionstorage
+    function init() {
+        if (sessionStorage["name"]) {
+            $('input[name*=name]').val(sessionStorage["name"]);
+        }
+        if (sessionStorage["summary"]) {
+            $('input[name*=summary').val(sessionStorage["summary"]);
+        }
+        if (sessionStorage["description"]) {
+            $('textarea[name*=description').val(sessionStorage["description"]);
+        }
+        if (sessionStorage["evolution_explanation"]) {
+            $('textarea[name*=evolution_explanation').val(sessionStorage["evolution_explanation"]);
+        }
+    }
+    init();
+});
+
+$('input').on("keyup change blur", function () {
+    sessionStorage[$(this).attr('name')] = $(this).val();
+});
+$('textarea').on("keyup change blur", function () {
+    sessionStorage[$(this).attr('name')] = $(this).val();
+});
+
+$('button[name*="evolve"]').click(function() {
+    // clear session storage when submitting the form
+    sessionStorage.clear();
+});
+</script>
     
 {% endblock %}

@@ -1174,7 +1174,32 @@ def add_tag(request):
             # now save the tag in the database
             tag.save()
                         
-            return tags(request)
+            # find where user came from
+            query = request.META['QUERY_STRING'].split(',')
+            if query[0] == 'file':
+                # redirect usr back to add file page
+                return HttpResponseRedirect(reverse('add_file_resource'))
+            elif query[0] == 'web':
+                # redirect usser to add web page
+                return HttpResponseRedirect(reverse('add_web_resource'))
+            elif query[0] == 'editresource':
+                # redirect back to edit resource page for this resource
+                return HttpResponseRedirect(reverse('edit_resource', args=[query[1]]))
+            elif query[0] == 'evolve':
+                # redirect back to evolve page for this resource
+                return HttpResponseRedirect(reverse('evolve', args=[query[1]]))
+            elif query[0] == 'pack':
+                #redirect back to newpack page
+                return HttpResponseRedirect(reverse('newpack'))
+            elif query[0] == 'initpack':
+                #redirect back to newpackinitial page
+                return HttpResponseRedirect(reverse('newpack_initial', args=[query[1]]))
+            elif query[0] == 'editpack':
+                # redirect back to edit pack page
+                return HttpResponseRedirect(reverse('edit_pack', args=[query[1]]))
+            else:
+                # redirect user to new tag page
+                return HttpResponseRedirect(reverse('tag', args=[tag.id]))
             
         else:
             # The supplied form contained errors - just print them to the terminal.
