@@ -346,3 +346,60 @@ class Post(models.Model):
         return "%s %s" % ( self.author, self.datetime)
     
 ''' end of forum models '''
+
+''' start of subscription models '''
+
+# model to hold all teachers subsribed to a resource
+class TeacherSubbedToPack(models.Model):
+    teacher = models.ForeignKey(Teacher)
+    resource = models.ForeignKey(Resource)
+    
+# model to hold all teachers subsribed to a pack
+class TeacherSubbedToPack(models.Model):
+    teacher = models.ForeignKey(Teacher)
+    pack = models.ForeignKey(Pack)
+    
+# model to hold all teachers subsribed to a tag
+class TeacherSubbedToTag(models.Model):
+    teacher = models.ForeignKey(Teacher)
+    tag = models.ForeignKey(Tag)
+    
+# model to hold all teachers subsribed to a board
+class TeacherSubbedToBoard(models.Model):
+    teacher = models.ForeignKey(Teacher)
+    board = models.ForeignKey(Board)
+    
+# model to hold all teachers subsribed to a thread
+class TeacherSubbedToThread(models.Model):
+    teacher = models.ForeignKey(Teacher)
+    thread = models.ForeignKey(Thread)
+    
+# model for notifications
+class Notification(models.Model):
+    # text of notification
+    text = models.CharField(max_length=256)
+    datetime = models.DateTimeField()
+    # type of notification
+    # define types of notifications
+    NOTIFICATIONTYPE = (
+        ('0', 'Resource'),# related to one resource
+        ('1', 'Pack'),#related to one pack
+        ('2', 'Tag'),#related to one tag
+        ('3', 'Board'),#related to one board
+        ('4', 'Thread'),#related to one thread
+    )
+    notification_type = models.CharField(max_length=2, choices=NOTIFICATIONTYPE)
+    
+    # optional foreignkeys depending on notification types
+    resource = models.ForeignKey(Resource, null=True, blank=True)
+    pack = models.ForeignKey(Pack, null=True, blank=True)
+    tag = models.ForeignKey(Tag, null=True, blank=True)
+    thread = models.ForeignKey(Thread, null=True, blank=True)
+    board = models.ForeignKey(Board, null=True, blank=True)
+    
+# model to hold notifications relating to teachers
+class TeacherHasNotification(models.Model):
+    teacher = models.ForeignKey(Teacher)
+    notification = models.ForeignKey(Notification)
+
+''' end of subscription models '''
