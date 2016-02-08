@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 from geoposition.fields import GeopositionField
+from random import randint
+
 
 ''' start of user models '''
 
@@ -43,6 +45,8 @@ class Teacher(models.Model):
     school = models.ForeignKey(School, null=True, blank=True)
     # creates a many to many relationship with hubs
     hubs = models.ManyToManyField(Hub, blank=True)
+    
+    datetime = models.DateTimeField()
 	
     def __unicode__(self):
         return "%s %s" % (self.firstname, self.surname)
@@ -70,7 +74,7 @@ class Tag(models.Model):
 class Pack(models.Model):
     explore  = models.IntegerField()
     name = models.CharField(max_length=128)
-    image = models.CharField(max_length=128)
+    image = models.ImageField(upload_to='images/%Y/%m/%d', null=True, blank=True)
 
     # creates foreign key to teacher
     author = models.ForeignKey(Teacher)
@@ -89,6 +93,8 @@ class Pack(models.Model):
 
     # creates a many to many relationship with tags
     tags = models.ManyToManyField(Tag)
+    
+    datetime = models.DateTimeField()
 
     class Meta:
         db_table = 'treasure_pack'
@@ -131,9 +137,8 @@ class Resource(models.Model):
     # what type of resource is this (file, web, something else?)
     resource_type = models.CharField(max_length=128)
     
-    # store the time the resource was made?
+    # store the time the resource was made
     datetime = models.DateTimeField()
-
     
     def __unicode__(self):
         return self.name
@@ -142,8 +147,10 @@ class Resource(models.Model):
 class FilesResource(models.Model):
     # one to one relationship with abstract resource
     resource = models.OneToOneField(Resource)
+    tmpNum=randint(0,36)
+    charset='abcudefghikak)abucdefghikak)abcdefghuikak)+'
     # path to resource
-    path = models.FileField(upload_to='resources/%Y/%m/%d')
+    path = models.FileField(upload_to='resources/%Y/%m/%d/'+str(tmpNum)+str(charset[tmpNum])+'/')
 
     def __unicode__(self):
         return self.resource.name
@@ -202,6 +209,8 @@ class TeacherRatesResource(models.Model):
     measure3 = models.CharField(max_length=128)
     # comment box
     comment = models.TextField()
+    
+    datetime = models.DateTimeField()#todo
     
     def __unicode__(self):
         return "%s %s" % (self.teacher, self.resource.name)

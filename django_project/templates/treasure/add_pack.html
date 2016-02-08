@@ -13,7 +13,7 @@
     <h2>Create a Pack</h2>
     <br/>
     <div class="container">
-        <form class="span6" id="upload_form" method="post" action="{% if resource_id %}{% url 'newpack_initial' resource_id %}{% else %}{% url 'newpack' %}{% endif %}">
+        <form class="span6" id="upload_form" method="post" action="{% if resource_id %}{% url 'newpack_initial' resource_id %}{% else %}{% url 'newpack' %}{% endif %}" enctype="multipart/form-data">
 	
 	        {% csrf_token %}
 	    
@@ -27,6 +27,9 @@
                 {{ field }}
                 {% if field.label == "Other Tags" %}
                 <a class="btn btn-info pull-right" href="{% url 'add_tag' %}?{% if resource_id %}initpack,{{ resource_id }}{% else %}pack{% endif %}">Add Tag</a>
+                {% endif %}
+                {% if field.label == "Upload Image" %}
+                <br><br>
                 {% endif %}
             {% endfor %}
 

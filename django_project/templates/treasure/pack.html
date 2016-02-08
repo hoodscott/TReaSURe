@@ -22,7 +22,7 @@
         <h4><strong>Tags:</strong></h4>
         {% if other_tags %}
             {% for tag in other_tags %}
-                <a href="/../tags/{{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+                <a href="{% url 'tag' tag.id %}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
             {% endfor %}
         {% else %}
             <p>There are no tags.</p>
@@ -31,7 +31,7 @@
     
     <div class="span3">
         
-        <div class=""> <img src="{{pack.image}}" style="width: 120px; height: 120px;" data-src="holder.js/120x120" alt="120x120"></div>
+        <div class=""> <img src="/secret/{{ pack.image }}" style="width: 120px; height: 120px;" data-src="holder.js/120x120" alt="120x120"></div>
         
         <hr>
         

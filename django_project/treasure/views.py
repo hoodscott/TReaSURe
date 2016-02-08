@@ -375,6 +375,8 @@ def register(request):
             # This delays saving the model until we're ready to avoid integrity problems.
             teacher = teacher_form.save(commit=False)
             teacher.user = user
+            
+            teacher.datetime = datetime.now()
 
             # Now we save the UserProfile model instance.
             teacher.save()
@@ -434,7 +436,7 @@ def rate(request, resource_id):
         # If the form is valid..
         if rating_form.is_valid():
             # Save the rating to the database.
-            rating=TeacherRatesResource(teacher_id=this_teacher.id,resource_id=this_resource.id,measure1=rating_form.cleaned_data['measure1'],measure2=rating_form.cleaned_data['measure2'],measure3=rating_form.cleaned_data['measure3'],comment=rating_form.cleaned_data['comment'])
+            rating=TeacherRatesResource(teacher_id=this_teacher.id,resource_id=this_resource.id,measure1=rating_form.cleaned_data['measure1'],measure2=rating_form.cleaned_data['measure2'],measure3=rating_form.cleaned_data['measure3'],comment=rating_form.cleaned_data['comment'],datetime=datetime.now())
             rating.save()
             download.rated='1'
             download.save()
@@ -1746,7 +1748,7 @@ def newpack(request):
     
     # A HTTP POST?
     if request.method == 'POST':
-        form = PackForm(selected_tags, request.POST)
+        form = PackForm(selected_tags, request.POST, request.FILES)
 
         # Have we been provided with a valid form?
         if form.is_valid():
@@ -1763,10 +1765,14 @@ def newpack(request):
             # initially 0 for now
             this_pack.restricted = 0
             
+            # if this is null, choose a defualt image TODO
+            this_pack.image = request.FILES['image']
+            
             # add author
             userid = request.user.id
             teacher = Teacher.objects.get(user = userid)
             this_pack.author = Teacher.objects.get(id = teacher.id)
+            this_pack.datetime = datetime.now()
             
             # now save the pack in the database so tags can be added
             this_pack.save()
@@ -1899,7 +1905,7 @@ def download(request, resource_id, bypass=0):
             pass
 	try:
             res = FilesResource.objects.get(resource = this_resource)
-            url='/../media/'+str(res.path)
+            url='/../secret/'+str(res.path)
 	except FilesResource.DoesNotExist:
             # Not a FilesResource
             pass
@@ -1934,6 +1940,7 @@ def newSocialAuthentication(request):
     try:
         his = request.user
         new_teacher = Teacher(user_id=his.id, firstname=his.first_name, surname=his.last_name)
+        new_teacher.datetime = datetime.now()
         new_teacher.save()
     except Teacher.DoesNotExist:
             # Not a WebResource

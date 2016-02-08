@@ -294,10 +294,9 @@ class PackForm(forms.ModelForm):
                             
     user = forms.CharField(widget = forms.HiddenInput(), required=False)
     
-    image = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
-                            max_length=128,
-                            help_text="URL for the Pack's image",
-                            label='Image URL')
+    image = forms.ImageField(widget = forms.ClearableFileInput(attrs={'tabindex':'1'}),
+                            label="Upload Image",
+                            help_text='Select the resource to upload: Maximum of 42MB')                            
     
     # should the pack be shown (basically deleted if not)
     hidden = forms.IntegerField(widget = forms.HiddenInput(), required=False)

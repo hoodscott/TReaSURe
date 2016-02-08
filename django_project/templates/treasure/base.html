@@ -97,10 +97,11 @@
 									<li><a href="{% url 'profile' %}" class="skel-layers-ignoreHref"><span>My Profile</span></a></li>
 									<li><a href="{% url 'contribution' %}" class="skel-layers-ignoreHref"><span>My Contribution</span></a></li>
 									<li><a href="{% url 'help' %}" class="skel-layers-ignoreHref"><span>Help</span></a></li>
-								{% else %}									
+								{% else %}
+								    <li><br></li>									
 									<li><a href="{% url 'login' %}" class="skel-layers-ignoreHref"><span>Login</span></a></li>
 									<li><a href="{% url 'register' %}" class="skel-layers-ignoreHref"><span>Register</span></a></li>
-                                    <li><a href="{% url 'home' %}login/google-oauth2"><span>Login with Google</span></a></li>									
+                                    <li><a href="{% url 'home' %}auth/login/google-oauth2"><span>Login with Google</span></a></li>									
 								{% endif %}			         
 							</ul>
 						</nav>
