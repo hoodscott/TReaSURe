@@ -316,7 +316,7 @@ def edit_resource(request, resource_id):
                 new_resource.save()
                 
                 # show user the updated page
-                return HttpResponseRedirect(reverse('resource_view', args=[str(new_resource.id)]))
+                return redirect(reverse('resource_view', args=[str(new_resource.id)]))
 
             # Invalid form or forms print problems to the terminal.
             else:
@@ -481,10 +481,10 @@ def use(request, resource_id, red):
     download.save()
 
     if red=='res':
-        return HttpResponseRedirect(reverse('resource_view', args=[this_resource.id]))
+        return redirect(reverse('resource_view', args=[this_resource.id]))
     else:
         # link='/me/'
-        return HttpResponseRedirect(reverse('my_homepage'))
+        return redirect(reverse('my_homepage'))
 
 
 def talk(request, resource_id, var,red="res"):
@@ -507,10 +507,10 @@ def talk(request, resource_id, var,red="res"):
             pass
 
     if red=='res':
-        return HttpResponseRedirect(reverse('resource_view', args=[this_resource.id]))
+        return redirect(reverse('resource_view', args=[this_resource.id]))
     else:
         # link='/me/'
-        return HttpResponseRedirect(reverse('my_homepage'))
+        return redirect(reverse('my_homepage'))
 
 def talkHide(request, var):
     # get the context of request
@@ -522,7 +522,7 @@ def talkHide(request, var):
         discuss.update(disable=0)
     elif var=="no":
         discuss.update(disable=1)
-    return HttpResponseRedirect(reverse('my_homepage'))
+    return redirect(reverse('my_homepage'))
 
 
 def user_login(request):
@@ -551,7 +551,7 @@ def user_login(request):
                 # If the account is valid and active, we can log the user in.
                 # We'll send the user back to the homepage.
                 login(request, user)
-                return HttpResponseRedirect(reverse('home'))
+                return redirect(reverse('home'))
             else:
                 # An inactive account was used - no logging in!
                 context_dict['disabled_account'] = "aye"
@@ -568,7 +568,7 @@ def user_logout(request):
     logout(request)
 
     # Take the user back to the homepage.
-    return HttpResponseRedirect(reverse('home'))
+    return redirect(reverse('home'))
     
     
 # view for the add materials page
@@ -639,7 +639,7 @@ def add_web_resource(request):
             board.save()
             
             # Now show the new materials page
-            return HttpResponseRedirect(reverse('resource_view', args=[resource.id]))
+            return redirect(reverse('resource_view', args=[resource.id]))
         else:
             # The supplied form contained errors - just print them to the terminal.
             print resource_form.errors
@@ -727,7 +727,7 @@ def add_file_resource(request):
             board.save()
             
             # show user the new materials page
-            return HttpResponseRedirect(reverse('resource_view', args=[resource.id]))
+            return redirect(reverse('resource_view', args=[resource.id]))
         else:
             # The supplied form contained errors - just print them to the terminal.
             print resource_form.errors
@@ -770,13 +770,13 @@ def add_hub(request):
                 query = request.META['QUERY_STRING']
                 if query == 'register':
                     # redirect usr back to registration page
-                    return HttpResponseRedirect(reverse('register'))
+                    return redirect(reverse('register'))
                 elif query == 'editprofile':
                     # redirect usser to edit profile page
-                    return HttpResponseRedirect(reverse('edit_profile'))
+                    return redirect(reverse('edit_profile'))
                 else:
                     # redirect user to new schoolpage
-                    return HttpResponseRedirect(reverse('hub_view', args=[hub.id]))
+                    return redirect(reverse('hub_view', args=[hub.id]))
             else:
                 form._errors['postcode'] = '--Invalid Postcode. '
                 print form.errors
@@ -815,13 +815,13 @@ def add_school(request):
                 query = request.META['QUERY_STRING']
                 if query == 'register':
                     # redirect usr back to registration page
-                    return HttpResponseRedirect(reverse('register'))
+                    return redirect(reverse('register'))
                 elif query == 'editprofile':
                     # redirect user to edit profile page
-                    return HttpResponseRedirect(reverse('edit_profile'))
+                    return redirect(reverse('edit_profile'))
                 else:
                     # redirect user to new schoolpage
-                    return HttpResponseRedirect(reverse('school_view', args=[school.id]))
+                    return redirect(reverse('school_view', args=[school.id]))
             else:
                 form._errors['postcode'] = '--Invalid Postcode. '
                 print form.errors
@@ -1178,28 +1178,28 @@ def add_tag(request):
             query = request.META['QUERY_STRING'].split(',')
             if query[0] == 'file':
                 # redirect usr back to add file page
-                return HttpResponseRedirect(reverse('add_file_resource'))
+                return redirect(reverse('add_file_resource'))
             elif query[0] == 'web':
                 # redirect usser to add web page
-                return HttpResponseRedirect(reverse('add_web_resource'))
+                return redirect(reverse('add_web_resource'))
             elif query[0] == 'editresource':
                 # redirect back to edit resource page for this resource
-                return HttpResponseRedirect(reverse('edit_resource', args=[query[1]]))
+                return redirect(reverse('edit_resource', args=[query[1]]))
             elif query[0] == 'evolve':
                 # redirect back to evolve page for this resource
-                return HttpResponseRedirect(reverse('evolve', args=[query[1]]))
+                return redirect(reverse('evolve', args=[query[1]]))
             elif query[0] == 'pack':
                 #redirect back to newpack page
-                return HttpResponseRedirect(reverse('newpack'))
+                return redirect(reverse('newpack'))
             elif query[0] == 'initpack':
                 #redirect back to newpackinitial page
-                return HttpResponseRedirect(reverse('newpack_initial', args=[query[1]]))
+                return redirect(reverse('newpack_initial', args=[query[1]]))
             elif query[0] == 'editpack':
                 # redirect back to edit pack page
-                return HttpResponseRedirect(reverse('edit_pack', args=[query[1]]))
+                return redirect(reverse('edit_pack', args=[query[1]]))
             else:
                 # redirect user to new tag page
-                return HttpResponseRedirect(reverse('tag', args=[tag.id]))
+                return redirect(reverse('tag', args=[tag.id]))
             
         else:
             # The supplied form contained errors - just print them to the terminal.
@@ -1418,7 +1418,7 @@ def edit_pack(request, pack_id):
                 new_pack.save()
                 
                 # show user the updated page
-                return HttpResponseRedirect(reverse('pack', args=[new_pack.id]))
+                return redirect(reverse('pack', args=[new_pack.id]))
 
             # Invalid form or forms print problems to the terminal.
             else:
@@ -1556,7 +1556,7 @@ def evolve(request, parent_id):
                 board.save()
                 
                 # show user the new materials page
-                return HttpResponseRedirect(reverse('resource_view', args=[resource.id]))
+                return redirect(reverse('resource_view', args=[resource.id]))
             else:
                 # The supplied form contained errors - just print them to the terminal.
                 print resource_form.errors
@@ -1618,7 +1618,7 @@ def evolve(request, parent_id):
                 board.save()
                 
                 # Now show the new materials page
-                return HttpResponseRedirect(reverse('resource_view', args=[resource.id]))
+                return redirect(reverse('resource_view', args=[resource.id]))
             else:
                 # The supplied form contained errors - just print them to the terminal.
                 print resource_form.errors
@@ -1784,7 +1784,7 @@ def newpack(request):
             this_pack.save()
                         
             # Now show the new pack page
-            return HttpResponseRedirect(reverse('pack', args=[this_pack.id]))
+            return redirect(reverse('pack', args=[this_pack.id]))
         else:
             # The supplied form contained errors - just print them to the terminal.
             print form.errors
@@ -1860,7 +1860,7 @@ def newpack_initial(request, resource_id):
             this_resource.save()
                         
             # Now show the new pack page
-            return HttpResponseRedirect(reverse('pack', args=[this_pack.id]))
+            return redirect(reverse('pack', args=[this_pack.id]))
         else:
             # The supplied form contained errors - just print them to the terminal.
             print form.errors
@@ -1940,7 +1940,7 @@ def newSocialAuthentication(request):
             pass
 
     # Render the template updating the context dictionary.
-    return redirect('/profile/edit/soc/')
+    return redirect(reverse('edit_profile', args=['soc']))
 
 
 # View to show a basic homepage to all users
@@ -2133,7 +2133,7 @@ def new_thread(request, board_type, board_url):
             new_thread.save()
             
             # show user the updated page
-            return HttpResponseRedirect(reverse('thread', args=[board_type, board_url, new_thread.id]))
+            return redirect(reverse('thread', args=[board_type, board_url, new_thread.id]))
 
         # Invalid form or forms print problems to the terminal.
         else:
@@ -2224,7 +2224,7 @@ def thread(request, board_type, board_url, thread_id):
             new_post.save()
             
             # show user the updated page
-            return HttpResponseRedirect(reverse('thread', args=[board_type, board_url, this_thread.id]))
+            return redirect(reverse('thread', args=[board_type, board_url, this_thread.id]))
 
         # Invalid form or forms print problems to the terminal.
         else:
