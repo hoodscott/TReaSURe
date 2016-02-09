@@ -18,6 +18,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 ## set static path
 STATIC_PATH = os.path.join(PROJECT_PATH,'static')
+STATIC_URL = '/static/'
 
 ## set media path
 MEDIA_PATH = os.path.join(PROJECT_PATH,'media')
@@ -59,11 +60,11 @@ ALLOWED_HOSTS = []
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
 # In a Windows environment this must be set to your system time zone.
-TIME_ZONE = 'Europe/London'
+TIME_ZONE = 'America/Chicago'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-GB'
+LANGUAGE_CODE = 'en-us'
 
 SITE_ID = 1
 
