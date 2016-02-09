@@ -24,7 +24,7 @@ MEDIA_PATH = os.path.join(PROJECT_PATH,'media')
 
 
 ## set database path
-DATABASE_PATH = os.path.join(PROJECT_PATH, 'treasure.db')
+DATABASE_PATH = os.path.join(PROJECT_PATH, 'treasure_DB.db')
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
