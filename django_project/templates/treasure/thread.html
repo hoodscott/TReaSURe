@@ -16,7 +16,11 @@
         <a href="{% url 'forum' %}">Return to Forum</a> 
     {% else %}
         <h2>{{ thread.title }}</h2>
+        {% if thread.threadtype == '0' %}
+        <p>insert rating here</p>
+        {%  endif  %}
         <h4>{{ thread.content }}</h4>
+        <p>Posted by {{ thread.author }}@{{  thread.datetime  }}<p>
         
         <br>
         {% if posts %}

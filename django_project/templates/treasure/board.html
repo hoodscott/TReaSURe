@@ -24,7 +24,7 @@
         {% if board %}
         <ul>
             {% for thread in board %}
-            <li><a href="{% url 'thread' board_type board_url thread.id %}">{{ thread.title }}</a></li>
+            <li><a href="{% url 'thread' board_type board_url thread.id %}">{{ thread.title }} {{ thread.num_posts }} {{ thread.last_post }} {{ thread.author }}</a></li>
             {% endfor %}
         </ul>
         {% else %}

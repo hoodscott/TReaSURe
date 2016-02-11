@@ -14,9 +14,9 @@ a
         <ul>
         {% for board in forum %}
             {% if board.resource != null %}
-            <li><a href="{% url 'board' board.boardtype board.resource.id %}">Resource: {{ board.title }}</a></li>
+            <li><a href="{% url 'board' board.boardtype board.resource.id %}">Resource: {{ board.title }}{{ board.num_threads }}{{  board.last_post }}{{ board.top }}</a></li>
             {% else %}
-            <li><a href="{% url 'board' board.boardtype board.id %}">{{ board.boardtype|capfirst }}: {{ board.title }}</a></li>            
+            <li><a href="{% url 'board' board.boardtype board.id %}">{{ board.boardtype|capfirst }}: {{ board.title }} Numposts: {{ board.thread__count }}</a></li>            
             {% endif %}
         {% endfor %}
         </ul>

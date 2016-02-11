@@ -68,6 +68,7 @@ urlpatterns = patterns('',
         url(r'^auth/new/$', views.newSocialAuthentication, name='new'),
         
         url(r'^forum/$', views.forum, name='forum'),
+        url(r'^forum/(?P<board_type>\w+)/$', views.forum_type, name='forum_type'),
         url(r'^forum/(?P<board_type>\w+)/(?P<board_url>\w+)/$', views.board, name='board'),
         url(r'^forum/(?P<board_type>\w+)/(?P<board_url>\w+)/new/$', views.new_thread, name='new_thread'),
         url(r'^forum/(?P<board_type>\w+)/(?P<board_url>\w+)/(?P<thread_id>\w+)/$', views.thread, name='thread'),

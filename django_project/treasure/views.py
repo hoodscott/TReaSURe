@@ -12,7 +12,7 @@ from string import split, upper
 from datetime import datetime
 from django.utils.html import escape, escapejs
 from django.utils.translation import ugettext as _
-from django.db.models import Count
+from django.db.models import Count, Min, Max
 
 
 # get the users teacher entry and school for the sidebar
@@ -2005,10 +2005,43 @@ def forum(request):
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
     
+    # get all boards
     boards = Board.objects.all()
     
-    # todo:add more detail to dict (number of posts on each board
-    # todo: maybe sort the boards in order of last post (show times of last posts?)
+    # adds an attribute to each board that holds the count of threads on a board
+    boards = boards.annotate(num_threads = Count('thread'))
+
+    # adds an attribute to each board that holds the time of the last post on a board
+    boards = boards.annotate(last_post = Max('thread__post__datetime'))
+    
+    # sort boards in reverse post order
+    boards = boards.order_by('-last_post')
+    
+    context_dict['forum'] = boards
+    
+    # Render the template updating the context dictionary.
+    return render_to_response('treasure/forum.html', context_dict, context)
+    
+# view to show overview of all boards
+@login_required
+def forum_type(request, board_type):
+    # get context of request
+    context = RequestContext(request)
+
+    # create dictionary to pass data to templates
+    context_dict = sidebar(request)
+    
+    # get all boards of this type
+    boards = Board.objects.all().filter(boardtype = board_type)
+    
+    # adds an attribute to each board that holds the count of threads on a board
+    boards = boards.annotate(num_threads = Count('thread'))
+
+    # adds an attribute to each board that holds the time of the last post on a board
+    boards = boards.annotate(last_post = Max('thread__post__datetime'))
+    
+    # sort boards in reverse post order
+    boards = boards.order_by('-last_post')
     
     context_dict['forum'] = boards
     
@@ -2038,8 +2071,8 @@ def board(request, board_type, board_url):
             print "1"
             this_board = Board.objects.all().get(resource = this_resource)
             try:
-                # get the threads on the forum
-                board = Thread.objects.all().filter(board = this_board)
+                # get the threads on the forum, along with the count of posts and time of last post for each thread
+                board = Thread.objects.all().filter(board = this_board).annotate(num_posts = Count('post'), last_post = Max('post__datetime'))
                 context_dict['board'] = board
             except Thread.DoesNotExist:
                 # do not pass a board object to template as there are no threads
@@ -2054,8 +2087,8 @@ def board(request, board_type, board_url):
             this_board = Board.objects.all().get(id=board_url)
             context_dict['title'] = this_board.title
             try:
-                # get the threads on the forum
-                board = Thread.objects.all().filter(board = this_board)
+                # get the threads on the forum, along with the count of posts and time of last post for each thread
+                board = Thread.objects.all().filter(board = this_board).annotate(num_posts = Count('post'), last_post = Max('post__datetime'))
                 context_dict['board'] = board
             except Thread.DoesNotExist:
                 # do not pass a board object to template as there are no threads
@@ -2063,8 +2096,6 @@ def board(request, board_type, board_url):
                 pass
         except Board.DoesNotExist:
             context_dict['invalid'] = True
-            
-    # todo: maybe sort the threads in created/lastpostedin order?
     
     # Render the template updating the context dictionary.
     return render_to_response('treasure/board.html', context_dict, context)
@@ -2215,9 +2246,6 @@ def thread(request, board_type, board_url, thread_id):
         if form.is_valid() and form.cleaned_data['content'] != "":
             # hold off on saving to avoid integrity errors.
             new_post = form.save(commit=False)
-            
-            print form.cleaned_data['content']
-            print form.cleaned_data['content'] == ""
             
             new_post.thread = Thread.objects.all().get(id = thread_id)
             
