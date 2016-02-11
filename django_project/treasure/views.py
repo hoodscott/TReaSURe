@@ -1995,6 +1995,25 @@ def help(request):
     
     # Render the template updating the context dictionary.
     return render_to_response('treasure/help.html', context_dict, context)
+    
+# helper function to get the boards of a specific type given the type
+def getSubForum(board_type):
+    # get all boards of this type
+    boards = Board.objects.all().filter(boardtype = board_type)
+    
+    # adds an attribute to each board that holds the count of threads on a board
+    boards = boards.annotate(num_threads = Count('thread'))
+    
+    # adds an attribute to each board that holds the time of the last post on a board
+    boards = boards.annotate(last_thread = Max('thread__datetime'))
+
+    # adds an attribute to each board that holds the time of the last post on a board
+    boards = boards.annotate(last_post = Max('thread__post__datetime'))
+    
+    # sort boards in reverse post order
+    boards = boards.order_by('-last_post')
+    
+    return boards
 
 # view to show overview of all boards
 @login_required
@@ -2005,22 +2024,16 @@ def forum(request):
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
     
-    # get all boards
-    boards = Board.objects.all()
+    # get the boards, separated by type (only last 10)
+    context_dict['level_boards'] = getSubForum('level')[:10][::-1]
+    context_dict['general_boards'] = getSubForum('general')[:10][::-1]
+    context_dict['resource_boards'] = getSubForum('resource')[:10][::-1]
     
-    # adds an attribute to each board that holds the count of threads on a board
-    boards = boards.annotate(num_threads = Count('thread'))
-
-    # adds an attribute to each board that holds the time of the last post on a board
-    boards = boards.annotate(last_post = Max('thread__post__datetime'))
-    
-    # sort boards in reverse post order
-    boards = boards.order_by('-last_post')
-    
-    context_dict['forum'] = boards
+    # set main forum flag so we can reuse the template
+    context_dict['main_forum'] = True
     
     # Render the template updating the context dictionary.
-    return render_to_response('treasure/forum.html', context_dict, context)
+    return render_to_response('treasure/forum.html', context_dict, context)    
     
 # view to show overview of all boards
 @login_required
@@ -2031,19 +2044,17 @@ def forum_type(request, board_type):
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
     
-    # get all boards of this type
-    boards = Board.objects.all().filter(boardtype = board_type)
+    # concatenate the type of board and the string _boards
+    string_for_template = board_type + '_boards'
     
-    # adds an attribute to each board that holds the count of threads on a board
-    boards = boards.annotate(num_threads = Count('thread'))
-
-    # adds an attribute to each board that holds the time of the last post on a board
-    boards = boards.annotate(last_post = Max('thread__post__datetime'))
+    # put some boards in the dict with the above key
+    context_dict[string_for_template] = getSubForum(board_type)
     
-    # sort boards in reverse post order
-    boards = boards.order_by('-last_post')
+    # concatenate the type of board with 
+    datatable_string = board_type + 'BoardTable'
     
-    context_dict['forum'] = boards
+    # add this to the datatable key in the dict
+    context_dict['datatable'] = datatable_string
     
     # Render the template updating the context dictionary.
     return render_to_response('treasure/forum.html', context_dict, context)

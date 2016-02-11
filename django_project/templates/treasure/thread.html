@@ -9,18 +9,19 @@
 
 {% block body_block %}
 
-<div class="span12 hero-unit">
+<div class="span10 hero-unit">
     {% if invalid %}
         <h3>Malformed url</h3>
         <a href="{% url 'home' %}">Return to Homepage</a>
         <a href="{% url 'forum' %}">Return to Forum</a> 
     {% else %}
         <h2>{{ thread.title }}</h2>
+        <h4>{{ thread.author }}@{{  thread.datetime  }}</h4>
         {% if thread.threadtype == '0' %}
-        <p>insert rating here</p>
+        <p>Measure1: {{ thread.rating.measure1 }}, Measure2: {{ thread.rating.measure2 }}, Measure3: {{  thread.rating.measure1 }}</p>
         {%  endif  %}
-        <h4>{{ thread.content }}</h4>
-        <p>Posted by {{ thread.author }}@{{  thread.datetime  }}<p>
+        <p>{{ thread.content }}<p>
+        <hr>
         
         <br>
         {% if posts %}
