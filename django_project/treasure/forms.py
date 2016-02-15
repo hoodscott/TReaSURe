@@ -35,13 +35,13 @@ rating= (('5','5'),('4','4'),('3','3'),('2','2'),('1','1'))
 class RatingForm(forms.Form):
     teacher = forms.CharField(widget = forms.HiddenInput(), required=False)
     resource = forms.CharField(widget = forms.HiddenInput(), required=False)
-    measure1 = forms.ChoiceField(label='Measure1',help_text="Measure 1 Description", choices=rating)
-    measure2 = forms.ChoiceField(label='Measure1',help_text="Measure 1 Description", choices=rating)
-    measure3 = forms.ChoiceField(label='Measure1',help_text="Measure 1 Description", choices=rating)
+    measure1 = forms.ChoiceField(label='Measure1*',help_text="Measure 1 Description", choices=rating)
+    measure2 = forms.ChoiceField(label='Measure2*',help_text="Measure 2 Description", choices=rating)
+    measure3 = forms.ChoiceField(label='Measure3*',help_text="Measure 3 Description", choices=rating)
     comment = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
                             max_length=128,
                             help_text="Feedback for the resource",
-                            label='Feedback/Comment')
+                            label='Feedback/Comment*')
 
 
 class ResourceForm(forms.ModelForm):
@@ -51,17 +51,17 @@ class ResourceForm(forms.ModelForm):
     name = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
                             max_length=128,
                             help_text="The resource name.",
-                            label='Name')
+                            label='Name*')
     
     summary = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
                         max_length=128,
-                        label='Summary',
+                        label='Summary*',
                         help_text="A short description. This will appear in resource lists.")
     
     description = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
                             help_text="The full description of the Resource. This will appear when viewing that resource.",
                             required=False,
-                            label='Description')
+                            label='Description*')
                             
     tree = forms.CharField(widget = forms.HiddenInput(), required=False)
     user = forms.CharField(widget = forms.HiddenInput(), required=False)
@@ -81,12 +81,12 @@ class ResourceForm(forms.ModelForm):
     level_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(tagtype=0).order_by('name'),
                                                 required=True,
-                                                label='Level Tags',
+                                                label='Level Tags*',
                                                 help_text="Tags that describe the Level that this material concerns")
     topic_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(tagtype=1).order_by('name'),
                                                 required=True,
-                                                label='Topic Tags',
+                                                label='Topic Tags*',
                                                 help_text="Tags that describe the Topic that this material covers")
     other_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(tagtype=2).order_by('name'),
@@ -115,23 +115,23 @@ class EvolveResourceForm(ResourceForm):
     evolution_type = forms.ChoiceField(widget=forms.Select(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
                             choices=EVOLUTIONS,
                             required=True,
-                            label='Evolution Type',
+                            label='Evolution Type*',
                             help_text="What is the evolution type?")
     
     evolution_explanation = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
                             help_text="In what way have you \"evolved\" this resource?",
                             required=False,
-                            label='Explanation of Evolution')
+                            label='Explanation of Evolution*')
                             
     name = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
                             max_length=128,
                             help_text="The resource name.",
-                            label='Name')
+                            label='Name*')
 
         
 class FileForm(forms.ModelForm):
     path = forms.FileField(widget = forms.ClearableFileInput(attrs={'tabindex':'1'}),
-                            label='Select the resource to upload',
+                            label='Select the resource to upload*',
                             help_text='Select the resource to upload: Maximum of 42MB')
     
     class Meta:
@@ -152,13 +152,13 @@ class WebForm(forms.ModelForm):
 class UserForm(forms.ModelForm):
     username = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
                                 help_text="The account username",
-                                label='Username')
+                                label='Username*')
     email = forms.CharField(widget = DisableAutoInput(attrs={'tabindex':'1'}),
                             help_text = "The email address",
-                            label='E-mail')
+                            label='E-mail*')
     password = forms.CharField(widget = forms.PasswordInput(attrs={'tabindex':'1'}),
                             help_text = "The account password.",
-                            label='Password')
+                            label='Password*')
 
     class Meta:
         model = User
@@ -168,10 +168,10 @@ class UserForm(forms.ModelForm):
 class UserFormNoPW(forms.ModelForm):
     username = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
                                 help_text="The account username",
-                                label='Username')
+                                label='Username*')
     email = forms.CharField(widget = DisableAutoInput(attrs={'tabindex':'1'}),
                             help_text = "The email address",
-                            label='E-mail')
+                            label='E-mail*')
 
     password = forms.CharField(widget = forms.HiddenInput(), required=False)
 
@@ -183,15 +183,15 @@ class UserFormNoPW(forms.ModelForm):
 class TeacherForm(forms.ModelForm):
     firstname = forms.CharField(max_length=128,
                                 help_text="Your first name",
-                                label='First Name',
+                                label='First Name*',
                                 widget = forms.TextInput(attrs={'tabindex':'1'}))
     surname = forms.CharField(max_length=128,
                                 help_text="Your last name",
-                                label='Last Name',
+                                label='Last Name*',
                                 widget = forms.TextInput(attrs={'tabindex':'1'}))
     school = forms.ModelChoiceField(queryset=School.objects.all().order_by('name'),
                                     required=False,
-                                    label='School',
+                                    label='School*',
                                     help_text="The school you work for",
                                     widget = forms.Select(attrs={'tabindex':'1'}))
 
@@ -218,7 +218,7 @@ class SchoolForm(forms.Form):
 
     name = forms.CharField(max_length=128,
                             help_text="The name of the school",
-                            label='Name',
+                            label='Name*',
                             widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}))
     country = forms.ChoiceField(label='Country',help_text="The Country the School is in", choices=countries)
     town = forms.CharField(max_length=128,
@@ -229,20 +229,20 @@ class SchoolForm(forms.Form):
                                 help_text="The address of the school",
                                 label='Address (eg. 3 George Street)')
     postcode = forms.CharField(help_text="The Postcode of the school",
-                                label='Postcode',
+                                label='Postcode*',
                                 widget = forms.TextInput(attrs={'tabindex':'1'}))
         
 class HubForm(forms.Form):
     name = forms.CharField(max_length=128,
                             help_text="The name of the hub.",
-                            label='Name',
+                            label='Name*',
                             widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}))
 
     country = forms.ChoiceField(label='Country',help_text="The Country the Hub is in", choices=countries)
     address = forms.CharField( label='Address',help_text="The address of the hub",
                                 widget = forms.Textarea(attrs={'tabindex':'1'}))
     postcode = forms.CharField(help_text="The Postcode of the Hub",
-                                label='Postcode',
+                                label='Postcode*',
                                 widget = forms.TextInput(attrs={'tabindex':'1'}))
         
 class SearchForm(forms.Form):
@@ -265,7 +265,7 @@ class SearchForm(forms.Form):
 class TagForm(forms.ModelForm):
     name = forms.CharField(max_length=128,
                             help_text="The name of the new tag (Should be Descriptive)",
-                            label='Name',
+                            label='Name*',
                             widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}))
     tagtype = forms.CharField(widget = forms.HiddenInput(), required=False)
     
@@ -280,17 +280,17 @@ class PackForm(forms.ModelForm):
     name = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
                             max_length=128,
                             help_text="The name of the pack",
-                            label='Name')
+                            label='Name*')
     
     summary = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
                         max_length=128,
                         help_text="A short description for the pack. This will appear in pack lists.",
-                        label='Summary')
+                        label='Summary*')
     
     description = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
                             help_text="The full description of the pack. This will appear when viewing a pack.",
                             required=False,
-                            label='Description')
+                            label='Description*')
                             
     user = forms.CharField(widget = forms.HiddenInput(), required=False)
     
