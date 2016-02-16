@@ -13,7 +13,8 @@ from datetime import datetime
 from django.utils.html import escape, escapejs
 from django.utils.translation import ugettext as _
 from django.db.models import Count
-
+from django.db.models.signals import post_save
+from notifications.signals import notify
 
 # get the users teacher entry and school for the sidebar
 def sidebar(request):
@@ -96,6 +97,24 @@ def convert_to_evotype(number):
     EVOLUTIONS = ['Creation', 'Amendments', 'Style', 'Translation', 'Recontext', 'New Difficulty', 'New Format']
     return EVOLUTIONS[number]
     
+# function to send a "create" notification
+def create_notify(resource, user):
+    notify.send(resource, recipient=user, verb='created', action_object=resource, description=u'', level='')
+
+# function to send a "evolve" notification
+def evolve_notify(resource, user, target):
+    notify.send(resource, recipient=user, verb='evolved', action_object=resource, target=target)
+    
+# function to send a "download" notification
+def download_notify(resource, user, level):
+    notify.send(resource, recipient=user, verb='downloaded', action_object=resource, level=level)
+    
+# function to send a want2talk notification
+def want2talk_notify(resource, user):
+    #todo: send a user in the taget field once profile pages are made
+    notify.send(resource, recipient=user, verb='want2talk', action_object=resource)
+
+
     
 # view for the homepage
 def index(request):
@@ -498,6 +517,12 @@ def talk(request, resource_id, var,red="res"):
     if var=="yes":
         talk=TeacherWantstoTalkResource(resource=this_resource, teacher=this_teacher,datetime=datetime.now(), latitude= teacher_school.latitude, longitude= teacher_school.longitude, disable=0)
         talk.save()
+        
+        # notify other users that someone wants to talk
+        talking_resource = TeacherWantstoTalkResource.objects.filter(resource=this_resource)
+        for relation in talking_resource:
+            want2talk_notify(this_resource, relation.teacher.user)
+
     elif var=="no":
         try:
             wanted = TeacherWantstoTalkResource.objects.get(teacher_id=this_teacher.id, resource_id=this_resource.id)
@@ -625,6 +650,9 @@ def add_web_resource(request):
             resource.tree = resource.id
             
             resource.save()
+            
+            # send notification
+            create_notify(resource, request.user)
 
             # delay saving the relationship model until we're ready
             # to avoid integrity problems
@@ -637,6 +665,8 @@ def add_web_resource(request):
             # create board for this resource
             board = Board(resource=resource, title=resource.name, boardtype='resource')
             board.save()
+            
+            #todo: subscribe creator to the board
             
             # Now show the new materials page
             return HttpResponseRedirect(reverse('resource_view', args=[resource.id]))
@@ -713,6 +743,9 @@ def add_file_resource(request):
             
             resource.save()
             
+            # send notification
+            create_notify(resource, request.user)
+            
             # add file to object
             files = FilesResource( path = request.FILES['path'])
             
@@ -725,6 +758,8 @@ def add_file_resource(request):
             # create board for this resource
             board = Board(resource=resource, title=resource.name, boardtype='resource')
             board.save()
+            
+            # todo: subscribe creator to this board
             
             # show user the new materials page
             return HttpResponseRedirect(reverse('resource_view', args=[resource.id]))
@@ -1531,7 +1566,8 @@ def evolve(request, parent_id):
                 resource.save()
                 
                 # append new id to parents tree
-                resource.tree = Resource.objects.get(id=parent_id).tree + u',' + unicode(resource.id)
+                parent_resource = Resource.objects.get(id=parent_id)
+                resource.tree = parent_resource.tree + u',' + unicode(resource.id)
                 
                 # combine the tags into one queryset
                 tags =  resource_form.cleaned_data['level_tags'] | \
@@ -1551,9 +1587,17 @@ def evolve(request, parent_id):
                 # save the instance
                 files.save()
                 
+                # send create notification
+                create_notify(resource, request.user)
+                
+                # send evolve notification
+                evolve_notify(resource, parent_resource.author.user, parent_resource)
+                
                 # create board for this resource
                 board = Board(resource=resource, title=resource.name, boardtype='resource')
                 board.save()
+                
+                #todo: subscribe creator to the board
                 
                 # show user the new materials page
                 return HttpResponseRedirect(reverse('resource_view', args=[resource.id]))
@@ -1593,7 +1637,8 @@ def evolve(request, parent_id):
                 resource.save()
                 
                 # append new id to parents tree
-                resource.tree = Resource.objects.get(id=parent_id).tree + u',' + unicode(resource.id)
+                parent_resource = Resource.objects.get(id=parent_id)
+                resource.tree = parent_resource.tree + u',' + unicode(resource.id)
                 
                 # combine the tags into one queryset
                 tags =  resource_form.cleaned_data['level_tags'] | \
@@ -1613,9 +1658,17 @@ def evolve(request, parent_id):
                 # save the instance
                 web.save()
                 
+                # send create notification
+                create_notify(resource, request.user)
+                  
+                # send evolve notification
+                evolve_notify(resource, parent_resource.author.user, parent_resource)
+                
                 # create board for this resource
                 board = Board(resource=resource, title=resource.name, boardtype='resource')
                 board.save()
+                
+                # todo: subscribe creaotr to the board
                 
                 # Now show the new materials page
                 return HttpResponseRedirect(reverse('resource_view', args=[resource.id]))
@@ -1881,47 +1934,54 @@ def newpack_initial(request, resource_id):
 def download(request, resource_id, bypass=0):
     # get context of request
     context = RequestContext(request)
-
+    
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
-
+    
     try:
         this_teacher = Teacher.objects.get(user=request.user)
         this_resource = get_object_or_404(Resource, id=resource_id)
         teacher_school = School.objects.get(id=this_teacher.school_id)
-
+        
         # Get resource URL
         try:
             res = WebResource.objects.get(resource = this_resource)
             url=res.url
-	except WebResource.DoesNotExist:
+        except WebResource.DoesNotExist:
             # Not a WebResource
             pass
-	try:
+        try:
             res = FilesResource.objects.get(resource = this_resource)
             url='/../media/'+str(res.path)
-	except FilesResource.DoesNotExist:
+        except FilesResource.DoesNotExist:
             # Not a FilesResource
             pass
-
-	# Saving Download Record in the Database
-	try:
+        
+        # Saving Download Record in the Database
+        try:
             downloaded= TeacherDownloadsResource.objects.get(teacher=this_teacher, resource=this_resource)
-	except TeacherDownloadsResource.DoesNotExist:
+        except TeacherDownloadsResource.DoesNotExist:
             download_record= TeacherDownloadsResource(teacher=this_teacher, resource=this_resource, datetime=datetime.now(), latitude= teacher_school.latitude, longitude= teacher_school.longitude, used=0, rated=0)
             download_record.save()
-            pass
-
+        
+        
+        # notify creator that there has been a download
+        num_downloads = TeacherDownloadsResource.objects.filter(resource=this_resource).count()
+        if num_downloads == 1:
+            download_notify(this_resource, this_resource.author.user, '.')
+        elif num_downloads % 10 == 0:
+            download_notify(this_resource, this_resource.author.user, ' '+str(num_downloads)+'times.')
+    
     except Resource.DoesNotExist:
-	# No Resource
-	pass
+        # No Resource
+        pass
+    
+    print url
     if bypass==0:
         # IfDownload Resource
         return redirect(url)
     else:
         return redirect(reverse('rate', args=[resource_id]))
-        #"/resource/"+resource_id+"/rate/")
-
 
 @login_required
 def newSocialAuthentication(request):

@@ -104,7 +104,7 @@
             <a class="btn btn-primary pull-right" href="{% url 'addtopack' resource.id %}">Add to a Pack</a>
        </div>
 
-        <div class="hero-unit">
+        <div class="hero-unit" id="want2talk">
             <h3>Discuss {{resource_name}}</h3>
         {% if want2talk %}
             <div class="table-responsive">
@@ -184,7 +184,7 @@
                         {% if change.3 != null  %}
                         <li><p>&nbsp;&nbsp;Reason for Change: {{ change.3 }}</p></li>
                         {% endif %}
-                    {% endif %}                                      
+                    {% endif %}
                 {% endfor %}
             </ul>
         </div>
