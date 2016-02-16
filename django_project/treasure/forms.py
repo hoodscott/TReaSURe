@@ -296,7 +296,7 @@ class PackForm(forms.ModelForm):
     
     image = forms.ImageField(widget = forms.ClearableFileInput(attrs={'tabindex':'1'}),
                             label="Upload Image",
-                            help_text='Select the resource to upload: Maximum of 42MB')                            
+                            help_text='Select the resource to upload: Maximum of 42MB')
     
     # should the pack be shown (basically deleted if not)
     hidden = forms.IntegerField(widget = forms.HiddenInput(), required=False)
@@ -456,17 +456,26 @@ class PostThreadForm(forms.ModelForm):
                             help_text="The body content of the thread.",
                             required=True,
                             label='Thread Body')
+                            
+    TYPE = (
+        ('1', 'Question'),
+        ('2', 'Discussion'),
+    )
+    threadtype = forms.ChoiceField(widget=forms.Select(attrs={'tabindex':'1'}),
+                            choices=TYPE,
+                            required=True,
+                            label='Thread Type*',
+                            help_text="Is this a question or the start of a discussion?")
     
     board = forms.CharField(widget = forms.HiddenInput(), required=False)
     datetime = forms.CharField(widget = forms.HiddenInput(), required=False)
     author = forms.CharField(widget = forms.HiddenInput(), required=False)
-    threadtype = forms.CharField(widget = forms.HiddenInput(), required=False)
     rating = forms.CharField(widget = forms.HiddenInput(), required=False)
     user = forms.CharField(widget = forms.HiddenInput(), required=False)
     
     class Meta:
         model = Thread
-        fields = ('title', 'content')
+        fields = ('title', 'content', 'threadtype')
         exclude = []
         
 class PostPostForm(forms.ModelForm):

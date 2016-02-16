@@ -526,7 +526,7 @@ def rate(request, resource_id):
                 rated_notify(thread, sub.teacher.user)
                 
             # sub creator to the new thread
-            new_sub = TeacherSubbedToBoard(teacher = this_teacher, board = this_thread)
+            new_sub = TeacherSubbedToThread(teacher = this_teacher, thread = thread)
             new_sub.save()
             
             # Update our variable to tell the template registration was successful.
@@ -2194,7 +2194,6 @@ def board(request, board_type, board_url):
             # check resource has a forum attached
             this_resource = Resource.objects.all().get(id=board_url)
             context_dict['resource'] = this_resource
-            print "1"
             this_board = Board.objects.all().get(resource = this_resource)
             try:
                 # get the threads on the forum, along with the count of posts and time of last post for each thread
@@ -2267,20 +2266,20 @@ def new_thread(request, board_type, board_url):
             
             # get board
             # check if url is a number
-            if board_type == "resource":
+            if board_type == 'resource':
                 try:
                     # if url is number, get board relating to that object
                     this_board = Board.objects.all().get(resource = Resource.objects.all().get(id=board_url))
                 except Board.DoesNotExist:
                     # no board at this url
-                    context_dict['invalid'] = "invalid"
+                    context_dict['invalid'] = 'invalid'
             else:
                 try:
                     # otherwise get board associated with the id
                     this_board = Board.objects.all().get(id=board_url)
                 except Board.DoesNotExist:
                     # no board at this url
-                    context_dict['invalid'] = "invalid"
+                    context_dict['invalid'] = 'invalid'
             new_thread.board = this_board
             
             # set author
@@ -2290,16 +2289,22 @@ def new_thread(request, board_type, board_url):
             # set time of threadposting
             new_thread.datetime = datetime.now()
             
-            # set threadtype to 2 (from forum so not rrating, could maybe be question)
-            # todo: maybe allow users to choose type of forum to submit
-            new_thread.threadtype = 2
-                            
             # save the new resource
             new_thread.save()
             
             # sub creator to the new thread
-            new_sub = TeacherSubbedToBoard(teacher = teacher, thread = new_thread)
+            new_sub = TeacherSubbedToThread(teacher = teacher, thread = new_thread)
             new_sub.save()
+            
+            # update subscribers of the board
+            subscribers = TeacherSubbedToBoard.objects.filter(board = this_board)
+            print new_thread.threadtype
+            if new_thread.threadtype == '1':#question
+                for sub in subscribers:
+                    question_notify(new_thread, sub.teacher.user)
+            elif new_thread.threadtype == '2':#question
+                for sub in subscribers:
+                    discussion_notify(new_thread, sub.teacher.user)
             
             # show user the updated page
             return redirect(reverse('thread', args=[board_type, board_url, new_thread.id]))
@@ -2346,7 +2351,7 @@ def thread(request, board_type, board_url, thread_id):
     context_dict['posts'] = the_posts
     
     # check url is properly formed
-    # (thread id, belongs to the object pointed to by board_url)
+    # (thread id belongs to the object pointed to by board_url)
     # first get board from url
     if board_type == "resource":
         try:
