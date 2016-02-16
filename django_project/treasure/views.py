@@ -142,28 +142,31 @@ def download_notify(resource, user, level):
     
 # send a want2talk notification
 def want2talk_notify(resource, user):
-    #todo: send a user in the taget field once profile pages are made
+    #todo: send a user in the target field once profile pages are made
     notify.send(resource, recipient=user, verb='want2talk', action_object=resource)
     
 # send a rated notification
-def rated_notify(resource, user, thread):
-    #todo: notify when rated
-    notify.send(resource, recipient=user, verb='rated', action_object=resource, target=thread)
+def rated_notify(thread, user):
+    #todo: send a user in the target field once profile pages are made
+    notify.send(thread, recipient=user, verb='rated', action_object=thread)
     
 # send a question notification
-def question_notify(resource, user, thread):
+def question_notify(thread, user):
     #todo: notify when quesiton is posted
-    notify.send(resource, recipient=user, verb='questioned', action_object=resource, target=thread)
+    #todo: send a user in the target field once profile pages are made
+    notify.send(thread, recipient=user, verb='questioned', action_object=thread)
     
 # send a discussion notification
-def discussion_notify(resource, user, thread):
+def discussion_notify(thread, user):
     #todo: notify when a disc is started
-    notify.send(resource, recipient=user, verb='discussed', action_object=resource, target=thread)
+    #todo: send a user in the target field once profile pages are made
+    notify.send(thread, recipient=user, verb='discussed', action_object=thread)
     
 # send a question notification
-def question_notify(resource, user, thread):
+def reply_notify(thread, user):
     #todo: notify when there is a post on a thread
-    notify.send(resource, recipient=user, verb='replied', action_object=resource, target=thread)
+    #todo: send a user in the target field once profile pages are made
+    notify.send(thread, recipient=user, verb='replied', action_object=thread)
 ''' end of notification threads '''
 
 
@@ -513,8 +516,18 @@ def rate(request, resource_id):
             download.save()
             
             # create a thread on the resources board
-            thread = Thread(board = Board.objects.all().get(resource=this_resource), datetime = datetime.now(), author= this_teacher, title=this_teacher.firstname+' '+this_teacher.surname+' rated this resource', content=rating.comment, threadtype=0, rating=rating)
+            this_board = Board.objects.all().get(resource=this_resource)
+            thread = Thread(board = this_board, datetime = datetime.now(), author= this_teacher, title=this_teacher.firstname+' '+this_teacher.surname+' rated this resource', content=rating.comment, threadtype=0, rating=rating)
             thread.save()
+            
+            # update subscribers of the board
+            subscribers = TeacherSubbedToBoard.objects.filter(board = this_board)
+            for sub in subscribers:
+                rated_notify(thread, sub.teacher.user)
+                
+            # sub creator to the new thread
+            new_sub = TeacherSubbedToBoard(teacher = this_teacher, board = this_thread)
+            new_sub.save()
             
             # Update our variable to tell the template registration was successful.
             rated = True
@@ -2271,7 +2284,8 @@ def new_thread(request, board_type, board_url):
             new_thread.board = this_board
             
             # set author
-            new_thread.author = Teacher.objects.all().get(user = request.user)
+            teacher = Teacher.objects.all().get(user = request.user)
+            new_thread.author = teacher
             
             # set time of threadposting
             new_thread.datetime = datetime.now()
@@ -2282,6 +2296,10 @@ def new_thread(request, board_type, board_url):
                             
             # save the new resource
             new_thread.save()
+            
+            # sub creator to the new thread
+            new_sub = TeacherSubbedToBoard(teacher = teacher, thread = new_thread)
+            new_sub.save()
             
             # show user the updated page
             return redirect(reverse('thread', args=[board_type, board_url, new_thread.id]))
@@ -2360,10 +2378,12 @@ def thread(request, board_type, board_url, thread_id):
             # hold off on saving to avoid integrity errors.
             new_post = form.save(commit=False)
             
-            new_post.thread = Thread.objects.all().get(id = thread_id)
+            this_thread = Thread.objects.all().get(id = thread_id)
+            new_post.thread = this_thread
             
             # set author
-            new_post.author = Teacher.objects.all().get(user = request.user)
+            teacher = Teacher.objects.all().get(user = request.user)
+            new_post.author = teacher
             
             # set time of threadposting
             new_post.datetime = datetime.now()
@@ -2371,6 +2391,15 @@ def thread(request, board_type, board_url, thread_id):
             # save the new resource
             new_post.save()
             
+            # update subscribers of the new post
+            subscribers = TeacherSubbedToThread.objects.filter(thread = this_thread)
+            for sub in subscribers:
+                reply_notify(this_thread, sub.teacher.user)
+                
+            # sub poster to the thread
+            new_sub = TeacherSubbedToThread(teacher = teacher, thread = this_thread)
+            new_sub.save()
+
             # show user the updated page
             return redirect(reverse('thread', args=[board_type, board_url, this_thread.id]))
 
