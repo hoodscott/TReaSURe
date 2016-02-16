@@ -355,3 +355,17 @@ class Post(models.Model):
         return "%s %s" % ( self.author, self.datetime)
     
 ''' end of forum models '''
+
+''' start of subscription models '''
+    
+# model to hold all teachers subsribed to a board
+class TeacherSubbedToBoard(models.Model):
+    teacher = models.ForeignKey(Teacher)
+    board = models.ForeignKey(Board)
+    
+# model to hold all teachers subsribed to a thread
+class TeacherSubbedToThread(models.Model):
+    teacher = models.ForeignKey(Teacher)
+    thread = models.ForeignKey(Thread)
+
+''' end of subscription models '''

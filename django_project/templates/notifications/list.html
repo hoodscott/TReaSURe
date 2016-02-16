@@ -1,0 +1,22 @@
+<div class="hero-unit">
+{% if notifications %}
+    {% for notification in notifications %}
+    <div class="post">
+    <p>{{ notification.timestamp }}</p>
+    {% if notification.verb == "created" %}
+        <p>You created a resource: <a href="{% url 'resource_view' notification.action_object.id %}">{{  notification.action_object.name }}</a></p>
+    {% elif notification.verb == "evolved" %}
+        <p>Your resource (<a href="{% url 'resource_view' notification.target.id %}">{{  notification.target.name }}</a>) has been {{ notification.verb }}: <a href="{% url 'resource_view' notification.action_object.id %}">{{  notification.action_object.name }}</a></p>
+    {% elif notification.verb == 'downloaded' %}
+        <p>Your resource (<a href="{% url 'resource_view' notification.action_object.id %}">{{  notification.action_object.name }}</a>) has been {{ notification.verb }}{{ notification.level }}</p>
+    {% elif notification.verb == 'want2talk' %}
+        <p>Someone new wants to talk about: <a href="{% url 'resource_view' notification.action_object.id %}#want2tal">{{  notification.action_object.name }}</a></p>
+    {% endif %}
+    </div>
+    {% endfor %}
+{% else %}
+<div class="post">
+  <p>No notifications at this time.</p>
+</div>
+{% endif %}
+</div>
