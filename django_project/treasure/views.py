@@ -1,21 +1,29 @@
-from django.http import HttpResponse, HttpResponseRedirect
-from django.template import RequestContext
-from django.shortcuts import render_to_response, redirect, get_object_or_404
-from treasure.forms import *
-from treasure.models import *
+# import python functions
+from datetime import datetime
+from string import split, upper
+
+# import django functions
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ValidationError
 from django.core import validators
+from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
-from string import split, upper
-from datetime import datetime
-from django.utils.html import escape, escapejs
-from django.utils.translation import ugettext as _
 from django.db.models import Count, Min, Max
 from django.db.models.signals import post_save
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render_to_response, redirect, get_object_or_404
+from django.template import RequestContext
+from django.utils.html import escape, escapejs
+from django.utils.translation import ugettext as _
+
+# import signals from django-notifications
 from notifications.signals import notify
 
+# import forms and models of this project
+from treasure.forms import *
+from treasure.models import *
+
+''' helper functions '''
 # get the users teacher entry and school for the sidebar
 def sidebar(request):
     context_dict = {}
@@ -35,6 +43,7 @@ def sidebar(request):
 
     return context_dict
 
+# convert a postcode to a lat,lon co-ordinate, returns -1 if not a valid postcode
 def postcodeLocation(country, postcode_given):
     s=upper(str(postcode_given))     #converting given postcode to uppercase
     if ' ' not in s:
@@ -56,7 +65,7 @@ def postcodeLocation(country, postcode_given):
 
     return
 
-# function to convert a many to many relationship to a list of objects
+# convert a many to many relationship to a list of objects
 def get_list(relation):
     objects = [relation[0]]
     i = 1
@@ -65,12 +74,12 @@ def get_list(relation):
         i += 1
     return objects
     
-# function to initialise a blank dictionary to pass into forms
+# initialise a blank dictionary to pass into forms
 # used to preset the tags in the forms
 def blank_tag_dict():
     return {'level':[], 'topic':[], 'other':[]}
     
-# function to return a list of the current tags
+# return a list of the current tags
 # used to preset the tags in the forms
 # object type can be resource or pack
 def populate_tag_dict(resource_id, object_type):
@@ -90,32 +99,75 @@ def populate_tag_dict(resource_id, object_type):
     
     return selected_tags
     
-# functino to return a dtring of the evolution type from an integer
+# return a string of the evolution type from an integer
 def convert_to_evotype(number):
     print number
     number = int(number)
     EVOLUTIONS = ['Creation', 'Amendments', 'Style', 'Translation', 'Recontext', 'New Difficulty', 'New Format']
     return EVOLUTIONS[number]
     
-# function to send a "create" notification
+# get the boards of a specific type given the type
+def getSubForum(board_type):
+    # get all boards of this type
+    boards = Board.objects.all().filter(boardtype = board_type)
+    
+    # adds an attribute to each board that holds the count of threads on a board
+    boards = boards.annotate(num_threads = Count('thread'))
+    
+    # adds an attribute to each board that holds the time of the last post on a board
+    boards = boards.annotate(last_thread = Max('thread__datetime'))
+
+    # adds an attribute to each board that holds the time of the last post on a board
+    boards = boards.annotate(last_post = Max('thread__post__datetime'))
+    
+    # sort boards in reverse post order
+    boards = boards.order_by('-last_post')
+    
+    return boards
+    
+''' end of helper functions '''
+
+''' notification threads '''
+# send a "create" notification
 def create_notify(resource, user):
     notify.send(resource, recipient=user, verb='created', action_object=resource, description=u'', level='')
 
-# function to send a "evolve" notification
+# send a "evolve" notification
 def evolve_notify(resource, user, target):
     notify.send(resource, recipient=user, verb='evolved', action_object=resource, target=target)
     
-# function to send a "download" notification
+# send a "download" notification
 def download_notify(resource, user, level):
     notify.send(resource, recipient=user, verb='downloaded', action_object=resource, level=level)
     
-# function to send a want2talk notification
+# send a want2talk notification
 def want2talk_notify(resource, user):
     #todo: send a user in the taget field once profile pages are made
     notify.send(resource, recipient=user, verb='want2talk', action_object=resource)
-
-
     
+# send a rated notification
+def rated_notify(resource, user, thread):
+    #todo: notify when rated
+    notify.send(resource, recipient=user, verb='rated', action_object=resource, target=thread)
+    
+# send a question notification
+def question_notify(resource, user, thread):
+    #todo: notify when quesiton is posted
+    notify.send(resource, recipient=user, verb='questioned', action_object=resource, target=thread)
+    
+# send a discussion notification
+def discussion_notify(resource, user, thread):
+    #todo: notify when a disc is started
+    notify.send(resource, recipient=user, verb='discussed', action_object=resource, target=thread)
+    
+# send a question notification
+def question_notify(resource, user, thread):
+    #todo: notify when there is a post on a thread
+    notify.send(resource, recipient=user, verb='replied', action_object=resource, target=thread)
+''' end of notification threads '''
+
+
+''' start of view funtions '''
 # view for the homepage
 def index(request):
     # get context of request
@@ -619,7 +671,7 @@ def add_web_resource(request):
             # set foreign key of the author of the resource
             userid = request.user.id
             teacher = Teacher.objects.get(user = userid)
-            resource.author = Teacher.objects.get(id = teacher.id)
+            resource.author = teacher
             
             # this is a creation
             resource.evolution_type = "0"
@@ -668,7 +720,9 @@ def add_web_resource(request):
             board = Board(resource=resource, title=resource.name, boardtype='resource')
             board.save()
             
-            #todo: subscribe creator to the board
+            # sub creator to the new board
+            new_sub = TeacherSubbedToBoard(teacher = teacher, board = board)
+            new_sub.save()
             
             # Now show the new materials page
             return redirect(reverse('resource_view', args=[resource.id]))
@@ -711,7 +765,7 @@ def add_file_resource(request):
             # set foreign key of the author of the resource
             userid = request.user.id
             teacher = Teacher.objects.get(user = userid)
-            resource.author = Teacher.objects.get(id = teacher.id)
+            resource.author = teacher
                         
             # this is a creation
             resource.evolution_type = "0"
@@ -761,7 +815,9 @@ def add_file_resource(request):
             board = Board(resource=resource, title=resource.name, boardtype='resource')
             board.save()
             
-            # todo: subscribe creator to this board
+            # sub creator to the new board
+            new_sub = TeacherSubbedToBoard(teacher = teacher, board = board)
+            new_sub.save()
             
             # show user the new materials page
             return redirect(reverse('resource_view', args=[resource.id]))
@@ -1549,7 +1605,8 @@ def evolve(request, parent_id):
                 # set foreign key of the author of the resource
                 userid = request.user.id
                 teacher = Teacher.objects.get(user = userid)
-                resource.author = Teacher.objects.get(id = teacher.id)
+                resource.author = teacher
+                # needed? resource.author = Teacher.objects.get(id = teacher.id)
                 
                 #default hidden
                 resource.hidden = 0
@@ -1599,7 +1656,9 @@ def evolve(request, parent_id):
                 board = Board(resource=resource, title=resource.name, boardtype='resource')
                 board.save()
                 
-                #todo: subscribe creator to the board
+                # sub creator to the new board
+                new_sub = TeacherSubbedToBoard(teacher = teacher, board = board)
+                new_sub.save()
                 
                 # show user the new materials page
                 return redirect(reverse('resource_view', args=[resource.id]))
@@ -1620,7 +1679,7 @@ def evolve(request, parent_id):
                 # set foreign key of the author of the resource
                 userid = request.user.id
                 teacher = Teacher.objects.get(user = userid)
-                resource.author = Teacher.objects.get(id = teacher.id)
+                resource.author = teacher
                 
                 #default hidden
                 resource.hidden = 0
@@ -1670,7 +1729,9 @@ def evolve(request, parent_id):
                 board = Board(resource=resource, title=resource.name, boardtype='resource')
                 board.save()
                 
-                # todo: subscribe creaotr to the board
+                # sub creator to the new board
+                new_sub = TeacherSubbedToBoard(teacher = teacher, board = board)
+                new_sub.save()
                 
                 # Now show the new materials page
                 return redirect(reverse('resource_view', args=[resource.id]))
@@ -2055,25 +2116,6 @@ def help(request):
     
     # Render the template updating the context dictionary.
     return render_to_response('treasure/help.html', context_dict, context)
-    
-# helper function to get the boards of a specific type given the type
-def getSubForum(board_type):
-    # get all boards of this type
-    boards = Board.objects.all().filter(boardtype = board_type)
-    
-    # adds an attribute to each board that holds the count of threads on a board
-    boards = boards.annotate(num_threads = Count('thread'))
-    
-    # adds an attribute to each board that holds the time of the last post on a board
-    boards = boards.annotate(last_thread = Max('thread__datetime'))
-
-    # adds an attribute to each board that holds the time of the last post on a board
-    boards = boards.annotate(last_post = Max('thread__post__datetime'))
-    
-    # sort boards in reverse post order
-    boards = boards.order_by('-last_post')
-    
-    return boards
 
 # view to show overview of all boards
 @login_required
@@ -2345,3 +2387,5 @@ def thread(request, board_type, board_url, thread_id):
     
     # Render the template updating the context dictionary.
     return render_to_response('treasure/thread.html', context_dict, context)
+
+''' end of view functions '''
