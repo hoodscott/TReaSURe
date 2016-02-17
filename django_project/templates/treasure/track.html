@@ -114,7 +114,7 @@ var boundCenter= {lat: tmpLat, lng:tmpLon};
 var zoom1=0, zoom2=0;
 
 //Determine the best zoom level based on the map scale and bounding coordinate information
-if (maxLon != minLon && maxLat != minLat)
+
 {
     //best zoom level based on map width
     zoom1 = Math.log(360.0 / 256.0 * (640-20) / (maxLon - minLon)) / Math.log(2);
@@ -123,6 +123,7 @@ if (maxLon != minLon && maxLat != minLat)
 
     //use the most zoomed out of the two zoom levels
     boundZoom = Math.ceil((zoom1 < zoom2) ? zoom1 : zoom2); 
+    console.log(boundZoom);
 }
 
 function pushNcheck(markerType, pushLat,pushLon){
@@ -202,7 +203,7 @@ function center(spot) {
     zoom=6;
   }else if (spot=='Bounds'){
     location= boundCenter;
-    zoom=boundZoom
+    zoom=boundZoom-1;
   }
   map.setCenter(location);
   map.setZoom(zoom);
