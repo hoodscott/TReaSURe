@@ -21,4 +21,4 @@ The current aim of this project is to have the following functionalities:
 
 
 DATABASE for the project is too large for the repository. 
-Download link: https://www.dropbox.com/s/ihanhr27vgt11jb/treasure.db?dl=0
+Download link: https://www.dropbox.com/s/3nifucx4knab4wv/treasure_DB.db?dl=0
