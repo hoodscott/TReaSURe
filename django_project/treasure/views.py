@@ -2232,7 +2232,8 @@ def board(request, board_type, board_url):
     
     # Render the template updating the context dictionary.
     return render_to_response('treasure/board.html', context_dict, context)
-    
+
+# view to create a new thread
 @login_required
 def new_thread(request, board_type, board_url):
     # get context of request
@@ -2347,11 +2348,17 @@ def thread(request, board_type, board_url, thread_id):
     context_dict['board_url'] = board_url
     context_dict['board_type'] = board_type
     context_dict['thread_id'] = thread_id
+    
+    teacher = Teacher.objects.all().get(user = request.user)
         
     # get thread
     try:
         this_thread = Thread.objects.all().get(id=thread_id)
         context_dict['thread'] = this_thread
+        
+        # check if user is subbed
+        if TeacherSubbedToThread.objects.filter(thread=this_thread, teacher = teacher).first():
+            context_dict['subscribed'] = True
     except Thread.DoesNotExist:
         # do not pass a thread object to the template
         pass
@@ -2397,7 +2404,6 @@ def thread(request, board_type, board_url, thread_id):
             new_post.thread = this_thread
             
             # set author
-            teacher = Teacher.objects.all().get(user = request.user)
             new_post.author = teacher
             
             # set time of threadposting
@@ -2411,9 +2417,11 @@ def thread(request, board_type, board_url, thread_id):
             for sub in subscribers:
                 reply_notify(this_thread, sub.teacher.user)
                 
-            # sub poster to the thread
-            new_sub = TeacherSubbedToThread(teacher = teacher, thread = this_thread)
-            new_sub.save()
+            # check if poster is already subbed
+            if not TeacherSubbedToThread.objects.filter(thread=this_thread, teacher = teacher).first():
+                # sub poster to the thread
+                new_sub = TeacherSubbedToThread(teacher = teacher, thread = this_thread)
+                new_sub.save()
 
             # show user the updated page
             return redirect(reverse('thread', args=[board_type, board_url, this_thread.id]))
@@ -2435,16 +2443,6 @@ def thread(request, board_type, board_url, thread_id):
 # view to subscribe user to board
 @login_required
 def sub_board(request, board_type, board_url):
-  
-    # get context of request
-    context = RequestContext(request)
-
-    # create dictionary to pass data to templates
-    #context_dict = sidebar(request)
-    
-    # add url to contextdict
-    #context_dict['board_url']=board_url
-    #context_dict['board_type']=board_type
     
     userid = request.user.id
     teacher = Teacher.objects.get(user = userid)
@@ -2462,7 +2460,7 @@ def sub_board(request, board_type, board_url):
             
         except Resource.DoesNotExist:
             # no board to sub to
-            print ERROR
+            print "no board to sub to"
     else:
         try:
             # check the word has a url attached
@@ -2481,16 +2479,6 @@ def sub_board(request, board_type, board_url):
 # view to unsubscribe user to board
 @login_required
 def unsub_board(request, board_type, board_url):
-  
-    # get context of request
-    context = RequestContext(request)
-
-    # create dictionary to pass data to templates
-    #context_dict = sidebar(request)
-    
-    # add url to contextdict
-    #context_dict['board_url']=board_url
-    #context_dict['board_type']=board_type
     
     userid = request.user.id
     teacher = Teacher.objects.get(user = userid)
@@ -2503,25 +2491,67 @@ def unsub_board(request, board_type, board_url):
             this_board = Board.objects.all().get(resource = this_resource)
             
             # sub user to the board
-            new_sub = TeacherSubbedToBoard.objects.get(teacher = teacher, board = this_board)
-            new_sub.delete()
+            old_sub = TeacherSubbedToBoard.objects.get(teacher = teacher, board = this_board)
+            old_sub.delete()
             
         except Resource.DoesNotExist:
             # no board to sub to
-            print ERROR
+            print "noboard to sub to"
     else:
         try:
             # check the word has a url attached
             this_board = Board.objects.all().get(id=board_url)
             
             # sub user to the board
-            new_sub = TeacherSubbedToBoard.objects.get(teacher = teacher, board = this_board)
-            new_sub.delete()
+            old_sub = TeacherSubbedToBoard.objects.get(teacher = teacher, board = this_board)
+            old_sub.delete()
             
         except Board.DoesNotExist:
             context_dict['invalid'] = True
     
     # return user to whence they came
     return redirect(reverse('board', args=[board_type, board_url]))
+
+# view to sub user to a thread
+@login_required
+def sub_thread(request, board_type, board_url, thread_id):
+    
+    teacher = Teacher.objects.all().get(user = request.user)
+    
+    # get thread
+    try:
+        this_thread = Thread.objects.all().get(id=thread_id)
+        # sub user to thread
+        new_sub = TeacherSubbedToThread(teacher = teacher, thread = this_thread)
+        new_sub.save()
+    except Thread.DoesNotExist:
+        # can't sub to nothing
+        pass
+      
+    # show user the updated page
+    return redirect(reverse('thread', args=[board_type, board_url, this_thread.id]))
+    
+# view to un sub a teacher from a thread
+# view to sub user to a thread
+@login_required
+def unsub_thread(request, board_type, board_url, thread_id):
+    
+    teacher = Teacher.objects.all().get(user = request.user)
+    
+    # get thread
+    try:
+        this_thread = Thread.objects.all().get(id=thread_id)
+        # unsub user to thread
+        old_sub = TeacherSubbedToThread.objects.filter(teacher = teacher, thread = this_thread).first()
+        if old_sub:
+            old_sub.delete()
+    except Thread.DoesNotExist:
+        # can't sub to nothing
+        pass
+      
+    # show user the updated page
+    return redirect(reverse('thread', args=[board_type, board_url, this_thread.id]))
+    
+    
 
 ''' end of view functions '''

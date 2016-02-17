@@ -13,10 +13,15 @@
     {% if invalid %}
         <h3>Malformed url</h3>
         <a href="{% url 'home' %}">Return to Homepage</a>
-        <a href="{% url 'forum' %}">Return to Forum</a> 
+        <a href="{% url 'forum' %}">Return to Forum</a>
     {% else %}
         <h2>{{ thread.title }}</h2>
         <h4>{{ thread.author }}@{{  thread.datetime  }}</h4>
+        {% if subscribed %}
+        <a class="btn btn-danger pull-right" href="{% url 'unsub_thread' board_type board_url thread.id %}">Unsubscribe to Thread</a>
+        {% else %}
+        <a class="btn btn-success pull-right" href="{% url 'sub_thread' board_type board_url thread.id %}">Subscribe to Thread</a>
+        {% endif %}
         {% if thread.threadtype == '0' %}
         <p>Measure1: {{ thread.rating.measure1 }}, Measure2: {{ thread.rating.measure2 }}, Measure3: {{  thread.rating.measure1 }}</p>
         {%  endif  %}
@@ -27,7 +32,7 @@
         {% if posts %}
         <ul>
             {% for post in posts %}
-            <li><p><i>{{ post.author }}@{{ post.datetime }}</i><br>{{ post.content }}</p></li>        
+            <li><p><i>{{ post.author }}@{{ post.datetime }}</i><br>{{ post.content }}</p></li>
             <li></li>
             {% endfor %}
         </ul>
