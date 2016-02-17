@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 {% load static %}
+{% load notifications_tags %}
 
 <html>
     <head>
@@ -13,7 +14,7 @@
 		<!--[if lte IE 9]><link rel="stylesheet" href="{% static 'sidebar/css/ie9.css' %}" /><![endif]-->
 		
 		<script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
-        <script type="text/javascript" src="https://cdn.datatables.net/s/dt/jq-2.1.4,dt-1.10.10,r-2.0.0/datatables.min.js"></script>		
+        <script type="text/javascript" src="https://cdn.datatables.net/s/dt/jq-2.1.4,dt-1.10.10,r-2.0.0/datatables.min.js"></script>
 		
         <!-- Bootstrap -->
 		<link rel="stylesheet" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css"></style>
@@ -43,19 +44,19 @@
                    <div class="nav-collapse collapse">
                        <ul class="nav pull-right">
                             {% if user.is_authenticated %}
-                                <li><a href="{% url 'profile' %}">Profile</a></li> 
+                                <li><a href="{% url 'profile' %}">Profile</a></li>
                             	<li><a href="{% url 'logout' %}">Logout</a></li>
                             {% else %}
                             	<li><a href="{% url 'login' %}">Login</a></li>
                               <li><a href="{% url 'logout' %}">Register</a></li>
-                              <li><a href="{% url 'home' %}login/google-oauth2">Login with Google</a></li>   
-                            {% endif %}                   
+                              <li><a href="{% url 'home' %}login/google-oauth2">Login with Google</a></li>
+                            {% endif %}
                        </ul>
                        <ul class="nav">
                        {% if user.is_authenticated %}
                            <li id="searchbar-container"><form type='get' class="navbar-search pull-left" action="{% url 'resources' %}">
 						 		<input id='search' name='search' class="search-query span2" placeholder="Quick Search" type="text">
-						   </form>                       
+						   </form>
                            </li>
                            <li><a href="{% url 'forum' %}">Forum</a></li>
                            <li><a href="{% url 'explore' %}">Explore</a></li>
@@ -91,6 +92,7 @@
                         <nav id="nav">
 							<ul>
 								{% if user.is_authenticated %}
+								  <li><a href="{% url 'notifications:unread' %}" id="home-link" class="skel-layers-ignoreHref"><span>Notifications {% live_notify_badge classes='badge small-notification' %}</span></a></li>
 									<li><a href="{% url 'my_homepage' %}#" id="home-link" class="skel-layers-ignoreHref"><span>My Page</span></a></li>
 									<li><a href="{% url 'my_homepage' %}#myresources" class="skel-layers-ignoreHref"><span>My Resources</span></a></li>
                                     <li><a href="{% url 'my_homepage' %}#mypacks" class="skel-layers-ignoreHref"><span>My Packs</span></a></li>
@@ -98,11 +100,11 @@
 									<li><a href="{% url 'contribution' %}" class="skel-layers-ignoreHref"><span>My Contribution</span></a></li>
 									<li><a href="{% url 'help' %}" class="skel-layers-ignoreHref"><span>Help</span></a></li>
 								{% else %}
-								    <li><br></li>									
+								    <li><br></li>
 									<li><a href="{% url 'login' %}" class="skel-layers-ignoreHref"><span>Login</span></a></li>
 									<li><a href="{% url 'register' %}" class="skel-layers-ignoreHref"><span>Register</span></a></li>
-                                    <li><a href="{% url 'home' %}auth/login/google-oauth2"><span>Login with Google</span></a></li>									
-								{% endif %}			         
+                                    <li><a href="{% url 'home' %}auth/login/google-oauth2"><span>Login with Google</span></a></li>
+								{% endif %}
 							</ul>
 						</nav>
 
@@ -125,14 +127,14 @@
 				<!-- Main Page -->
 				<section id="MainPage">
                     <div class="container">
-                        {% if resource.hidden == 1  and resource.author != user_teacher %}                        
+                        {% if resource.hidden == 1  and resource.author != user_teacher %}
                             <div class="hero-unit"><h2>This resource is not visible (hidden).<br>The author has chosen to hide it, sorry.</h2></div>
                         {% elif resource.restricted == 1 and resource.author != user_teacher %}
                             <div class="hero-unit"><h2>This resource is not visible (restricted)<br>This resource is only for Scottish teachers, sorry.</h2></div>
                         {% elif pack.hidden == 1  and pack.author != user_teacher %}
                             <div class="hero-unit"><h2>This pack is not visible (hidden)<br>The author has chosen to hide it, sorry.</h2></div>
                         {% elif pack.restricted == 1  and pack.author != user_teacher %}
-                            <div class="hero-unit"><h2>This pack is not visible (restricted)This pack is only for Scottish teachers, sorry.</h2></div>                       
+                            <div class="hero-unit"><h2>This pack is not visible (restricted)This pack is only for Scottish teachers, sorry.</h2></div>
                         {% else %}
                             {% block body_block%}{% endblock%}
                         {% endif %}
@@ -148,8 +150,10 @@
         <script src="{% static 'sidebar/js/skel.min.js' %}"></script>
         <script src="{% static 'sidebar/js/util.js' %}"></script>
         <!--[if lte IE 8]><script src="{% static 'sidebar/js/ie/respond.min.js' %}"></script><![endif]-->
-        <script src="{% static 'sidebar/js/main.js' %}"></script>		
+        <script src="{% static 'sidebar/js/main.js' %}"></script>
         <script src="{% static 'js/bootstrap.min.js' %}"></script>
         <script src="{% static 'js/treasure.js' %}"></script>
+        <script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
+{% register_notify_callbacks callbacks='fill_notification_list,fill_notification_badge' %}
     </body>
 </html>

@@ -13,7 +13,9 @@ TEMPLATE_PATH = os.path.join(PROJECT_PATH, 'templates')
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'social.apps.django_app.context_processors.backends',
-    'social.apps.django_app.context_processors.login_redirect'
+    'social.apps.django_app.context_processors.login_redirect',
+    'django.core.context_processors.request'
+    #'notifications'
 )
 
 ## set static path
@@ -39,7 +41,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'PlanCSharing@gmail.com'
-EMAIL_HOST_PASSWORD = 'quintincutts' 
+EMAIL_HOST_PASSWORD = 'quintincutts'
 EMAIL_PORT = 587
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

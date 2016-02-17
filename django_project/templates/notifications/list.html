@@ -1,5 +1,14 @@
+{% extends "treasure/base.html" %}
+
+{% block title %}
+    Notifications
+{% endblock %}
+
+{% block body_block %}
 <div class="hero-unit">
 {% if notifications %}
+    <h2>Notifications</h2>
+    <a class="btn btn-primary pull-right" href="{% url 'notifications:mark_all_as_read' %}">Mark all as Read</a>
     {% for notification in notifications %}
     <div class="post">
     <p>{{ notification.timestamp }}</p>
@@ -39,10 +48,10 @@
         <p>{{notification.action_object}}{{notification.verb}}</p>
     {% endif %}
     </div>
+    <hr>
     {% endfor %}
 {% else %}
-<div class="post">
-  <p>No notifications at this time.</p>
-</div>
+    <h2>No notifications at this time</h2>
 {% endif %}
 </div>
+{% endblock %}

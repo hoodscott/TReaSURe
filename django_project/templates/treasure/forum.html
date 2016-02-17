@@ -97,7 +97,7 @@ a
                     </thead>
                     <tbody>
                         {% for board in resource_boards %}
-                            {% if board.restricted != 1 %}
+                            {% if board.restricted != 1 and board.num_threads > 0 %}
                             <tr>
                                 <td><a href="{% url 'board' board.boardtype board.resource.id %}">{{ board.title }}</a></td>
                                 <td>{{ board.num_threads }}</td>
@@ -111,7 +111,7 @@ a
             </div>
         </div> <!-- close panel -->
     </div>
-    {% endif %}        
+    {% endif %}
     
 </div>
 
