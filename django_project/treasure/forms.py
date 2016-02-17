@@ -3,6 +3,7 @@ from treasure.models import *
 from django.contrib.auth.models import User
 from treasure.widgets import *
 from django.utils.safestring import mark_safe
+from captcha.fields import CaptchaField
 
 #define values for hidden
 HIDDEN = (
@@ -159,6 +160,7 @@ class UserForm(forms.ModelForm):
     password = forms.CharField(widget = forms.PasswordInput(attrs={'tabindex':'1'}),
                             help_text = "The account password.",
                             label='Password*')
+    captcha= CaptchaField()
 
     class Meta:
         model = User

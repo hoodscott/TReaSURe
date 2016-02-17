@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block body_block %}
-  <div style="height:100%; width:100%">
+  <div style="height:480px; width:640px">
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDudWkR_tpJ06lIarBZm3qIngNAae1RXNw&scale=1&signed_in=true">
 </script>
 
@@ -28,10 +28,11 @@
                 <option value="Scotland" >Scotland</option>
                 <option value="User">MySchool</option>
                 <option value="UK">UK</option>
+                <option value="Bounds">Best View</option>
               </select>
           </ul>
         </div>     
-        <div id="map" style="height: 100%; min-height: 640px; width: 100%"><div style="text-align:center;">
+        <div id="map" style="height: 100%; min-height: 480px; width: 100%"><div style="text-align:center;">
 			<span style="color:Gray;">Loading map...</span>
 		</div>
   
@@ -42,21 +43,26 @@
     </div>
     </div>
     <script type="text/javascript">
+  var boundZoom=0;
   var downloaded=[];
   var used=[];
   var rated=[];
-  var discuss=[];  
+  var discuss=[]; 
+  var maxLat = -90;
+  var minLat = 90;
+  var maxLon = -180;
+  var minLon = 180;  
   {% for download in downloaded %}
-  downloaded.push({lat:{{download.latitude}}, lng: {{download.longitude}} })
+  pushNcheck("Downloaded",{{download.latitude}},{{download.longitude}});
   {% endfor %}
   {% for usage in used %}
-  used.push({lat:{{usage.latitude}}, lng: {{usage.longitude}} })
+  pushNcheck("Used",{{usage.latitude}},{{usage.longitude}});
   {% endfor %}  
   {% for rating in rated %}
-  rated.push({lat:{{rating.latitude}}, lng: {{rating.longitude}} })
+  pushNcheck("Rated",{{rating.latitude}},{{rating.longitude}});
   {% endfor %} 
   {% for person in discuss %}
-  discuss.push({lat:{{person.latitude}}, lng: {{person.longitude}} })
+  pushNcheck("Discuss",{{person.latitude}},{{person.longitude}});
   {% endfor %} 
 
   var infoWindow = new google.maps.InfoWindow();
@@ -79,7 +85,6 @@ var map = new google.maps.Map(document.getElementById('map'), {
   zoom: 4,
   center: Scotland,
   zIndex: 1,
-  zoom: 6
 });
 var infoWindow = new google.maps.InfoWindow();
 
@@ -87,26 +92,71 @@ var loadingTime=14000;
 var delay= {{animationTimeout}};
 
 for (i = 0; i < downloaded.length; i++) { 
-  {% ifequal timeline 'timeline' %}addMarkerWithTimeout(downloaded, i, (loadingTime+i*delay), dlicon, "Downloaded");{% else %}addMarker(downloaded, i, dlicon, "Downloaded");
-  {% endifequal %}
+  {% ifequal timeline 'timeline' %}addMarkerWithTimeout(downloaded, i, (loadingTime+i*delay), dlicon, "Downloaded");{% else %}addMarker(downloaded, i, dlicon, "Downloaded");{% endifequal %}
 }
 
 for (i = 0; i < used.length; i++) { 
-  {% ifequal timeline 'timeline' %}addMarkerWithTimeout(used, i, (loadingTime+i*delay), classicon, "Used");{% else %}addMarker(used, i, classicon, "Used");
-  {% endifequal %}
+  {% ifequal timeline 'timeline' %}addMarkerWithTimeout(used, i, (loadingTime+i*delay), classicon, "Used");{% else %}addMarker(used, i, classicon, "Used");{% endifequal %}
 } 
 
 for (i = 0; i < rated.length; i++) { 
-  {% ifequal timeline 'timeline' %}addMarkerWithTimeout(rated, i, (loadingTime+i*delay), fbicon, "Rated");{% else %}addMarker(rated, i, fbicon, "Rated");
-  {% endifequal %}
+  {% ifequal timeline 'timeline' %}addMarkerWithTimeout(rated, i, (loadingTime+i*delay), fbicon, "Rated");{% else %}addMarker(rated, i, fbicon, "Rated");{% endifequal %}
 }
 
 for (i = 0; i < discuss.length; i++) { 
-  {% ifequal timeline 'timeline' %}addMarkerWithTimeout(discuss, i, (loadingTime+i*delay), fbicon, "Happy to talk about it!");{% else %}addMarker(rated, i, fbicon, "Discuss");
-  {% endifequal %}
+  {% ifequal timeline 'timeline' %}addMarkerWithTimeout(discuss, i, (loadingTime+i*delay), fbicon, "Happy to talk about it!");{% else %}addMarker(rated, i, fbicon, "Discuss");{% endifequal %}
 }
 
 {% ifequal timeline 'timeline' %}toggleGroup("Discuss");{% endifequal %}
+var tmpLat=((maxLat + minLat)/2.0);
+var tmpLon=((maxLon + minLon)/2.0);
+var boundCenter= {lat: tmpLat, lng:tmpLon};
+var zoom1=0, zoom2=0;
+
+//Determine the best zoom level based on the map scale and bounding coordinate information
+if (maxLon != minLon && maxLat != minLat)
+{
+    //best zoom level based on map width
+    zoom1 = Math.log(360.0 / 256.0 * (640-20) / (maxLon - minLon)) / Math.log(2);
+    //best zoom level based on map height
+    zoom2 = Math.log(180.0 / 256.0 * (480-20) / (maxLat - minLat)) / Math.log(2);
+
+    //use the most zoomed out of the two zoom levels
+    boundZoom = Math.ceil((zoom1 < zoom2) ? zoom1 : zoom2); 
+}
+
+function pushNcheck(markerType, pushLat,pushLon){
+    if (markerType=="Downloaded"){
+      downloaded.push({lat:pushLat, lng: pushLon });
+    }else if (markerType=="Used"){
+      used.push({lat:pushLat, lng: pushLon });
+    }else if (markerType=="Rated"){
+      rated.push({lat:pushLat, lng: pushLon });
+    }else if (markerType=="Discuss"){
+      discuss.push({lat:pushLat, lng: pushLon });
+    }
+    if (pushLat>maxLat) maxLat=pushLat;
+    if (pushLat<minLat) minLat=pushLat;
+    if (pushLon>maxLon) maxLon=pushLon;
+    if (pushLon<minLon) minLon=pushLon;
+
+}
+
+function instantBounds(){
+    var bounds = new google.maps.LatLngBounds();
+    var types= ["Downloaded", "Used", "Rated", "Discuss"];
+    var type='';
+    for (var j=0; j<4; j++) {
+        type=types[j];
+        for (var i = 0; i < markers[type].length; i++) {
+          var markerPosition =  markers[type][i].getPosition();
+          if (markers[type][i].getVisible()) {
+            bounds.extend(markerPosition);
+          }
+        }
+    }
+    return bounds
+}
 
 function addMarkerWithTimeout(array, index, timeout, icon, title) {
   window.setTimeout(function(){addMarker(array, index,icon, title);}, timeout);
@@ -147,12 +197,20 @@ function center(spot) {
   }else if (spot=='UK'){
     location= UK;
     zoom=5;
-  }else{
+  }else if (spot=='User'){
     location= User;
     zoom=6;
+  }else if (spot=='Bounds'){
+    location= boundCenter;
+    zoom=boundZoom
   }
   map.setCenter(location);
   map.setZoom(zoom);
+  if (spot=="Bounds"){
+    var ccenter=map.getCenter();
+    var zzoom=map.getZoom();
+    var stop=map.getZoom();
+  }
 }
 
 function bindInfoWindow(marker, map, infoWindow, html) {
