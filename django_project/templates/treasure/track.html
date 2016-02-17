@@ -122,8 +122,7 @@ var zoom1=0, zoom2=0;
     zoom2 = Math.log(180.0 / 256.0 * (480-20) / (maxLat - minLat)) / Math.log(2);
 
     //use the most zoomed out of the two zoom levels
-    boundZoom = Math.ceil((zoom1 < zoom2) ? zoom1 : zoom2); 
-    console.log(boundZoom);
+    boundZoom = Math.ceil((zoom1 < zoom2) ? zoom1 : zoom2);
 }
 
 function pushNcheck(markerType, pushLat,pushLon){
