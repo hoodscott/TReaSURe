@@ -28,7 +28,11 @@
         <p>Someone has rated: <a href="{% url 'thread' 'resource' notification.action_object.board.resource.id notification.action_object.id %}">{{ notification.action_object.board.title }}</a></p>
     
     {% elif notification.verb == 'questioned' %}
-        <p>Someone asked a question about: <a href="{% url 'thread' 'resource' notification.action_object.board.resource.id notification.action_object.id %}">{{ notification.action_object.board.title }}</a></p>
+        {% if notification.action_object.board.boardtype == "resource" %}
+        <p>Someone asked a question about: <a href="{% url 'thread' notification.action_object.board.boardtype notification.action_object.board.resource.id notification.action_object.id %}">{{ notification.action_object.board.title }}</a></p>
+        {% else %}
+        <p>Someone asked a question about: <a href="{% url 'thread' notification.action_object.board.boardtype notification.action_object.board.id notification.action_object.id %}">{{ notification.action_object.board.title }}</a></p>
+        {% endif %}
     
     {% elif notification.verb == 'discussed' %}
         {% if notification.action_object.board.boardtype == "resource" %}

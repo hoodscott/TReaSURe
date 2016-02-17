@@ -2455,9 +2455,14 @@ def sub_board(request, board_type, board_url):
             this_resource = Resource.objects.all().get(id=board_url)
             this_board = Board.objects.all().get(resource = this_resource)
             
-            # sub user to the board
-            new_sub = TeacherSubbedToBoard(teacher = teacher, board = this_board)
-            new_sub.save()
+            
+            # check if poster is already subbed
+            if not TeacherSubbedToBoard.objects.filter(board=this_board, teacher = teacher).first():
+                # sub user to the board
+                new_sub = TeacherSubbedToBoard(teacher = teacher, board = this_board)
+                new_sub.save()
+            else:
+                print 'already subbed error'
             
         except Resource.DoesNotExist:
             # no board to sub to
@@ -2467,9 +2472,13 @@ def sub_board(request, board_type, board_url):
             # check the word has a url attached
             this_board = Board.objects.all().get(id=board_url)
             
-            # sub user to the board
-            new_sub = TeacherSubbedToBoard(teacher = teacher, board = this_board)
-            new_sub.save()
+            # check if poster is already subbed
+            if not TeacherSubbedToBoard.objects.filter(board=this_board, teacher = teacher).first():
+                # sub user to the board
+                new_sub = TeacherSubbedToBoard(teacher = teacher, board = this_board)
+                new_sub.save()
+            else:
+                print 'already subbed error'
             
         except Board.DoesNotExist:
             context_dict['invalid'] = True
@@ -2491,9 +2500,9 @@ def unsub_board(request, board_type, board_url):
             this_resource = Resource.objects.all().get(id=board_url)
             this_board = Board.objects.all().get(resource = this_resource)
             
-            # sub user to the board
-            old_sub = TeacherSubbedToBoard.objects.get(teacher = teacher, board = this_board)
-            old_sub.delete()
+            old_sub = TeacherSubbedToBoard.objects.filter(teacher = teacher, board = this_board).first()
+            if old_sub:
+                old_sub.delete()
             
         except Resource.DoesNotExist:
             # no board to sub to
@@ -2503,9 +2512,9 @@ def unsub_board(request, board_type, board_url):
             # check the word has a url attached
             this_board = Board.objects.all().get(id=board_url)
             
-            # sub user to the board
-            old_sub = TeacherSubbedToBoard.objects.get(teacher = teacher, board = this_board)
-            old_sub.delete()
+            old_sub = TeacherSubbedToBoard.objects.filter(teacher = teacher, board = this_board).first()
+            if old_sub:
+                old_sub.delete()
             
         except Board.DoesNotExist:
             context_dict['invalid'] = True
@@ -2522,9 +2531,14 @@ def sub_thread(request, board_type, board_url, thread_id):
     # get thread
     try:
         this_thread = Thread.objects.all().get(id=thread_id)
-        # sub user to thread
-        new_sub = TeacherSubbedToThread(teacher = teacher, thread = this_thread)
-        new_sub.save()
+
+        # check if poster is already subbed
+        if not TeacherSubbedToThread.objects.filter(thread=this_thread, teacher = teacher).first():
+            # sub user to the board
+            new_sub = TeacherSubbedToThread(teacher = teacher, thread = this_thread)
+            new_sub.save()
+        else:
+            print 'already subbed error'
     except Thread.DoesNotExist:
         # can't sub to nothing
         pass
