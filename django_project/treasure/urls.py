@@ -73,9 +73,10 @@ urlpatterns = patterns('',
         url(r'^forum/(?P<board_type>\w+)/(?P<board_url>\w+)/new/$', views.new_thread, name='new_thread'),
         url(r'^forum/(?P<board_type>\w+)/(?P<board_url>\w+)/(?P<thread_id>\w+)/$', views.thread, name='thread'),
         
+        url(r'^subscribe/forum/(?P<board_type>\w+)/(?P<board_url>\w+)/$', views.sub_board, name='sub_board'),
+        url(r'^unsubscribe/forum/(?P<board_type>\w+)/(?P<board_url>\w+)/$', views.unsub_board, name='unsub_board'),
+        
         #url(r'^profile/(?P<user_id>\w+)/$', views.profile, name='profile'),
         #url(r'^profile/(?P<user_id>\w+)/history/$', views.user_history, name='user_history'),
-        
-
         
         )

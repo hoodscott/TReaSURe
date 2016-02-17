@@ -2188,6 +2188,9 @@ def board(request, board_type, board_url):
     context_dict['board_url']=board_url
     context_dict['board_type']=board_type
     
+    userid = request.user.id
+    teacher = Teacher.objects.get(user = userid)
+    
     #determine if other or resourceboard
     if board_type == 'resource':
         try:
@@ -2195,10 +2198,13 @@ def board(request, board_type, board_url):
             this_resource = Resource.objects.all().get(id=board_url)
             context_dict['resource'] = this_resource
             this_board = Board.objects.all().get(resource = this_resource)
+            if TeacherSubbedToBoard.objects.filter(board=this_board, teacher = teacher).first():
+                context_dict['subscribed'] = True
             try:
                 # get the threads on the forum, along with the count of posts and time of last post for each thread
                 board = Thread.objects.all().filter(board = this_board).annotate(num_posts = Count('post'), last_post = Max('post__datetime'))
                 context_dict['board'] = board
+
             except Thread.DoesNotExist:
                 # do not pass a board object to template as there are no threads
                 print "no threads", board_url
@@ -2211,6 +2217,8 @@ def board(request, board_type, board_url):
             # check the word has a url attached
             this_board = Board.objects.all().get(id=board_url)
             context_dict['title'] = this_board.title
+            if TeacherSubbedToBoard.objects.filter(board=this_board, teacher = teacher).first():
+                context_dict['subscribed'] = True
             try:
                 # get the threads on the forum, along with the count of posts and time of last post for each thread
                 board = Thread.objects.all().filter(board = this_board).annotate(num_posts = Count('post'), last_post = Max('post__datetime'))
@@ -2242,6 +2250,8 @@ def new_thread(request, board_type, board_url):
         try:
             # if url is number, get board relating to that object
             this_board = Board.objects.all().get(resource = Resource.objects.all().get(id=board_url))
+            
+            
         except (Board.DoesNotExist, Resource.DoesNotExist) as e:
             # no board at this url
             context_dict['invalid'] = "invalid"
@@ -2421,5 +2431,97 @@ def thread(request, board_type, board_url, thread_id):
     
     # Render the template updating the context dictionary.
     return render_to_response('treasure/thread.html', context_dict, context)
+    
+# view to subscribe user to board
+@login_required
+def sub_board(request, board_type, board_url):
+  
+    # get context of request
+    context = RequestContext(request)
+
+    # create dictionary to pass data to templates
+    #context_dict = sidebar(request)
+    
+    # add url to contextdict
+    #context_dict['board_url']=board_url
+    #context_dict['board_type']=board_type
+    
+    userid = request.user.id
+    teacher = Teacher.objects.get(user = userid)
+    
+    #determine if other or resourceboard
+    if board_type == 'resource':
+        try:
+            # check resource has a forum attached
+            this_resource = Resource.objects.all().get(id=board_url)
+            this_board = Board.objects.all().get(resource = this_resource)
+            
+            # sub user to the board
+            new_sub = TeacherSubbedToBoard(teacher = teacher, board = this_board)
+            new_sub.save()
+            
+        except Resource.DoesNotExist:
+            # no board to sub to
+            print ERROR
+    else:
+        try:
+            # check the word has a url attached
+            this_board = Board.objects.all().get(id=board_url)
+            
+            # sub user to the board
+            new_sub = TeacherSubbedToBoard(teacher = teacher, board = this_board)
+            new_sub.save()
+            
+        except Board.DoesNotExist:
+            context_dict['invalid'] = True
+    
+    # return user to whence they came
+    return redirect(reverse('board', args=[board_type, board_url]))
+    
+# view to unsubscribe user to board
+@login_required
+def unsub_board(request, board_type, board_url):
+  
+    # get context of request
+    context = RequestContext(request)
+
+    # create dictionary to pass data to templates
+    #context_dict = sidebar(request)
+    
+    # add url to contextdict
+    #context_dict['board_url']=board_url
+    #context_dict['board_type']=board_type
+    
+    userid = request.user.id
+    teacher = Teacher.objects.get(user = userid)
+    
+    #determine if other or resourceboard
+    if board_type == 'resource':
+        try:
+            # check resource has a forum attached
+            this_resource = Resource.objects.all().get(id=board_url)
+            this_board = Board.objects.all().get(resource = this_resource)
+            
+            # sub user to the board
+            new_sub = TeacherSubbedToBoard.objects.get(teacher = teacher, board = this_board)
+            new_sub.delete()
+            
+        except Resource.DoesNotExist:
+            # no board to sub to
+            print ERROR
+    else:
+        try:
+            # check the word has a url attached
+            this_board = Board.objects.all().get(id=board_url)
+            
+            # sub user to the board
+            new_sub = TeacherSubbedToBoard.objects.get(teacher = teacher, board = this_board)
+            new_sub.delete()
+            
+        except Board.DoesNotExist:
+            context_dict['invalid'] = True
+    
+    # return user to whence they came
+    return redirect(reverse('board', args=[board_type, board_url]))
 
 ''' end of view functions '''

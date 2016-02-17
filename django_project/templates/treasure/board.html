@@ -21,7 +21,13 @@
             <h3>Discussions about: {{ title|capfirst }}</h3>
         {% endif %}
                 
-        <a class="btn btn-primary" href="{% url 'new_thread' board_type board_url %}">New Thread</a><br><br>
+        <a class="btn btn-primary" href="{% url 'new_thread' board_type board_url %}">New Thread</a>
+        {% if subscribed %}
+        <a class="btn btn-danger pull-right" href="{% url 'unsub_board' board_type board_url %}">Unsubscribe to Board</a>
+        {% else %}
+        <a class="btn btn-success pull-right" href="{% url 'sub_board' board_type board_url %}">Subscribe to Board</a>
+        {% endif %}
+        <br><br>
         
         {% if board %}
                 
@@ -35,7 +41,7 @@
                                 <th>Posted By</th>
                                 <th>Replies</th>
                                 <th>Last Post</th>
-                                <th>Created At</th>                                                              
+                                <th>Created At</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -66,7 +72,7 @@
 
         {% else %}
             <h4>No Threads on this board</h4>
-        {% endif %}   
+        {% endif %}
     
     {% endif %}
     
