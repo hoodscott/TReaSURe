@@ -83,8 +83,8 @@
                        {% if user.is_authenticated %}
 							<div id="logo">
 								<span class="image avatar48"><img src="{% static 'images/avatar.jpg' %}" alt="user avatar" /></span>
-								<h1 id="title">{{ user_teacher.firstname }} {{ user_teacher.surname }}</h1>
-								<p>{{ school }}{% ifequal school 'No School' %}, <a href="{% url 'edit_profile' %}">Add?</a>{% endifequal%}</p>
+								<h1 id="title">{{ user.teacher.firstname }} {{ user.teacher.surname }}</h1>
+								<p>{% if user.teacher.school.name %}{{ user.teacher.school.name }}{% else %}<a href="{% url 'edit_profile' %}">Add School?</a>{% endif %}</p>
 							</div>
 	                   {% endif %}
 

@@ -28,6 +28,7 @@ from treasure.models import *
 def sidebar(request):
     context_dict = {}
     
+    # this is not needed, but removing it is a pain; it is very coupled :/
     try:
         userid = request.user.id
         teacher = Teacher.objects.get(user = userid)
@@ -40,7 +41,7 @@ def sidebar(request):
         
     except Teacher.DoesNotExist:
         pass
-
+    
     return context_dict
 
 # convert a postcode to a lat,lon co-ordinate, returns -1 if not a valid postcode
