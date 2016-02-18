@@ -369,8 +369,11 @@ def edit_resource(request, resource_id):
         if request.method == 'POST':
             # Attempt to grab information from the raw form information.
             # pass in instance of the record to be updated
-            form = EditResourceForm(selected_tags, data=request.POST, instance=this_resource)
-
+            if teacher.verified == 0:
+                form = EditResourceForm(selected_tags, data=request.POST, instance=this_resource)
+            else:
+                form = VerifiedEditResourceForm(selected_tags, data=request.POST, instance=this_resource)
+            
             # If the form is valid...
             if form.is_valid():
                 # hold off on saving to avoid integrity errors.
@@ -390,6 +393,15 @@ def edit_resource(request, resource_id):
                 # save the new resource
                 new_resource.save()
                 
+                # update board related to this resource
+                try:
+                    this_board = Board.objects.get(resource=new_resource)
+                    this_board.restricted = new_resource.restricted
+                    this_board.save()
+                except BoardDoesNotExistError:
+                    # every resource should have a board associated
+                    pass
+                
                 # show user the updated page
                 return redirect(reverse('resource_view', args=[str(new_resource.id)]))
 
@@ -400,7 +412,10 @@ def edit_resource(request, resource_id):
         # Not a HTTP POST, so we render our form using two ModelForm instances.
         else:
             # pass the current records to initially populate the forms
-            form = EditResourceForm(selected_tags, instance = this_resource)
+            if teacher.verified == 0:
+                form = EditResourceForm(selected_tags, instance=this_resource)
+            else:
+                form = VerifiedEditResourceForm(selected_tags, instance=this_resource)
         
         context_dict['form'] = form
             
@@ -451,6 +466,7 @@ def register(request):
             teacher = teacher_form.save(commit=False)
             teacher.user = user
             
+            teacher.verified = 0
             teacher.datetime = datetime.now()
 
             # Now we save the UserProfile model instance.
@@ -672,9 +688,15 @@ def add_web_resource(request):
     
     selected_tags = blank_tag_dict()
     
+    userid = request.user.id
+    teacher = Teacher.objects.get(user = userid)
+    
     # A HTTP POST?
     if request.method == 'POST':
-        resource_form = ResourceForm(selected_tags, request.POST)
+        if teacher.verified == 0:
+            resource_form = ResourceForm(selected_tags, request.POST)
+        else:
+            resource_form = VerifiedResourceForm(selected_tags, request.POST)    
         web_form = WebForm(request.POST)
 
         # Have we been provided with a valid form?
@@ -693,9 +715,9 @@ def add_web_resource(request):
             # default values for hidden
             resource.hidden = 0
             
-            # todo: restrict views
-            # initially 0 for now
-            resource.restricted = 0
+            if teacher.verified == 0:
+                # unverified teachers resources are always unrestricted
+                resource.restricted = 0
             
             # this is a web resource
             resource.resource_type = "web"
@@ -731,7 +753,7 @@ def add_web_resource(request):
             web.save()
             
             # create board for this resource
-            board = Board(resource=resource, title=resource.name, boardtype='resource')
+            board = Board(resource=resource, title=resource.name, boardtype='resource', restricted=resource.restricted)
             board.save()
             
             # sub creator to the new board
@@ -746,7 +768,10 @@ def add_web_resource(request):
             print web_form.errors
     else:
         # If the request was not a POST, display the form to enter details.
-        resource_form = ResourceForm(selected_tags)
+        if teacher.verified == 0:
+            resource_form = ResourceForm(selected_tags)
+        else:
+            resource_form = VerifiedResourceForm(selected_tags)
         web_form = WebForm()
     
     # create dictionary to pass data to templates
@@ -765,10 +790,18 @@ def add_file_resource(request):
     context = RequestContext(request)
     
     selected_tags = blank_tag_dict()
+    
+    userid = request.user.id
+    teacher = Teacher.objects.get(user = userid)
 
     # A HTTP POST?
     if request.method == 'POST':
-        resource_form = ResourceForm(selected_tags, request.POST)
+        print teacher.verified
+        if teacher.verified == 0:
+            resource_form = ResourceForm(selected_tags, request.POST)
+        else:
+            resource_form = VerifiedResourceForm(selected_tags, request.POST)
+            print "verified"
         file_form = FileForm(request.POST, request.FILES)
 
         # Have we been provided with a valid form?
@@ -787,9 +820,9 @@ def add_file_resource(request):
             # default values for hidden
             resource.hidden = 0
             
-            # todo: restrict views
-            # initially 0 for now
-            resource.restricted = 0
+            if teacher.verified == 0:
+                # unverified teachers resources are always unrestricted
+                resource.restricted = 0
             
             # this is a file resource
             resource.resource_type = "file"
@@ -826,7 +859,7 @@ def add_file_resource(request):
             files.save()
             
             # create board for this resource
-            board = Board(resource=resource, title=resource.name, boardtype='resource')
+            board = Board(resource=resource, title=resource.name, boardtype='resource', restricted=resource.restricted)
             board.save()
             
             # sub creator to the new board
@@ -841,7 +874,10 @@ def add_file_resource(request):
             print file_form.errors
     else:
         # If the request was not a POST, display the form to enter details.
-        resource_form = ResourceForm(selected_tags)
+        if teacher.verified == 0:
+            resource_form = ResourceForm(selected_tags)
+        else:
+            resource_form = VerifiedResourceForm(selected_tags)
         file_form = FileForm()
     
     # create dictionary to pass data to templates
@@ -1503,7 +1539,10 @@ def edit_pack(request, pack_id):
         if request.method == 'POST':
             # Attempt to grab information from the raw form information.
             # pass in instance of the record to be updated
-            form = EditPackForm(selected_tags, data=request.POST, instance=this_pack)
+            if teacher.verified == 0:
+                form = EditPackForm(selected_tags, request.POST, request.FILES, instance=this_pack)
+            else:
+                form = VerifiedEditPackForm(selected_tags, request.POST, request.FILES, instance=this_pack)
 
             # If form is valid...
             if form.is_valid():
@@ -1534,7 +1573,10 @@ def edit_pack(request, pack_id):
         # Not a HTTP POST, so we render our form using two ModelForm instances.
         else:
             # pass the current records to initially populate the forms
-            form = EditPackForm(selected_tags, instance = this_pack)
+            if teacher.verified == 0:
+                form = EditPackForm(selected_tags, instance = this_pack)
+            else:
+                form = VerifiedEditPackForm(selected_tags, instance = this_pack)
         
         context_dict['form'] = form
             
@@ -1602,10 +1644,15 @@ def evolve(request, parent_id):
     # get tags of parent
     selected_tags = populate_tag_dict(parent_id, Resource)
     
+    userid = request.user.id
+    teacher = Teacher.objects.get(user = userid)    
+    
     # A HTTP POST?
     if request.method == 'POST':
-        
-        resource_form = EvolveResourceForm(selected_tags,request.POST)
+        if teacher.verified == 0:
+            resource_form = EvolveResourceForm(selected_tags, request.POST)
+        else:
+            resource_form = VerifiedEvolveResourceForm(selected_tags, request.POST)
         file_form = FileForm(request.POST, request.FILES)
         web_form = WebForm(request.POST)
         
@@ -1620,14 +1667,13 @@ def evolve(request, parent_id):
                 userid = request.user.id
                 teacher = Teacher.objects.get(user = userid)
                 resource.author = teacher
-                # needed? resource.author = Teacher.objects.get(id = teacher.id)
                 
-                #default hidden
+                #not hidden by default
                 resource.hidden = 0
                 
-                # todo: implement restrictions
-                # initially 0 for now
-                resource.restricted = 0
+                if teacher.verified == 0:
+                    # unverified teachers resources are always unrestricted
+                    resource.restricted = 0
                 
                 # set type of resource
                 resource.resource_type = 'file'
@@ -1667,7 +1713,7 @@ def evolve(request, parent_id):
                 evolve_notify(resource, parent_resource.author.user, parent_resource)
                 
                 # create board for this resource
-                board = Board(resource=resource, title=resource.name, boardtype='resource')
+                board = Board(resource=resource, title=resource.name, boardtype='resource', restricted = resource.restricted)
                 board.save()
                 
                 # sub creator to the new board
@@ -1695,12 +1741,12 @@ def evolve(request, parent_id):
                 teacher = Teacher.objects.get(user = userid)
                 resource.author = teacher
                 
-                #default hidden
+                #not hidden by default
                 resource.hidden = 0
                 
-                # todo: implement restrictions
-                # initially 0 for now
-                resource.restricted = 0
+                if teacher.verified == 0:
+                    # unverified teachers resources are always unrestricted
+                    resource.restricted = 0
                 
                 # set type of resource
                 resource.resource_type = 'web'
@@ -1740,7 +1786,7 @@ def evolve(request, parent_id):
                 evolve_notify(resource, parent_resource.author.user, parent_resource)
                 
                 # create board for this resource
-                board = Board(resource=resource, title=resource.name, boardtype='resource')
+                board = Board(resource=resource, title=resource.name, boardtype='resource', restricted=resource.restricted)
                 board.save()
                 
                 # sub creator to the new board
@@ -1757,7 +1803,11 @@ def evolve(request, parent_id):
         
     else:
         # If the request was not a POST, display the form to enter details.
-        resource_form = EvolveResourceForm(selected_tags)
+        if teacher.verified == 0:
+            resource_form = EvolveResourceForm(selected_tags)
+        else:
+            resource_form = VerifiedEvolveResourceForm(selected_tags)
+
         file_form = FileForm()
         web_form = WebForm()
     
@@ -1874,9 +1924,14 @@ def newpack(request):
     # get tags of resource
     selected_tags = blank_tag_dict()
     
+    teacher = request.user.teacher    
+    
     # A HTTP POST?
     if request.method == 'POST':
-        form = PackForm(selected_tags, request.POST, request.FILES)
+        if teacher.verified == 0:
+            form = PackForm(selected_tags, request.POST, request.FILES)
+        else:
+            form = VerifiedPackForm(selected_tags, request.POST, request.FILES)
 
         # Have we been provided with a valid form?
         if form.is_valid():
@@ -1889,17 +1944,15 @@ def newpack(request):
             # default values for hidden
             this_pack.hidden = 0
             
-            # todo: restrict views
-            # initially 0 for now
-            this_pack.restricted = 0
+            if teacher.verified == 0:
+                # unverified teachers packs are always unrestricted
+                this_pack.restricted = 0
             
             # if this is null, choose a defualt image TODO
             this_pack.image = request.FILES['image']
             
             # add author
-            userid = request.user.id
-            teacher = Teacher.objects.get(user = userid)
-            this_pack.author = Teacher.objects.get(id = teacher.id)
+            this_pack.author = teacher
             this_pack.datetime = datetime.now()
             
             # now save the pack in the database so tags can be added
@@ -1924,7 +1977,10 @@ def newpack(request):
             print form.errors
     else:
         # If the request was not a POST, display the form to enter details.
-        form = PackForm(selected_tags)
+        if teacher.verified == 0:
+            form = PackForm(selected_tags)
+        else:
+            form = VerifiedPackForm(selected_tags)
     
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
@@ -1947,9 +2003,14 @@ def newpack_initial(request, resource_id):
     # get tags of resource
     selected_tags = blank_tag_dict()
     
+    teacher = request.user.teacher
+    
     # A HTTP POST?
     if request.method == 'POST':
-        form = PackForm(selected_tags, request.POST)
+        if teacher.verified == 0:
+            form = PackForm(selected_tags, request.POST, request.FILES)
+        else:
+            form = VerifiedPackForm(selected_tags, request.POST, request.FILES)
 
         # Have we been provided with a valid form?
         if form.is_valid():
@@ -1962,14 +2023,12 @@ def newpack_initial(request, resource_id):
             # default values for hidden
             this_pack.hidden = 0
             
-            # todo: restrict views
-            # initially 0 for now
-            this_pack.restricted = 0
+            if teacher.verified == 0:
+                # unverified teachers packs are always unrestricted
+                this_pack.restricted = 0
             
             # add author
-            userid = request.user.id
-            teacher = Teacher.objects.get(user = userid)
-            this_pack.author = Teacher.objects.get(id = teacher.id)
+            this_pack.author = teacher
             
             # now save the pack in the database so tags can be added
             this_pack.save()
@@ -2000,7 +2059,10 @@ def newpack_initial(request, resource_id):
             print form.errors
     else:
         # If the request was not a POST, display the form to enter details.
-        form = PackForm(selected_tags)
+        if teacher.verified == 0:
+            form = PackForm(selected_tags)
+        else:
+            form = VerifiedPackForm(selected_tags)
     
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
@@ -2076,6 +2138,7 @@ def newSocialAuthentication(request):
         his = request.user
         new_teacher = Teacher(user_id=his.id, firstname=his.first_name, surname=his.last_name)
         new_teacher.datetime = datetime.now()
+        new_teacher.verified = 0
         new_teacher.save()
     except Teacher.DoesNotExist:
             # Not a WebResource
@@ -2247,6 +2310,8 @@ def new_thread(request, board_type, board_url):
     context_dict['board_url'] = board_url
     context_dict['board_type'] = board_type
     
+    teacher = request.user.teacher
+    
     # check board_url coresponds to a board
     if board_type == "resource":
         try:
@@ -2269,7 +2334,10 @@ def new_thread(request, board_type, board_url):
     if request.method == 'POST':
         # Attempt to grab information from the raw form information.
         # pass in instance of the record to be updated
-        form = PostThreadForm(request.POST)
+        if teacher.verified == 0:
+            form = PostThreadForm(request.POST)
+        else:
+            form = VerifiedPostThreadForm(request.POST)
 
         # If the form is valid...
         if form.is_valid():
@@ -2295,11 +2363,19 @@ def new_thread(request, board_type, board_url):
             new_thread.board = this_board
             
             # set author
-            teacher = Teacher.objects.all().get(user = request.user)
             new_thread.author = teacher
             
             # set time of threadposting
             new_thread.datetime = datetime.now()
+            
+            print teacher.verified
+            
+            if teacher.verified == 0:
+                print "inside"
+                # unverified teachers resources are always unrestricted
+                new_thread.restricted = 0
+            else:
+                print "outside"
             
             # save the new resource
             new_thread.save()
@@ -2328,7 +2404,10 @@ def new_thread(request, board_type, board_url):
     # Not a HTTP POST, so we render our form using two ModelForm instances.
     else:
         # pass the current records to initially populate the forms
-        form = PostThreadForm()
+        if teacher.verified == 0:
+            form = PostThreadForm()
+        else:
+            form = VerifiedPostThreadForm()
     
     context_dict['form'] = form
     

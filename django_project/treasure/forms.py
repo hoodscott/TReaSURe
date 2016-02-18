@@ -13,7 +13,7 @@ HIDDEN = (
 
 # define values for restriction
 RESTRICTED = (
-    ('0', 'Pubic'),
+    ('0', 'Public'),
     ('1', 'Scottish Teachers Only'),
 )
 
@@ -46,8 +46,6 @@ class RatingForm(forms.Form):
 
 
 class ResourceForm(forms.ModelForm):
-
-
         
     name = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
                             max_length=128,
@@ -62,7 +60,7 @@ class ResourceForm(forms.ModelForm):
     description = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
                             help_text="The full description of the Resource. This will appear when viewing that resource.",
                             required=False,
-                            label='Description*')
+                            label='Description')
                             
     tree = forms.CharField(widget = forms.HiddenInput(), required=False)
     user = forms.CharField(widget = forms.HiddenInput(), required=False)
@@ -110,6 +108,14 @@ class ResourceForm(forms.ModelForm):
         fields = ('evolution_type', 'evolution_explanation', 'name', 'summary', 'description', 'tree', 'user', 'hidden', 'restricted', 'resource_type')
         exclude = []
 
+# extends the resource form for verified teachers to allow them to hide their work from non verified users
+class VerifiedResourceForm(ResourceForm):
+    restricted = forms.ChoiceField(choices=RESTRICTED,
+                        required=True,
+                        label='Restricted*',
+                        help_text="Should this be viewable by anyone or just scottish teachers?",
+                        widget = forms.Select(attrs={'tabindex':'1'}))
+
 # extends the resource form to add the evolution types
 class EvolveResourceForm(ResourceForm):
     # stores the form of evolution (creation, amendment, etc.)
@@ -122,12 +128,20 @@ class EvolveResourceForm(ResourceForm):
     evolution_explanation = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
                             help_text="In what way have you \"evolved\" this resource?",
                             required=False,
-                            label='Explanation of Evolution*')
+                            label='Explanation of Evolution')
                             
     name = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
                             max_length=128,
                             help_text="The resource name.",
                             label='Name*')
+                            
+# extends the evolve form for verified teachers to allow them to hide their work from non verified users
+class VerifiedEvolveResourceForm(EvolveResourceForm):
+    restricted = forms.ChoiceField(choices=RESTRICTED,
+                        required=True,
+                        label='Restricted*',
+                        help_text="Should this be viewable by anyone or just scottish teachers?",
+                        widget = forms.Select(attrs={'tabindex':'1'}))
 
         
 class FileForm(forms.ModelForm):
@@ -193,7 +207,7 @@ class TeacherForm(forms.ModelForm):
                                 widget = forms.TextInput(attrs={'tabindex':'1'}))
     school = forms.ModelChoiceField(queryset=School.objects.all().order_by('name'),
                                     required=False,
-                                    label='School*',
+                                    label='School',
                                     help_text="The school you work for",
                                     widget = forms.Select(attrs={'tabindex':'1'}))
 
@@ -292,12 +306,13 @@ class PackForm(forms.ModelForm):
     description = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
                             help_text="The full description of the pack. This will appear when viewing a pack.",
                             required=False,
-                            label='Description*')
+                            label='Description')
                             
     user = forms.CharField(widget = forms.HiddenInput(), required=False)
     
-    image = forms.ImageField(widget = forms.ClearableFileInput(attrs={'tabindex':'1'}),
+    image = forms.ImageField(widget = forms.FileInput(attrs={'tabindex':'1'}),
                             label="Upload Image",
+                            required=False,
                             help_text='Select the resource to upload: Maximum of 42MB')
     
     # should the pack be shown (basically deleted if not)
@@ -332,12 +347,20 @@ class PackForm(forms.ModelForm):
         model = Pack
         fields = ('explore', 'name', 'summary', 'description', 'image', 'hidden', 'restricted')
         exclude = []
+
+# extends the pack form for verified teachers to allow them to hide their work from non verified users
+class VerifiedPackForm(PackForm):
+    restricted = forms.ChoiceField(choices=RESTRICTED,
+                        required=True,
+                        label='Restricted*',
+                        help_text="Should this be viewable by anyone or just scottish teachers?",
+                        widget = forms.Select(attrs={'tabindex':'1'}))
         
 class EditResourceForm(forms.ModelForm):
     
     summary = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
                         max_length=128,
-                        label='Summary',
+                        label='Summary*',
                         help_text="A short description. This will appear in resource lists.")
     
     description = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
@@ -348,12 +371,12 @@ class EditResourceForm(forms.ModelForm):
     level_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(tagtype=0).order_by('name'),
                                                 required=True,
-                                                label='Level Tags',
+                                                label='Level Tags*',
                                                 help_text="Tags that describe the Level that this material concerns")
     topic_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(tagtype=1).order_by('name'),
                                                 required=True,
-                                                label='Topic Tags',
+                                                label='Topic Tags*',
                                                 help_text="Tags that describe the Topic that this material covers")
     other_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(tagtype=2).order_by('name'),
@@ -363,16 +386,11 @@ class EditResourceForm(forms.ModelForm):
 
     hidden = forms.ChoiceField(choices=HIDDEN,
                                 required=True,
-                                label='Visible',
+                                label='Visible*',
                                 help_text="Should this be visible or hidden?",
                                 widget = forms.Select(attrs={'tabindex':'1'}))
     
-    ''' todo: implement restrictions
-    visible = forms.ChoiceField(choices=VISIBLE,
-                            required=True,
-                            label='Visible',
-                            help_text="Should this be viewable by anyone or just scottish teachers?",
-                            widget = forms.Select(attrs={'tabindex':'1'}))'''
+    restricted = forms.IntegerField(widget = forms.HiddenInput(), required=False)
                             
     def __init__(self,tags,*args,**kwargs):
         self.tag_ids = tags
@@ -385,8 +403,16 @@ class EditResourceForm(forms.ModelForm):
         
     class Meta:
         model = Resource
-        fields = ('name', 'summary', 'description', 'hidden')
+        fields = ('name', 'summary', 'description', 'hidden', 'restricted')
         exclude = []
+        
+# extends the edit resource form for verified teachers to allow them to hide their work from non verified users
+class VerifiedEditResourceForm(EditResourceForm):
+    restricted = forms.ChoiceField(choices=RESTRICTED,
+                        required=True,
+                        label='Restricted*',
+                        help_text="Should this be viewable by anyone or just scottish teachers?",
+                        widget = forms.Select(attrs={'tabindex':'1'}))
     
                                                 
 class EditPackForm(forms.ModelForm):
@@ -401,10 +427,10 @@ class EditPackForm(forms.ModelForm):
                             required=False,
                             label='Description')
     
-    image = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1'}),
-                            max_length=128,
-                            help_text="URL for the Pack's image",
-                            label='Image URL')
+    image = forms.ImageField(widget = forms.ClearableFileInput(attrs={'tabindex':'1'}),
+                            label="Upload Image",
+                            required=False,
+                            help_text='Select the resource to upload: Maximum of 42MB')
     
     level_tags = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(attrs={'tabindex':'1'}),
                                                 queryset=Tag.objects.filter(tagtype=0).order_by('name'),
@@ -422,16 +448,11 @@ class EditPackForm(forms.ModelForm):
 
     hidden = forms.ChoiceField(choices=HIDDEN,
                                 required=True,
-                                label='Visible',
+                                label='Visible*',
                                 help_text="Should this be visible or hidden?",
                                 widget = forms.Select(attrs={'tabindex':'1'}))
-    
-    ''' todo: implement restrictions
-    visible = forms.ChoiceField(choices=VISIBLE,
-                            required=True,
-                            label='Visible',
-                            help_text="Should this be viewable by anyone or just scottish teachers?",
-                            widget = forms.Select(attrs={'tabindex':'1'}))'''
+                                
+    restricted = forms.IntegerField(widget = forms.HiddenInput(), required=False)
                             
     def __init__(self,tags,*args,**kwargs):
         self.tag_ids = tags
@@ -444,20 +465,28 @@ class EditPackForm(forms.ModelForm):
         
     class Meta:
         model = Pack
-        fields = ('summary', 'description', 'image', 'hidden')
+        fields = ('summary', 'description', 'image', 'hidden', 'restricted')
         exclude = []
+        
+# extends the edit resource form for verified teachers to allow them to hide their work from non verified users
+class VerifiedEditPackForm(EditPackForm):
+    restricted = forms.ChoiceField(choices=RESTRICTED,
+                        required=True,
+                        label='Restricted*',
+                        help_text="Should this be viewable by anyone or just scottish teachers?",
+                        widget = forms.Select(attrs={'tabindex':'1'}))
         
 class PostThreadForm(forms.ModelForm):
     
     title = forms.CharField(max_length=128,
                                 help_text="The title of the thread.",
-                                label='Thread Title',
+                                label='Thread Title*',
                                 widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}))
                                 
     content = forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
                             help_text="The body content of the thread.",
                             required=True,
-                            label='Thread Body')
+                            label='Thread Body*')
                             
     TYPE = (
         ('1', 'Question'),
@@ -475,10 +504,20 @@ class PostThreadForm(forms.ModelForm):
     rating = forms.CharField(widget = forms.HiddenInput(), required=False)
     user = forms.CharField(widget = forms.HiddenInput(), required=False)
     
+    restricted = forms.IntegerField(widget = forms.HiddenInput(), required=False)
+    
     class Meta:
         model = Thread
-        fields = ('title', 'content', 'threadtype')
+        fields = ('title', 'content', 'threadtype', 'restricted')
         exclude = []
+        
+# extends the post thread form for verified teachers to allow them to hide their work from non verified users
+class VerifiedPostThreadForm(PostThreadForm):
+    restricted = forms.ChoiceField(choices=RESTRICTED,
+                        required=True,
+                        label='Restricted*',
+                        help_text="Should this be viewable by anyone or just scottish teachers?",
+                        widget = forms.Select(attrs={'tabindex':'1'}))
         
 class PostPostForm(forms.ModelForm):
     

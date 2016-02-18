@@ -14,7 +14,7 @@
     <br/>
     <div class="container">
         {% if form %}
-            <form class="span6" id="edit_pack_form" method="post" action="{% url 'edit_pack' pack_id %}">
+            <form class="span6" id="edit_pack_form" method="post" action="{% url 'edit_pack' pack_id %}" enctype="multipart/form-data">
 	
 				    {% csrf_token %}
 			
@@ -28,6 +28,9 @@
                     {{ field }}
                     {% if field.label == "Other Tags" %}
                     <a class="btn btn-info pull-right" href="{% url 'add_tag' %}?editpack,{{ pack_id }}">Add Tag</a>
+                    {% endif %}
+                    {% if field.label == "Upload Image" %}
+                    <br><br>
                     {% endif %}
 				    {% endfor %}
 				
