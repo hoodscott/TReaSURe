@@ -47,6 +47,9 @@ class Teacher(models.Model):
     hubs = models.ManyToManyField(Hub, blank=True)
     
     datetime = models.DateTimeField()
+    
+    # is this teacher able to see restricted resources/packs/boards/threads
+    verified = models.IntegerField()
 	
     def __unicode__(self):
         return "%s %s" % (self.firstname, self.surname)
@@ -85,10 +88,10 @@ class Pack(models.Model):
     # short summary
     summary = models.CharField(max_length=128)
     
-    # should the resource be shown (basically deleted if not)
+    # should the pack be shown (basically deleted if not)
     hidden = models.IntegerField()
     
-    # is this resource restricted to scottish teachers
+    # is this pack restricted to scottish teachers
     restricted = models.IntegerField()
 
     # creates a many to many relationship with tags
@@ -310,6 +313,9 @@ class Board(models.Model):
     )
     boardtype = models.CharField(max_length=32, choices=BOARDTYPES)
     
+    # is this board restricted to scottish teachers
+    restricted = models.IntegerField()
+    
     def __unicode__(self):
         return "%s" % (self.title)
 
@@ -337,6 +343,9 @@ class Thread(models.Model):
     
     # optional rating attached
     rating = models.OneToOneField(TeacherRatesResource, null=True, blank=True)
+    
+    # is this thread restricted to scottish teachers
+    restricted = models.IntegerField()
     
     def __unicode__(self):
         return "%s %s" % (self.board, self.title)
