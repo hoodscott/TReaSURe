@@ -9,34 +9,35 @@
 {% block body_block %}
 {% if teacher %}
     <div class="hero-unit row-fluid">
-	    <h2>Profile Details</h2><br>
-		<ul>
-			<li>Username</li>
-			<li><input type="text" value="{{username}}" disabled="disabled"></li>
-			<li>E-mail</li>
-			<li><input type="text" value="{{user_email}}" disabled="disabled"></li>
-			<li>Password</li>
-			<li><input type="text" value="************" disabled="disabled">
-			    <a href="{% url 'change_password' %}">Change your password?</a>
-			</li>
-			<li>First Name</li>
-			<li><input type="text" value="{{user_firstname}}" disabled="disabled"></li>
-			<li>Last Name</li>
-			<li><input type="text" value="{{user_lastname}}" disabled="disabled"></li>
-			<li>School</li>
-			<li>
-				<ul><li>{% if user_school %}<a href="{% url 'school_view' user_school.id %}">{{ user_school.name }}</a>{% else %} You have not added any schools in your profile.{% endif %}</li></ul>
-			</li>
-			<li>Hub</li>
-			<li>{% if user_hubs %}
-				<ul>
-				{% for hub in user_hubs %}
-					<li><a href="{% url 'hub_view' hub.id %}">{{ hub.name }}</a></li>
-				{% endfor %}
-				</ul>
-				{% else %} You have not added any hubs in your profile.{% endif %}</li>
-		</ul>
-		<a class="btn btn-primary" href="{% url 'edit_profile' %}">Edit Profile</a>
+	      <h2>Profile Details</h2><br>
+    		<ul>
+      			<li>Username</li>
+      			<li><input type="text" value="{{username}}" disabled="disabled"></li>
+      			<li>E-mail</li>
+      			<li><input type="text" value="{{user_email}}" disabled="disabled"></li>
+      			<li>Password</li>
+      			<li><input type="text" value="************" disabled="disabled">
+      			    <a href="{% url 'change_password' %}">Change your password?</a>
+      			</li>
+      			<li>First Name</li>
+      			<li><input type="text" value="{{user_firstname}}" disabled="disabled"></li>
+      			<li>Last Name</li>
+      			<li><input type="text" value="{{user_lastname}}" disabled="disabled"></li>
+      			<li>School</li>
+      			<li><ul>
+      				  <li>{% if user_school %}<a href="{% url 'school_view' user_school.id %}">{{ user_school.name }}</a>{% else %} You have not added any schools in your profile.{% endif %}</li>
+      			</ul></li>
+      			<li>Hub</li>
+      			<li>
+      	    {% if user_hubs %}
+        				<ul>
+        				{% for hub in user_hubs %}
+        			      <li><a href="{% url 'hub_view' hub.id %}">{{ hub.name }}</a></li>
+        				{% endfor %}
+        				</ul>
+      		  {% else %} You have not added any hubs in your profile.{% endif %}</li>
+    		</ul>
+    		<a class="btn btn-primary" href="{% url 'edit_profile' %}">Edit Profile</a>
     </div>
 {% else %}
 	<div class="hero-unit">

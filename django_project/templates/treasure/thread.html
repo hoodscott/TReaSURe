@@ -4,12 +4,12 @@
 {% load render_help %}
 
 {% block title %}
-    Thread
+    {{  thread.title  }}
 {% endblock %}
 
 {% block body_block %}
 
-<div class="span10 hero-unit">
+<div class="hero-unit">
     {% if invalid %}
         <h3>Malformed url</h3>
         <a href="{% url 'home' %}">Return to Homepage</a>
@@ -43,7 +43,7 @@
         <br>
         <form class="span6" id="upload_form" method="post" action="{% url 'thread' board_type board_url thread_id %}">
 
-        {% csrf_token %}
+            {% csrf_token %}
         
             {% for hidden in form.hidden_fields %}
                 {{ hidden }}

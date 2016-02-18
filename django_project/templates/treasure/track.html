@@ -7,9 +7,8 @@
 {% endblock %}
 
 {% block body_block %}
-  <div style="height:480px; width:640px">
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDudWkR_tpJ06lIarBZm3qIngNAae1RXNw&scale=1&signed_in=true">
-</script>
+<div style="height:480px; width:640px">
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDudWkR_tpJ06lIarBZm3qIngNAae1RXNw&scale=1&signed_in=true"></script>
 
         <div>
           <ul style="margin: 0;">
@@ -18,7 +17,7 @@
             <input style="margin-right: 5px;"  id="UsageCheckbox" type="checkbox" onclick="toggleGroup('Used')" {% ifequal timeline 'timeline'%}disabled="disabled" checked="checked"{% endifequal %} />Feedback
             <input style="margin-right: 30px;" id="FeedbackCheckbox" type="checkbox" onclick="toggleGroup('Rated')" {% ifequal timeline 'timeline'%}disabled="disabled" checked="checked"{% endifequal %} />People happy to discuss it
             <input style="margin-right: 30px;" id="DiscussionCheckbox" type="checkbox" onclick="toggleGroup('Discuss')" {% ifequal timeline 'timeline'%}disabled="disabled"{% endifequal %} />
-                {% ifequal timeline 'timeline' %} 
+                {% ifequal timeline 'timeline' %}
             <div class='btn' onclick='window.location.assign("../")'>Timeline Animation <input type="checkbox" checked="checked"/></div>
             {% else %}
             <div class='btn' onclick='window.location.assign("./timeline/")'>Timeline Animation <input type="checkbox"/></div>
@@ -31,13 +30,13 @@
                 <option value="Bounds">Best View</option>
               </select>
           </ul>
-        </div>     
+        </div>
         <div id="map" style="height: 100%; min-height: 480px; width: 100%"><div style="text-align:center;">
 			<span style="color:Gray;">Loading map...</span>
 		</div>
   
   <div id="legend" style="z-index: 0; position: absolute; top: 0px; left: 100px;">
-	  <b>Resources:</b> <img src="{% static 'images/dlicon.png' %}" alt="Downlaoded" /> Downloaded 
+	  <b>Resources:</b> <img src="{% static 'images/dlicon.png' %}" alt="Downlaoded" /> Downloaded
 	  <img src="{% static 'images/classicon.png' %}" alt="Used" /> Used
 	</div>
     </div>
@@ -47,23 +46,23 @@
   var downloaded=[];
   var used=[];
   var rated=[];
-  var discuss=[]; 
+  var discuss=[];
   var maxLat = -90;
   var minLat = 90;
   var maxLon = -180;
-  var minLon = 180;  
+  var minLon = 180;
   {% for download in downloaded %}
   pushNcheck("Downloaded",{{download.latitude}},{{download.longitude}});
   {% endfor %}
   {% for usage in used %}
   pushNcheck("Used",{{usage.latitude}},{{usage.longitude}});
-  {% endfor %}  
+  {% endfor %}
   {% for rating in rated %}
   pushNcheck("Rated",{{rating.latitude}},{{rating.longitude}});
-  {% endfor %} 
+  {% endfor %}
   {% for person in discuss %}
   pushNcheck("Discuss",{{person.latitude}},{{person.longitude}});
-  {% endfor %} 
+  {% endfor %}
 
   var infoWindow = new google.maps.InfoWindow();
   var UK = {lat: 54.53, lng: -4.17};
@@ -91,19 +90,19 @@ var infoWindow = new google.maps.InfoWindow();
 var loadingTime=14000;
 var delay= {{animationTimeout}};
 
-for (i = 0; i < downloaded.length; i++) { 
+for (i = 0; i < downloaded.length; i++) {
   {% ifequal timeline 'timeline' %}addMarkerWithTimeout(downloaded, i, (loadingTime+i*delay), dlicon, "Downloaded");{% else %}addMarker(downloaded, i, dlicon, "Downloaded");{% endifequal %}
 }
 
-for (i = 0; i < used.length; i++) { 
+for (i = 0; i < used.length; i++) {
   {% ifequal timeline 'timeline' %}addMarkerWithTimeout(used, i, (loadingTime+i*delay), classicon, "Used");{% else %}addMarker(used, i, classicon, "Used");{% endifequal %}
-} 
+}
 
-for (i = 0; i < rated.length; i++) { 
+for (i = 0; i < rated.length; i++) {
   {% ifequal timeline 'timeline' %}addMarkerWithTimeout(rated, i, (loadingTime+i*delay), fbicon, "Rated");{% else %}addMarker(rated, i, fbicon, "Rated");{% endifequal %}
 }
 
-for (i = 0; i < discuss.length; i++) { 
+for (i = 0; i < discuss.length; i++) {
   {% ifequal timeline 'timeline' %}addMarkerWithTimeout(discuss, i, (loadingTime+i*delay), fbicon, "Happy to talk about it!");{% else %}addMarker(rated, i, fbicon, "Discuss");{% endifequal %}
 }
 

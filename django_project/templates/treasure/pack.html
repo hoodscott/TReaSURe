@@ -8,6 +8,7 @@
 
 {% block body_block %}
 {% if pack %}
+{% if pack.restricted <= request.user.teacher.verified %}
 <div class="row-fluid hero-unit">
 
     <div class="span8">
@@ -29,7 +30,7 @@
         {% endif %}
     </div>
     
-    <div class="span3">
+    <div class="span4">
         
         <div class=""> <img src="/secret/{{ pack.image }}" style="width: 120px; height: 120px;" data-src="holder.js/120x120" alt="120x120"></div>
         
@@ -83,11 +84,13 @@
 		                </thead>
 		                <tbody>
 		                    {% for resource in pack_resources %}
+		                        {% if resource.restricted <= request.user.teacher.verified %}
 		                        <tr class="Label">
 		                            <td><a href="{% url 'resource_view' resource.id %}">{{resource.name}}</a></td>
 		                            <td>{{resource.author}}</td>
 		                            <td>{{resource.summary}}</td>
 		                        </tr>
+		                        {% endif %}
 		                    {% endfor %}
 
 		                </tbody>
@@ -101,6 +104,9 @@
     {% endif %}
     
 </div>
+{% else %}
+    <div class="hero-unit"><h3>This pack is restricted to verified Scottish teachers only.</h3></div>
+{% endif %}
 {% else %}
     <div class="hero-unit"><h3>Wrong URL, or Pack no longer exists.</h3></div>
 {% endif %}

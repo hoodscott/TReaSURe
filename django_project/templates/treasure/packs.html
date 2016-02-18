@@ -8,107 +8,100 @@
 {% endblock %}
 
 {% block body_block %}
-<div class="span12">
-    <div class="row" id="toprow">
-    <div class="span9 hero-unit container panel panel-default">
-        <div class="row panel-heading clearfix">
+
+<div class="span7 hero-unit container panel panel-default">
+    <div class="row panel-heading clearfix">
         <h3>Packs</h3>
-        </div>
-        <div class="span5"><a class="btn btn-block btn-primary" href="{% url 'newpack' %}">Add Pack</a></div>
-        <br/>
-        <hr>
+    </div>
+    <div class="span4"><a class="btn btn-block btn-primary" href="{% url 'newpack' %}">Add Pack</a></div>
+    <br/>
+    <hr>
 
 
         
-        <div class="row panel-body">
-            <div class="span8 table-responsive" style="margin-left:0px">
-                <table id="Packs" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                    <thead>
-                        <tr>
-                            <th>Pack Name</th>
-                            <th>Author</th>
-                            <th>Summary</th>
+    <div class="row panel-body">
+        <div class="span6 table-responsive" style="margin-left:0px">
+            <table id="Packs" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Pack Name</th>
+                        <th>Author</th>
+                        <th>Summary</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pack in packs %}
+                        {% if pack.restricted <= request.user.teacher.verified %}
+                        <tr class="studentLabel">
+                            <td><a href="{% url 'pack' pack.id %}">{{ pack.name }}</a></td>
+                            <td>{{pack.author}}</td>
+                            <td>{{pack.summary}}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for pack in packs %}
-                            {% if pack.hidden != 1 and pack.restricted != 1 %}
-                            <tr class="studentLabel">
-                                <td><a href="{% url 'pack' pack.id %}">{{ pack.name }}</a></td>
-                                <td>{{pack.author}}</td>
-                                <td>{{pack.summary}}</td>
-                            </tr>
-                            {% endif %}
-                        {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+             </table>
+        </div>
+    </div> <!-- close panel -->
+</div> <!-- close body -->
 
-                    </tbody>
-                 </table>
-            </div>
-        </div> <!-- close panel -->
-        
-    </div> <!-- close body -->
-    <div class="span3 hero-unit">
-                        <form id="search_form" method="post" action="{% url 'packs' %}">
-        
-                    {% csrf_token %}
-                        <div class="span3" style="margin-left:-2em">
-                            <h3 class="span2">Refine Search</h3>
-                        {% for field in form.visible_fields %}
-                            <div class="span2">
-                                {{ field.errors }}
-                                {{field.label}}{% render_help_text field %}<br/>
-                                {{ field }}<br/>
-                            </div>
-                        {% endfor %}
-                        </div>
-                    <div class="span12" style="margin-left:-0.3em"><button class="btn btn-primary" type="submit" name="submit">Search</button></div>
-                </form>
-    </div>
-    </div>
+<div class="span3 hero-unit">
+    <form id="search_form" method="post" action="{% url 'packs' %}">
+    
+        {% csrf_token %}
+
+        <h3 >Refine Search</h3>
+        {% for field in form.visible_fields %}
+            {{ field.errors }}
+            {{field.label}}{% render_help_text field %}<br/>
+            {{ field }}<br/>
+        {% endfor %}
+
+        <button class="btn btn-primary" type="submit" name="submit">Search</button>
+    </form>
 </div>
 
-	<!-- script for table -->
-	<script type="text/javascript">
-	$(document).ready(function(){
-	    // get the sting after the equals sign
-	    var split = location.search.replace('?', '').split('=')
-	    console.log(split[1])
-	    
-	    // if there is no query in url
-	    if (split[1]==undefined){
-	        // initialise the datatable with no search string
-	        $('#Packs').DataTable();
-	    }
-	    // if there is a query in the url
-	    else {
-	        // initialise tha tabel with the string in the url
-	        $('#Packs').DataTable({
-	            "oSearch": {"sSearch": split[1].replace('+',' ')}
-	        });
-	    }
-	    
-	    // update form action with query in datatable
-	    // get form
-	    var form = document.getElementById('search_form') || null;
-	    
-	    // function to update form on update
-        $('#Packs').ready(function() {
-            var value = $('.dataTables_filter input').val() || null;
-            // update the action
-            if(form && value) {
-                form.action = './?search='+value.replace(' ','+');
-            }
+<!-- script for table -->
+<script type="text/javascript">
+$(document).ready(function(){
+    // get the string after the equals sign
+    var split = location.search.replace('?', '').split('=')
+
+    // if there is no query in url
+    if (split[1]==undefined){
+        // initialise the datatable with no search string
+        $('#Packs').DataTable();
+    }
+    // if there is a query in the url
+    else {
+        // initialise tha tabel with the string in the url
+        $('#Packs').DataTable({
+            "oSearch": {"sSearch": split[1].replace('+',' ')}
         });
-        // function to update form on update
-        $('#Packs').on('search.dt', function() {
-            var value = $('.dataTables_filter input').val() || null;
-            // update the action
-            if(form && value) {
-                form.action = './?search='+value.replace(' ','+');
-            }
-        });
-	    
-	});
-	</script>
+    }
+    
+    // update form action with query in datatable
+    // get form
+    var form = document.getElementById('search_form') || null;
+    
+    // function to update form on update
+      $('#Packs').ready(function() {
+          var value = $('.dataTables_filter input').val() || null;
+          // update the action
+          if(form && value) {
+              form.action = './?search='+value.replace(' ','+');
+          }
+      });
+      // function to update form on update
+      $('#Packs').on('search.dt', function() {
+          var value = $('.dataTables_filter input').val() || null;
+          // update the action
+          if(form && value) {
+              form.action = './?search='+value.replace(' ','+');
+          }
+      });
+    
+});
+</script>
 
 {% endblock %}

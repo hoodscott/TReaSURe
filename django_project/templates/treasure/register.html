@@ -30,7 +30,7 @@
                 {% for field in user_form.visible_fields %}
                 {% if field.label != "Captcha" %}
                     {{ field.errors }}
-                    {{field.label}}{% render_help_text field %}<br/>
+                    {{ field.label }}{% render_help_text field %}<br/>
                     {{ field }}<br/>
                 {% endif%}
                 {% endfor %}
@@ -41,7 +41,7 @@
 
                 {% for field in teacher_form.visible_fields %}
                     {{ field.errors }}
-                    {{field.label}}{% render_help_text field %}<br/>
+                    {{ field.label }}{% render_help_text field %}<br/>
                     {{ field }}
                     {% if field.label == "School*" %}
                     <a class="btn btn-info pull-right" href="{% url 'add_school' %}?register">Add School</a>
@@ -54,11 +54,10 @@
                 {% for field in user_form.visible_fields %}
                 {% if field.label == "Captcha" %}
                     {{ field.errors }}
-                    {{field.label}}{% render_help_text field %}<br/>
+                    {{ field.label }}{% render_help_text field %}<br/>
                     {{ field }}<br/>
                 {% endif%}
                 {% endfor %}
-
 
                 <br/>
                 <button class="btn btn-primary" type="submit" name="submit" tabindex='1'>Register</button>
@@ -99,7 +98,5 @@ $('button[name*="submit"]').click(function() {
     sessionStorage.clear();
 });
 </script>
-
-
 
 {% endblock %}

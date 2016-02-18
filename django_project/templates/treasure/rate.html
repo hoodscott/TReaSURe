@@ -5,14 +5,13 @@
 {% block head_block%}{% if rated or condition %}<meta http-equiv="refresh" content="2; url={% url 'resource_view' this_resource.id %}" />{% endif %}{% endblock%}
 
 {% block title %}
-    Register
+    Rate this_resource.name
 {% endblock %}
 
 {% block body_block %}
-
 <div class="hero-unit">
     {% if rated %}
-        <h4>Thank you for the feedback, {{ this_teacher.firstname}}</h4>
+        <h4>Thank you for the feedback, {{ request.user.teacher.firstname}}</h4>
         <h4>You will be redirected back to the Resource, if not <a href="{% url 'resource_view' this_resource.id %}" tabindex='1'>click here.</a></h4>
     {% else %}
         {% if condition %}
@@ -23,7 +22,6 @@
         <br/>
         <div class="container">
             <form class="span6" id="rating_form" method="post" action="{% url 'rate' this_resource.id %}" enctype="multipart/form-data">
-	
                 {% csrf_token %}
             
                 {% for field in rating_form.visible_fields %}
@@ -31,7 +29,6 @@
                     {{field.label}}{% render_help_text field %}<br/>
                     {{ field }}<br/>
                 {% endfor %}
-
                 <br/>
                 <button class="btn btn-primary" type="submit" name="submit" tabindex='1'>Submit Rating</button>
             </form>
