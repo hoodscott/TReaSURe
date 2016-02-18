@@ -150,10 +150,9 @@ class Resource(models.Model):
 class FilesResource(models.Model):
     # one to one relationship with abstract resource
     resource = models.OneToOneField(Resource)
-    tmpNum=randint(0,36)
-    charset='abcudefghikak)abucdefghikak)abcdefghuikak)+'
+    
     # path to resource
-    path = models.FileField(upload_to='resources/%Y/%m/%d/'+str(tmpNum)+str(charset[tmpNum])+'/')
+    path = models.FileField(upload_to='resources/%Y/%m/%d/')
 
     def __unicode__(self):
         return self.resource.name
