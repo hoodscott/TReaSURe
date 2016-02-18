@@ -8,11 +8,13 @@
 
 {% block body_block %}
 
-<div class="span11 hero-unit">
+<div class="hero-unit">
     
     {% if invalid %}
         <h4>No Board at this URL</h4>
         <a href="{% url 'forum' %}/">Return to the main forum</a>
+    {% elif board.restricted >= request.user.teacher.verified %}
+        <h4>This board is restricted to verified Scottish teachers only.</h4>
     {% else %}
         
         {% if resource %}
@@ -30,48 +32,47 @@
         <br><br>
         
         {% if board %}
-                
-            <div class="row panel-body">
-                <div class="span10 table-responsive" style="margin-left:0px">
-                    <table id="threadTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                        <thead>
-                            <tr>
-                                <th>Thread Name</th>
-                                <th>Type</th>
-                                <th>Posted By</th>
-                                <th>Replies</th>
-                                <th>Last Post</th>
-                                <th>Created At</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for thread in board %}
-                                {% if thread.restricted != 1 %}
-                                <tr>
-                                    <td><a href="{% url 'thread' board_type board_url thread.id %}">{{ thread.title }}</a></td>
-                                    {% if thread.threadtype == '0' %}
-                                    <td>Rating</td>
-                                    {% elif thread.threadtype == '1' %}
-                                    <td>Question</td>
-                                    {% elif thread.threadtype == '2' %}
-                                    <td>Discussion</td>
-                                    {% else %}
-                                    <td>No type!</td>
-                                    {% endif %}
-                                    <td>{{ thread.author }}</td>
-                                    <td>{{ thread.num_posts }}</td>
-                                    <td>{{ thread.last_post }}</td>
-                                    <td>{{ thread.datetime }}</td>
-                                </tr>
-                                {% endif %}
-                            {% endfor %}
-                        </tbody>
-                     </table>
-                </div>
-            </div> <!-- close panel -->
+        <div class="row panel-body">
+            <div class="span10 table-responsive" style="margin-left:0px">
+                <table id="threadTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Thread Name</th>
+                            <th>Type</th>
+                            <th>Posted By</th>
+                            <th>Replies</th>
+                            <th>Last Post</th>
+                            <th>Created At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for thread in board %}
+                        {% if thread.restricted <= request.user.teacher.verified %}
+                        <tr>
+                            <td><a href="{% url 'thread' board_type board_url thread.id %}">{{ thread.title }}</a></td>
+                            {% if thread.threadtype == '0' %}
+                            <td>Rating</td>
+                            {% elif thread.threadtype == '1' %}
+                            <td>Question</td>
+                            {% elif thread.threadtype == '2' %}
+                            <td>Discussion</td>
+                            {% else %}
+                            <td>No type!</td>
+                            {% endif %}
+                            <td>{{ thread.author }}</td>
+                            <td>{{ thread.num_posts }}</td>
+                            <td>{{ thread.last_post }}</td>
+                            <td>{{ thread.datetime }}</td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                 </table>
+            </div>
+        </div> <!-- close panel -->
 
         {% else %}
-            <h4>No Threads on this board</h4>
+        <h4>No Threads on this board</h4>
         {% endif %}
     
     {% endif %}

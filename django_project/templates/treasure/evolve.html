@@ -21,7 +21,7 @@
             <div id="file" class="{% if error == "file" %}active{% endif %} tab-pane container">
                 <h3>File Evolve</h3>
                 <form class="span6" id="file_evolve" method="post" action="{% url 'evolve' resource_id %}" enctype="multipart/form-data">
-                	{% csrf_token %}
+                    {% csrf_token %}
                 
                     {% for hidden in resource_form.hidden_fields %}
                         {{ hidden }}
@@ -53,7 +53,7 @@
             <div id="web" class="{% if error == "web" %}active{% endif %} tab-pane container">
                 <h3>Web Evolve</h3>
                 <form class="span6" id="web_evolve" method="post" action="{% url 'evolve' resource_id %}" enctype="multipart/form-data">
-                	{% csrf_token %}
+                    {% csrf_token %}
                 
                     {% for hidden in resource_form.hidden_fields %}
                         {{ hidden }}
@@ -83,7 +83,7 @@
             </div>
             
             <div class="{% if not error %}active{% endif %} tab-pane container">
-                <ul><li><h3>Please select evolution type.</h3></li></ul>
+                <h3>Please select an evolution type.</h3>
             </div>
 
         </div>

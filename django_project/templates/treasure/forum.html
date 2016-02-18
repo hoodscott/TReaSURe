@@ -1,5 +1,5 @@
 {% extends 'treasure/base.html' %}
-a
+
 {% load static %}
 
 {% block title %}
@@ -7,113 +7,116 @@ a
 {% endblock %}
 
 {% block body_block %}
+{% if level_boards or general_boards or resource_boards %}
+{% else %}<div class="hero-unit"><h4>No Boards in Forum</h4></div>
+{% endif %}
 
-<div class="span11">
-    {% if level_boards or general_boards or resource_boards %}{% else %}<div class="hero-unit"><h4>No Boards in Forum</h4></div>{% endif %}
-
-    {% if level_boards %}
-    <div class="hero-unit">
-        {% if main_forum %}<h3><a href="{% url 'forum_type' 'level' %}">Level Forum</a></h3>
-        {% else %}<h3>Level Forum</h3>
-        {% endif %}
-        <div class="row panel-body">
-            <div class="span10 table-responsive" style="margin-left:0px">
-                <table id="levelBoardTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                    <thead>
-                        <tr>
-                            <th>Board Name</th>
-                            <th>Number of Threads</th>
-                            <th>Last Thread</th>
-                            <th>Last Post</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for board in level_boards %}
-                            {% if board.restricted != 1 %}
-                            <tr>
-                                <td><a href="{% url 'board' board.boardtype board.id %}">{{ board.title }}</a></td>
-                                <td>{{ board.num_threads }}</td>
-                                <td>{{ board.last_thread }}</td>
-                                <td>{{ board.last_post }}</td>
-                            </tr>
-                            {% endif %}
-                        {% endfor %}
-                    </tbody>
-                 </table>
-            </div>
-        </div> <!-- close panel -->
-    </div>
+{% if level_boards %}
+<div class="hero-unit">
+    {% if main_forum %}<h3><a href="{% url 'forum_type' 'level' %}">Level Forum</a></h3>
+    {% else %}<h3>Level Forum</h3>
     {% endif %}
     
-    {% if general_boards %}
-    <div class="hero-unit">
-        {% if main_forum %}<h3><a href="{% url 'forum_type' 'general' %}">General Forum</a></h3>
-        {% else %}<h3>General Forum</h3>
-        {% endif %}
-        <div class="row panel-body">
-            <div class="span10 table-responsive" style="margin-left:0px">
-                <table id="generalBoardTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                    <thead>
+    <div class="row panel-body">
+        <div class="span10 table-responsive" style="margin-left:0px">
+            <table id="levelBoardTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Board Name</th>
+                        <th>Number of Threads</th>
+                        <th>Last Thread</th>
+                        <th>Last Post</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for board in level_boards %}
+                        {% if board.restricted <= request.user.teacher.id %}
                         <tr>
-                            <th>Board Name</th>
-                            <th>Number of Threads</th>
-                            <th>Last Thread</th>
-                            <th>Last Post</th>
+                            <td><a href="{% url 'board' board.boardtype board.id %}">{{ board.title }}</a></td>
+                            <td>{{ board.num_threads }}</td>
+                            <td>{{ board.last_thread }}</td>
+                            <td>{{ board.last_post }}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for board in general_boards %}
-                            {% if board.restricted != 1 %}
-                            <tr>
-                                <td><a href="{% url 'board' board.boardtype board.id %}">{{ board.title }}</a></td>
-                                <td>{{ board.num_threads }}</td>
-                                <td>{{ board.last_thread }}</td>
-                                <td>{{ board.last_post }}</td>
-                            </tr>
-                            {% endif %}
-                        {% endfor %}
-                    </tbody>
-                 </table>
-            </div>
-        </div> <!-- close panel -->
-    </div>
-    {% endif %}
-    
-    {% if resource_boards %}
-    <div class="hero-unit">
-        {% if main_forum %}<h3><a href="{% url 'forum_type' 'resource' %}">Resource Forum</a></h3>
-        {% else %}<h3>Resource Forum</h3>
-        {% endif %}
-        <div class="row panel-body">
-            <div class="span10 table-responsive" style="margin-left:0px">
-                <table id="resourceBoardTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                    <thead>
-                        <tr>
-                            <th>Board Name</th>
-                            <th>Number of Threads</th>
-                            <th>Last Thread</th>
-                            <th>Last Post</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for board in resource_boards %}
-                            {% if board.restricted != 1 and board.num_threads > 0 %}
-                            <tr>
-                                <td><a href="{% url 'board' board.boardtype board.resource.id %}">{{ board.title }}</a></td>
-                                <td>{{ board.num_threads }}</td>
-                                <td>{{ board.last_thread }}</td>
-                                <td>{{ board.last_post }}</td>
-                            </tr>
-                            {% endif %}
-                        {% endfor %}
-                    </tbody>
-                 </table>
-            </div>
-        </div> <!-- close panel -->
-    </div>
-    {% endif %}
-    
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+             </table>
+        </div>
+    </div> <!-- close panel -->
 </div>
+{% endif %}
+
+{% if general_boards %}
+<div class="hero-unit">
+    {% if main_forum %}<h3><a href="{% url 'forum_type' 'general' %}">General Forum</a></h3>
+    {% else %}<h3>General Forum</h3>
+    {% endif %}
+    
+    <div class="row panel-body">
+        <div class="span10 table-responsive" style="margin-left:0px">
+            <table id="generalBoardTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Board Name</th>
+                        <th>Number of Threads</th>
+                        <th>Last Thread</th>
+                        <th>Last Post</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for board in general_boards %}
+                        {% if board.restricted <= request.user.teacher.id %}
+                        <tr>
+                            <td><a href="{% url 'board' board.boardtype board.id %}">{{ board.title }}</a></td>
+                            <td>{{ board.num_threads }}</td>
+                            <td>{{ board.last_thread }}</td>
+                            <td>{{ board.last_post }}</td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+             </table>
+        </div>
+    </div> <!-- close panel -->
+</div>
+{% endif %}
+
+{% if resource_boards %}
+<div class="hero-unit">
+    {% if main_forum %}<h3><a href="{% url 'forum_type' 'resource' %}">Resource Forum</a></h3>
+    {% else %}<h3>Resource Forum</h3>
+    {% endif %}
+    
+    <div class="row panel-body">
+        <div class="span10 table-responsive" style="margin-left:0px">
+            <table id="resourceBoardTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Board Name</th>
+                        <th>Number of Threads</th>
+                        <th>Last Thread</th>
+                        <th>Last Post</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for board in resource_boards %}
+                        {% if board.restricted <= request.user.teacher.id %}
+                        {% if board.num_threads > 0 %}
+                        <tr>
+                            <td><a href="{% url 'board' board.boardtype board.resource.id %}">{{ board.title }}</a></td>
+                            <td>{{ board.num_threads }}</td>
+                            <td>{{ board.last_thread }}</td>
+                            <td>{{ board.last_post }}</td>
+                        </tr>
+                        {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+             </table>
+        </div>
+    </div> <!-- close panel -->
+</div>
+{% endif %}
 
 {% if not main_forum %}
 <!-- scripts for tables -->

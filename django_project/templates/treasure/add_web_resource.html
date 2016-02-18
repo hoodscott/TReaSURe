@@ -15,7 +15,7 @@
     <div class="container">
         <form class="span6" id="upload_form" method="post" action="{% url 'add_web_resource' %}">
 	
-	    {% csrf_token %}
+            {% csrf_token %}
 	    
             {% for hidden in resource_form.hidden_fields %}
                 {{ hidden }}

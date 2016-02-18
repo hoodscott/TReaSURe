@@ -14,8 +14,8 @@
     <br/>
     <div class="container">
         <form class="span6" id="upload_form" method="post" action="{% url 'add_file_resource' %}" enctype="multipart/form-data">
-	
-	        {% csrf_token %}
+          
+            {% csrf_token %}
 	    
             {% for hidden in resource_form.hidden_fields %}
                 {{ hidden }}

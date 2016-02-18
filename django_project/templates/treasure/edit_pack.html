@@ -14,33 +14,33 @@
     <br/>
     <div class="container">
         {% if form %}
-            <form class="span6" id="edit_pack_form" method="post" action="{% url 'edit_pack' pack_id %}" enctype="multipart/form-data">
+        <form class="span6" id="edit_pack_form" method="post" action="{% url 'edit_pack' pack_id %}" enctype="multipart/form-data">
+
+		    {% csrf_token %}
 	
-				    {% csrf_token %}
-			
-				    {% for hidden in form.hidden_fields %}
-				        {{ hidden }}
-				    {% endfor %}
+		    {% for hidden in form.hidden_fields %}
+		        {{ hidden }}
+		    {% endfor %}
 
-				    {% for field in form.visible_fields %}
-		                {{ field.errors }}
-		                {{field.label}}{% render_help_text field %}<br/>
-                    {{ field }}
-                    {% if field.label == "Other Tags" %}
-                    <a class="btn btn-info pull-right" href="{% url 'add_tag' %}?editpack,{{ pack_id }}">Add Tag</a>
-                    {% endif %}
-                    {% if field.label == "Upload Image" %}
-                    <br><br>
-                    {% endif %}
-				    {% endfor %}
-				
-				
-				    <br/>
-                	<button class="btn btn-primary" type="submit" name="submit" tabindex='1'>Update Pack</button>
+		    {% for field in form.visible_fields %}
+                {{ field.errors }}
+                {{field.label}}{% render_help_text field %}<br/>
+                {{ field }}
+                {% if field.label == "Other Tags" %}
+                <a class="btn btn-info pull-right" href="{% url 'add_tag' %}?editpack,{{ pack_id }}">Add Tag</a>
+                {% endif %}
+                {% if field.label == "Upload Image" %}
+                <br><br>
+                {% endif %}
+		    {% endfor %}
+		
+		
+		    <br/>
+        <button class="btn btn-primary" type="submit" name="submit" tabindex='1'>Update Pack</button>
 
-            </form>
+        </form>
         {% else %}
-            <h3>This is not your pack. Access to edit; Denied!</h3>
+        <h3>This is not your pack. Access to edit; Denied!</h3>
         {% endif %}
     </div>
 </div>
