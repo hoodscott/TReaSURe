@@ -115,7 +115,7 @@ def getSubForum(board_type):
     # adds an attribute to each board that holds the count of threads on a board
     boards = boards.annotate(num_threads = Count('thread'))
     
-    # adds an attribute to each board that holds the time of the last post on a board
+    # adds an attribute to each board that holds the time of the last thread creation on a board
     boards = boards.annotate(last_thread = Max('thread__datetime'))
 
     # adds an attribute to each board that holds the time of the last post on a board
@@ -125,6 +125,25 @@ def getSubForum(board_type):
     boards = boards.order_by('-last_post')
     
     return boards
+
+# get a sorted list of threads on a board
+def getThreads(this_resource):
+    # get the board corresponding to the resource
+    this_board = Board.objects.get(resource = this_resource)
+    
+    # get the threads on this board
+    threads = Thread.objects.filter(board = this_board)
+    
+    # add an attribute to each thread to hold the number of posts of each thread
+    threads = threads.annotate(num_posts = Count('post'))
+    
+    # add an attribute to each thread to hold the time of the last post
+    threads = threads.annotate(last_post = Max('post__datetime'))
+    
+    # sort in reverse order
+    threads = threads.order_by('-datetime')
+    
+    return threads
     
 ''' end of helper functions '''
 
@@ -1204,6 +1223,9 @@ def resource_view(request, resource_id):
         
         this_board = Board.objects.get(resource=this_resource)
         context_dict['forum_count'] = Thread.objects.filter(board = this_board).count()
+        
+        # get last five forum posts
+        context_dict['threads'] = getThreads(this_resource)[:5]
         
         # used to verify it exists
         context_dict['resource'] = this_resource
