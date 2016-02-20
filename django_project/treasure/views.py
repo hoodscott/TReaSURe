@@ -696,7 +696,7 @@ def add_web_resource(request):
         if teacher.verified == 0:
             resource_form = ResourceForm(selected_tags, request.POST)
         else:
-            resource_form = VerifiedResourceForm(selected_tags, request.POST)    
+            resource_form = VerifiedResourceForm(selected_tags, request.POST)
         web_form = WebForm(request.POST)
 
         # Have we been provided with a valid form?
@@ -1102,20 +1102,20 @@ def resource_view(request, resource_id):
         rating_exists = TeacherRatesResource.objects.get(teacher_id=this_teacher.id, resource_id=this_resource.id)
         context_dict['rating_exists'] = rating_exists
     except TeacherRatesResource.DoesNotExist:
-            # do nothing
-            pass
+        # do nothing
+        pass
     try:
         downloaded = TeacherDownloadsResource.objects.get(teacher_id=this_teacher.id, resource_id=this_resource.id)
         context_dict['downloaded'] = downloaded
     except TeacherDownloadsResource.DoesNotExist:
-            # do nothing
-            pass
+        # do nothing
+        pass
     try:
         iWant2Talk = TeacherWantstoTalkResource.objects.get(teacher_id=this_teacher.id, resource_id=this_resource.id)
         context_dict['iWant2Talk'] = iWant2Talk
     except TeacherWantstoTalkResource.DoesNotExist:
-            # do nothing
-            pass
+        # do nothing
+        pass
     try:
         # Can we find a resource with the given id?
         this_resource = Resource.objects.get(id=resource_id)
@@ -1193,9 +1193,19 @@ def resource_view(request, resource_id):
             i += 1
         changelog += [previous_versions[-1]]
         
-        context_dict["changelog"] = changelog
+        context_dict['changelog'] = changelog
         
-         # used to verify it exists
+        # count up occurences
+        context_dict['download_count'] = TeacherDownloadsResource.objects.filter(resource = this_resource).count()
+        context_dict['rating_count'] = TeacherRatesResource.objects.filter(resource = this_resource).count()
+        context_dict['pack_count'] = this_resource.packs.count()
+        context_dict['2talk_count'] = TeacherWantstoTalkResource.objects.filter(resource = this_resource).count()
+        context_dict['version_count'] = i
+        
+        this_board = Board.objects.get(resource=this_resource)
+        context_dict['forum_count'] = Thread.objects.filter(board = this_board).count()
+        
+        # used to verify it exists
         context_dict['resource'] = this_resource
     except Resource.DoesNotExist:
         # We get here if we didn't find the specified resource.
@@ -1645,7 +1655,7 @@ def evolve(request, parent_id):
     selected_tags = populate_tag_dict(parent_id, Resource)
     
     userid = request.user.id
-    teacher = Teacher.objects.get(user = userid)    
+    teacher = Teacher.objects.get(user = userid)
     
     # A HTTP POST?
     if request.method == 'POST':
@@ -1924,7 +1934,7 @@ def newpack(request):
     # get tags of resource
     selected_tags = blank_tag_dict()
     
-    teacher = request.user.teacher    
+    teacher = request.user.teacher
     
     # A HTTP POST?
     if request.method == 'POST':
@@ -2368,14 +2378,9 @@ def new_thread(request, board_type, board_url):
             # set time of threadposting
             new_thread.datetime = datetime.now()
             
-            print teacher.verified
-            
             if teacher.verified == 0:
-                print "inside"
                 # unverified teachers resources are always unrestricted
                 new_thread.restricted = 0
-            else:
-                print "outside"
             
             # save the new resource
             new_thread.save()
@@ -2386,11 +2391,10 @@ def new_thread(request, board_type, board_url):
             
             # update subscribers of the board
             subscribers = TeacherSubbedToBoard.objects.filter(board = this_board)
-            print new_thread.threadtype
             if new_thread.threadtype == '1':#question
                 for sub in subscribers:
                     question_notify(new_thread, sub.teacher.user)
-            elif new_thread.threadtype == '2':#question
+            elif new_thread.threadtype == '2':#discussion
                 for sub in subscribers:
                     discussion_notify(new_thread, sub.teacher.user)
             

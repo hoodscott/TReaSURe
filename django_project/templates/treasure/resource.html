@@ -9,7 +9,7 @@
 {% block body_block %}
     {% if resource %}
         {% if resource.restricted <= request.user.teacher.verified %}
-        <div class="hero-unit row-fluid">
+        <div class="hero-unit row-fluid" id="resource">
             <div class="span8">
                 <h2>{{ resource_name}}</h2>
                 <h3><strong>{{ resource.summary }}</strong></h3>
@@ -37,6 +37,14 @@
                 {% endif %}
             </div>
             <div class="span3">
+                <span>
+                    <a href="./#resource">D:{{ download_count }}</a>&nbsp;
+                    <a href="./#feedback">R:{{ rating_count }}</a>&nbsp;
+                    <a href="./#forum">F:{{ forum_count }}</a>&nbsp;
+                    <a href="./#pack">P:{{ pack_count }}</a>&nbsp;
+                    <a href="./#want2talk">2:{{ 2talk_count }}</a>&nbsp;
+                    <a href="./#change">V:{{ version_count }}</a>&nbsp;
+                </span>
                 <hr>
                 
                 <h4><strong>Levels:</strong></h4>
@@ -71,12 +79,12 @@
            </div>
         </div>
         
-        <div class="hero-unit">
+        <div class="hero-unit" id="forum">
             <h3>Forum</h3>
             <a href="{% url 'board' 'resource' resource.id %}">Link2Forum</a>
         </div>
         
-        <div class="hero-unit">
+        <div class="hero-unit" id="pack">
             <h3>Packs</h3>
             {% if partofpacks %}
                 <div class="table-responsive">
@@ -135,7 +143,7 @@
         </div>
 
         
-        <div class="hero-unit">
+        <div class="hero-unit" id="rating">
         {% if feedback %}
             <h3>Feedback</h3>
             <div class="table-responsive">
@@ -175,7 +183,7 @@
         {% endif %}
         </div>
         
-        <div class="hero-unit">
+        <div class="hero-unit" id="change">
             <h3>Changelog</h3>
             <ul>
                 {% for change in changelog %}
