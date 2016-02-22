@@ -2222,6 +2222,8 @@ def help(request):
 
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
+    records=Help.objects.all()
+    context_dict['help']=records
     
     # Render the template updating the context dictionary.
     return render_to_response('treasure/help.html', context_dict, context)

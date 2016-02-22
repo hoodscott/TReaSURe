@@ -8,7 +8,13 @@
 
 {% block body_block %}
 <div class="hero-unit">
-    <h2>HELP</h2>
+	<h3>PlanC Sharing - Help</h3>
+    {% for record in help%}
+    <div class="well well-small">
+      <h4>{{record.question}}</h4>
+      {{record.answer}}
+    </div>
+    {% endfor %}
 </div>
 
 {% endblock %}

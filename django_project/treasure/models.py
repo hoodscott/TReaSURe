@@ -377,3 +377,11 @@ class TeacherSubbedToThread(models.Model):
     thread = models.ForeignKey(Thread)
 
 ''' end of subscription models '''
+
+# model for help texts
+class Help(models.Model):
+    question = models.CharField(max_length=128)
+    answer = models.TextField()
+
+    def __unicode__(self):
+        return self.name
