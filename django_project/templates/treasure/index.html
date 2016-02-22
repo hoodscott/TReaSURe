@@ -1,39 +1,80 @@
 {% extends 'treasure/base.html' %}
 
 {% load static %}
+{% load render_help %}
 
 {% block title %}
     Home
 {% endblock %}
 
-{% block notification%}
-{% if need2rate %}
-<section id="top" class="one dark cover">
-    <div class="container">
-        <header>
-            <h2 class="alt">Welcome back, {{ request.user.teacher.firstname }}</h2>
-            <p>The community values your opinion.
-            Please remember to <a href="{% url 'my_homepage' %}/#myratings">rate</a> the resources you download.</p>
-        </header>
-        <footer>
-            <a href="#MainPage" class="button scrolly" id="continue-browsing">Continue Browsing</a>
-        </footer>
-    </div>
-</section>
-{% endif %}
-{% endblock %}
-
 {% block body_block %}
+<div class="span5 hero-unit container panel panel-default">
+    <div class="row panel-heading clearfix">
+        <h3>Home</h3>
+        <div class="well" style="margin-left: 1.5em;"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. </div>
+    </div>
+</div>
+        
+<div class="span5 hero-unit">
+<hr>
+<ul class="nav nav-tabs">
+    <li><strong>Latest:</strong></li>
+    <li><a href="#LatestResources" data-toggle="tab">Resources</a></li>
+    <li><a href="#LatestFeedback" data-toggle="tab">Feedback</a></li>
+    <li><a href="#LatestPacks" data-toggle="tab">Packs</a></li>
+</ul>
+<hr>
+<div class="tab-content" id="tabs">
+    <div class="tab-pane" id="LatestPacks">
+        {% if new_packs %}<ol>
+        {% for p in new_packs %}
+            <li><a href="/packs/{{ p.id }}">{{ p }}</a></li>
+        {% endfor %}
+        </ol><hr>{% else %} No Packs Created Yet<hr>{% endif %}</div>
+    <div class="tab-pane" id="LatestFeedback">
+        {% if new_ratings %}<ol>
+            {% for rating in new_ratings %}
+                <li>
+                    {{ rating.teacher.user.username }} rated <a href="/resource/{{ rating.resource.id }}">
+                    {{ rating.resource.name }}</a> {{ rating.measure1 }}, {{ rating.measure2 }}, {{ rating.measure3 }}
+                </li>
+            {% endfor %}
+        </ol><hr>{% else %} No Feedback Given Yet<hr>{% endif %}</div>
+    <div class="tab-pane" id="LatestResources">
+        {% if new_resources %}<ol>
+          {% for r in new_resources %}
+              <li><a href="/resource/{{ r.id }}">{{ r }}</a></li>
+          {% endfor %}
+          </ol><hr>{% else %} No Resources Uploaded Yet <hr>{% endif %}
+    </div>
+</div>
+    <div class="well">
+        <h3><emph>{{ num_resources }} Resources;<br>{{ num_packs }} Packs;<br>{{ num_users }} Users.</emph></h3>
+    </div>
+    {% if top_resources %}
+    <hr>
+    <div>
+      <h4>Most Downloaded Resources</h4>
+        <ol>
+        {% for r in top_resources %}
+            <li><a href="/treasure/resource/{{ r.id }}">{{ r }}; {{r.num_downloads}} Downloads</a></li>
+        {% endfor %}
+        </ol>
+    <div>
 
-{% if user.is_authenticated %}
-<div class="hero-unit">
-    <h3><span class="icon-search"></span>new main page goes here</h3>
+    {% endif %}
+
 </div>
 
-{% else %}
-<div class="hero-unit">
-    <h3>Please <a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">Register</a>.</h3>
-</div>
-{% endif %}
+<!-- script for table -->
+<script type="text/javascript">
+  $(document).ready(function(){
+      // get the string after the equals sign
+  function activaTab(tab){
+      $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+  };
+  activaTab('LatestResources');
+})
+</script>
 
-{% endblock %}s
+{% endblock %}
