@@ -2183,7 +2183,7 @@ def download(request, resource_id, bypass=0):
             pass
         try:
             res = FilesResource.objects.get(resource = this_resource)
-            url='/../secret/'+str(res.path)
+            url='/../media/'+str(res.path)
         except FilesResource.DoesNotExist:
             # Not a FilesResource
             pass
