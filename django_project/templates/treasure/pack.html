@@ -32,7 +32,7 @@
     
     <div class="span4">
         
-        <div class=""> <img src="/secret/{{ pack.image }}" style="width: 120px; height: 120px;" data-src="holder.js/120x120" alt="120x120"></div>
+        <div class=""> <img {% if pack.image %}src="/secret/{{ pack.image }}"{% else %}src="http://40.media.tumblr.com/e40df6d773286fc0c457d2354badd6c5/tumblr_noilwtoDrU1upwzm1o1_500.jpg"{% endif %} style="width: 120px; height: 120px;" data-src="holder.js/120x120" alt="pack cover images"></div>
         
         <hr>
         
