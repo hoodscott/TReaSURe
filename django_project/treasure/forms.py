@@ -217,6 +217,11 @@ class TeacherForm(forms.ModelForm):
                                             help_text="The teaching hubs that you are member of (eg. Plan C)",
                                             widget = forms.SelectMultiple(attrs={'tabindex':'1'}))
 
+    scottishTeacher= forms.BooleanField(widget=forms.CheckboxInput(attrs={'tabindex':'1'}),
+                                            help_text="Are you a registered teacher in Scotland?",
+                                            required=False,
+                                            label="Registered Scottish Teacher?")
+
     def __init__(self,*args,**kwargs):
         super(TeacherForm, self).__init__(*args,**kwargs)
 

@@ -54,6 +54,17 @@ class Teacher(models.Model):
     def __unicode__(self):
         return "%s %s" % (self.firstname, self.surname)
 
+# model for tags of resources and packs
+class pendingVerification(models.Model):
+    teacher = models.ForeignKey(Teacher)
+    reviewed= models.IntegerField()
+    datetimeOfRequest = models.DateTimeField()
+    datetimeOfReview = models.DateTimeField( null=True, blank=True)
+    reviewer= models.IntegerField()
+
+    def __unicode__(self):
+        return "%s %s" % (self.teacher.firstname, self.teacher.surname)
+
 '''  end of user models '''
 
 ''' start of material models '''

@@ -320,7 +320,6 @@ def edit_profile(request,soc=0):
         # pass in instance of the record to be updated
         user_form = UserFormNoPW(data=request.POST, instance=my_user_record)
         teacher_form = TeacherForm(data=request.POST, instance=my_teacher_record)
-        visit1=Visit(tripId="",)
         # If the two forms are valid...
         if user_form.is_valid() and teacher_form.is_valid():
             # Save the user's form data to the database.
@@ -338,6 +337,10 @@ def edit_profile(request,soc=0):
             hubs = teacher_form.cleaned_data['hubs']
             for hub in hubs:
                 teacher.hubs.add(hub)
+            if teacher_form.cleaned_data['scottishTeacher']:
+                pending_verification= pendingVerification(teacher=teacher, datetimeOfRequest=datetime.now())
+                pending_verification.save()
+
             teacher.save()
             
             # Update our variable to tell the template registration was successful.
@@ -492,6 +495,9 @@ def register(request):
 
             # Now we save the UserProfile model instance.
             teacher.save()
+            if teacher_form.cleaned_data['scottishTeacher']:
+                pending_verification= pendingVerification(teacher=teacher, datetimeOfRequest=datetime.now())
+                pending_verification.save()
 
             # save the hubs the user has selected
             hubs = teacher_form.cleaned_data['hubs']
@@ -555,7 +561,7 @@ def rate(request, resource_id):
             
             # create a thread on the resources board
             this_board = Board.objects.all().get(resource=this_resource)
-            thread = Thread(board = this_board, datetime = datetime.now(), author= this_teacher, title=this_teacher.firstname+' '+this_teacher.surname+' rated this resource', content=rating.comment, threadtype=0, rating=rating, restricted = this_board.restricted)
+            thread = Thread(board = this_board, datetime = datetime.now(), author= this_teacher, title=this_teacher.firstname+' '+this_teacher.surname+' rated this resource', content=rating.comment, threadtype=0, rating=rating)
             thread.save()
             
             # update subscribers of the board
