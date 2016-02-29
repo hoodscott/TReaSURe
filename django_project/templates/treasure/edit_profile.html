@@ -52,13 +52,20 @@
   				{% endfor %}
   
   				{% for field in teacher_form.visible_fields %}
-              {{ field.errors }}
-              {{field.label}}{% render_help_text field %}<br/>
-              {{ field }}
-              {% if field.label == "School" %}
-              <a class="btn btn-info pull-right" href="{% url 'add_school' %}?editprofile">Add School</a>
-              {% elif field.label == "Hubs" %}
-              <a class="btn btn-info pull-right" href="{% url 'add_hub' %}?editprofile">Add Hub</a>
+              {% if field.label == "Registered Scottish Teacher?" %}
+                  {% if request.user.teacher.verified == 0 and not inlist %}
+                      {{ field.errors }}
+                      {{ field }}{{ field.label }}{% render_help_text field %}
+                  {% endif %}
+		          {% else %}		            
+                  {{ field.errors }}
+                  {{field.label}}{% render_help_text field %}<br/>
+                  {{ field }}
+                  {% if field.label == "School" %}
+                  <a class="btn btn-info pull-right" href="{% url 'add_school' %}?editprofile">Add School</a>
+                  {% elif field.label == "Hubs" %}
+                  <a class="btn btn-info pull-right" href="{% url 'add_hub' %}?editprofile">Add Hub</a>              
+                  {% endif %}
               {% endif %}
               <br/>
   				{% endfor %}

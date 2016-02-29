@@ -364,6 +364,12 @@ def edit_profile(request,soc=0):
     if soc!=0:
         context_dict['soc'] = 'soc'
     
+    try:
+        context_dict['inlist'] = pendingVerification.objects.get(teacher = my_teacher_record)
+    except pendingVerification.DoesNotExist:
+        # not in list
+        pass
+    
     # return response object
     return render_to_response('treasure/edit_profile.html', context_dict, context)
     
