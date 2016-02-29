@@ -1,0 +1,56 @@
+{% extends 'treasure/base.html' %}
+
+{% load static %}
+{% load render_help %}
+
+{% block title %}
+    Resources
+{% endblock %}
+
+{% block body_block %}
+{% if admin == True %}
+<div class="hero-unit container panel panel-default">
+    <div class="row panel-heading clearfix">
+        <h3>Pending Verifications</h3>
+    </div>
+    <hr>
+        
+    <div class="row panel-body">
+        <div class="table-responsive" style="margin-left:0px">
+            <table id="Reviews" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Teacher</th>
+                        <th>School</th>
+                        <th>Request Time</th>
+                        <th>Verify?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for review in reviews %}
+                        <tr class="reviewlabel">
+                            <td>{{review.teacher.firstname}} {{review.teacher.surname}}</td>
+                            <td>{{review.teacher.school.name}}</td>
+                            <td>{{review.datetimeOfRequest}}</td>
+                            <td><a href="{% url 'verify' review.id 'yes' %}">Yes</a> <a href="{% url 'verify' review.id 'no' %}">No</a></td>
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+             </table>
+        </div>
+    </div> <!-- close panel -->
+</div>
+{% else %}
+<div class="hero-unit"><h2>No permissions</h2></div>
+{% endif %}
+
+<!-- script for table -->
+<script type="text/javascript">
+$(document).ready(function(){
+        // initialise tha tabel with the string in the url
+        $('#Reviews').DataTable();
+</script>
+
+{% endblock %}

@@ -78,6 +78,9 @@ urlpatterns = patterns('',
         url(r'^subscribe/forum/(?P<board_type>\w+)/(?P<board_url>\w+)/(?P<thread_id>\w+)/$', views.sub_thread, name='sub_thread'),
         url(r'^unsubscribe/forum/(?P<board_type>\w+)/(?P<board_url>\w+)/(?P<thread_id>\w+)/$', views.unsub_thread, name='unsub_thread'),
         
+        url(r'^review/$', views.review_list, name='review_list'),
+        url(r'^review/(?P<request_id>\w+)/(?P<var>\w+)/$', views.verify, name='verify'),
+        
         url(r'^captcha/', include('captcha.urls')),
         #url(r'^profile/(?P<user_id>\w+)/$', views.profile, name='profile'),
         #url(r'^profile/(?P<user_id>\w+)/history/$', views.user_history, name='user_history'),

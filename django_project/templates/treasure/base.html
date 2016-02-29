@@ -96,6 +96,10 @@
                     		<li><a href="{% url 'profile' %}" class="skel-layers-ignoreHref"><span>My Profile</span></a></li>
                     		<li><a href="{% url 'contribution' %}" class="skel-layers-ignoreHref"><span>My Contribution</span></a></li>
                     		<li><a href="{% url 'help' %}" class="skel-layers-ignoreHref"><span>Help</span></a></li>
+                    		{% if user.is_superuser %}
+                    		<li><br></li>
+                    		<li><a href="{% url 'review_list' %}" class="skel-layers-ignoreHref"><span>Pending Verifications</span></a></li>
+                    		{% endif %}
       							{% else %}
       							    <li><br></li>
                         <li><a href="{% url 'login' %}" class="skel-layers-ignoreHref"><span>Login</span></a></li>

@@ -653,6 +653,45 @@ def talk(request, resource_id, var,red="res"):
     else:
         # link='/me/'
         return redirect(reverse('my_homepage'))
+        
+def verify(request, request_id, var):
+    # get the context of request
+    context = RequestContext(request)
+    context_dict = sidebar(request)
+    this_reviewer = Teacher.objects.get(user=request.user)
+    this_request=pendingVerification.objects.get(id=request_id)
+    this_requestor=this_request.teacher
+    
+    if request.user.is_superuser:
+
+      if var=="yes":
+          this_requestor.verified=1
+          this_request.reviewer=this_reviewer.id
+          this_request.reviewed=1
+          this_request.datetimeOfReview=datetime.now()
+          this_request.save()
+          this_requestor.save()
+
+      elif var=="no":
+          this_requestor.verified=0
+          this_request.reviewer=this_reviewer.id
+          this_request.reviewed=1
+          this_request.datetimeOfReview=datetime.now()
+          this_request.save()
+          this_requestor.save()
+
+    return redirect(reverse('review_list'))
+    
+def review_list(request):
+    context = RequestContext(request)
+    context_dict = sidebar(request)
+    context_dict['reviews'] = pendingVerification.objects.filter(reviewed = None)
+    
+    # todo check admin
+    context_dict['admin'] = request.user.is_superuser
+    
+    return render_to_response('treasure/review_list.html', context_dict, context)
+    
 
 def talkHide(request, var):
     # get the context of request
