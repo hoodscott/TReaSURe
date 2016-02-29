@@ -182,7 +182,7 @@
                     </tbody>
                 </table>
             </div>
-            {% if not iWant2Talk %}<a class="btn btn-primary pull-right" href="{% url 'talk' resource.id yes %}">I am happy to talk</a>{% endif %}
+            {% if not iWant2Talk %}<a class="btn btn-primary pull-right" href="{% url 'talk' resource.id 'yes' %}">I am happy to talk</a>{% endif %}
             {% else %}
             <p><a href="{% url 'talk' resource.id 'yes' %}">I am happy to discuss about it.</a></p>
             {% endif %}
