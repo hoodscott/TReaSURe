@@ -93,3 +93,10 @@ a.btn {
     padding-left:1;
     padding-right:1;
 }
+
+@media (min-width: 980px) {
+@@ -131,7 +131,7 @@
+  .navbar-fixed-bottom .container {
+    width: 1170px;
+    width: 980px;
+  }
