@@ -28,14 +28,14 @@
     <div class="tab-pane" id="LatestPacks">
         {% if new_packs %}<ol>
         {% for p in new_packs %}
-            <li><a href="/packs/{{ p.id }}">{{ p }}</a></li>
+            <li><a href="{% url 'pack' p.id %}">{{ p }}</a></li>
         {% endfor %}
         </ol><hr>{% else %} No Packs Created Yet<hr>{% endif %}</div>
     <div class="tab-pane" id="LatestFeedback">
         {% if new_ratings %}<ol>
             {% for rating in new_ratings %}
                 <li>
-                    {{ rating.teacher.user.username }} rated <a href="/resource/{{ rating.resource.id }}">
+                    {{ rating.teacher.user.username }} rated <a href="{% url 'resource_view' rating.resource.id %}">
                     {{ rating.resource.name }}</a> {{ rating.measure1 }}, {{ rating.measure2 }}, {{ rating.measure3 }}
                 </li>
             {% endfor %}
@@ -43,7 +43,7 @@
     <div class="tab-pane" id="LatestResources">
         {% if new_resources %}<ol>
           {% for r in new_resources %}
-              <li><a href="/resource/{{ r.id }}">{{ r }}</a></li>
+              <li><a href="{% url 'resource_view' r.id %}">{{ r }}</a></li>
           {% endfor %}
           </ol><hr>{% else %} No Resources Uploaded Yet <hr>{% endif %}
     </div>
@@ -57,7 +57,7 @@
       <h4>Most Downloaded Resources</h4>
         <ol>
         {% for r in top_resources %}
-            <li><a href="/treasure/resource/{{ r.id }}">{{ r }}; {{r.num_downloads}} Downloads</a></li>
+            <li><a href="{% url 'resource_view' r.id %}">{{ r }}; {{r.num_downloads}} Downloads</a></li>
         {% endfor %}
         </ol>
     <div>
