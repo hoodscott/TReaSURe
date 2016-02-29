@@ -198,7 +198,7 @@ class TeacherDownloadsResource(models.Model):
     rated = models.IntegerField()
     
     def __unicode__(self):
-        return "%s %s" % (self.teacher.name, self.resource.name)
+        return "%s %s" % (self.teacher, self.resource.name)
         
 # model to store a users rating of a resource
 class TeacherRatesResource(models.Model):
@@ -229,7 +229,7 @@ class TeacherWantstoTalkResource(models.Model):
     datetime = models.DateTimeField()
     disable = models.IntegerField()
     def __unicode__(self):
-        return "%s %s" % (self.teacher.name, self.resource.name)
+        return "%s %s" % (self.teacher, self.resource.name)
      
 ''' end of material relationship models '''
 
@@ -384,4 +384,4 @@ class Help(models.Model):
     answer = models.TextField()
 
     def __unicode__(self):
-        return self.name
+        return self.question
