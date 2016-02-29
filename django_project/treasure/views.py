@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core import validators
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse,resolve
 from django.db.models import Count, Min, Max
 from django.db.models.signals import post_save
 from django.http import HttpResponse, HttpResponseRedirect
@@ -2183,7 +2183,7 @@ def download(request, resource_id, bypass=0):
             pass
         try:
             res = FilesResource.objects.get(resource = this_resource)
-            url='/secret/'+str(res.path)
+            url='/../plancsharing/secret/'+str(res.path)
         except FilesResource.DoesNotExist:
             # Not a FilesResource
             pass
