@@ -215,7 +215,7 @@ def index(request):
     want2talk=TeacherWantstoTalkResource.objects.all()
     context_dict['want2talk'] = want2talk.filter(teacher_id=this_teacher)
     
-    need2rate=TeacherDownloadsResource.objects.all().filter(teacher=this_teacher, rated=0)
+    need2rate=TeacherDownloadsResource.objects.all().filter(teacher=this_teacher)
     context_dict['need2rate'] = need2rate.filter(teacher=this_teacher)
     
     # return response object
@@ -318,7 +318,7 @@ def edit_profile(request,soc=0):
         # pass in instance of the record to be updated
         user_form = UserFormNoPW(data=request.POST, instance=my_user_record)
         teacher_form = TeacherForm(data=request.POST, instance=my_teacher_record)
-
+        visit1=Visit(tripId="",)
         # If the two forms are valid...
         if user_form.is_valid() and teacher_form.is_valid():
             # Save the user's form data to the database.
