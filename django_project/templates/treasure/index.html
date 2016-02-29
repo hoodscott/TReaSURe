@@ -9,10 +9,13 @@
 
 {% block body_block %}
 <div class="span5 hero-unit container panel panel-default">
-    <div class="row panel-heading clearfix">
-        <h3>Home</h3>
-        <div class="well" style="margin-left: 1.5em;"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. </div>
-    </div>
+        <img class="pull-left" src="{% static 'images/typographic_tragedy.png'%}"/>
+        <img src="{% static 'images/ode_to_the_lost_typographers.png'%}"/>
+        <img class="pull-right" src="{% static 'images/index logo.png'%}"/>
+
+            <div class="row panel-heading clearfix">
+        <h4>Title</h4></div>
+        <div class="well"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. </div>
 </div>
         
 <div class="span5 hero-unit">
@@ -48,8 +51,8 @@
           </ol><hr>{% else %} No Resources Uploaded Yet <hr>{% endif %}
     </div>
 </div>
-    <div class="well">
-        <h3><emph>{{ num_resources }} Resources;<br>{{ num_packs }} Packs;<br>{{ num_users }} Users.</emph></h3>
+    <div class="well" style="width:80%">
+        <h4><emph>{{ num_resources }} Resources;<br>{{ num_packs }} Packs;<br>{{ num_users }} Users.</emph></h4>
     </div>
     {% if top_resources %}
     <hr>
