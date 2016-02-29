@@ -2,6 +2,7 @@
 from datetime import datetime
 from string import split, upper
 
+
 # import django functions
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -15,6 +16,7 @@ from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext
 from django.utils.html import escape, escapejs
 from django.utils.translation import ugettext as _
+from django.utils.datastructures import MultiValueDictKeyError
 
 # import signals from django-notifications
 from notifications.signals import notify
@@ -1980,8 +1982,11 @@ def newpack(request):
                 # unverified teachers packs are always unrestricted
                 this_pack.restricted = 0
             
-            # if this is null, choose a defualt image TODO
-            this_pack.image = request.FILES['image']
+            # if this is null, choose a default image
+            try:
+              this_pack.image = request.FILES['image']
+            except MultiValueDictKeyError:
+              pass #default image TODO
             
             # add author
             this_pack.author = teacher
