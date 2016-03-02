@@ -15,8 +15,8 @@
         <h3>Malformed url</h3>
         <a href="{% url 'home' %}">Return to Homepage</a>
         <a href="{% url 'forum' %}">Return to Forum</a>
-    {% else %}
-        <h2>{{ thread.title }}</h2>
+    {% elif thread.restricted <= request.user.teacher.verified %}
+        <h2>{{ thread.title }}{% if thread.restricted == 1 %}&nbsp;<img alt="Restricted to scottish teachers" title="Restricted to scottish teachers" src="{% static 'images/small_scotland.png' %}"/>{% endif %}</h2>
         <h4>{{ thread.author }}@{{  thread.datetime  }}</h4>
         {% if subscribed %}
         <a class="btn btn-danger pull-right" href="{% url 'unsub_thread' board_type board_url thread.id %}">Unsubscribe to Thread</a>
@@ -58,7 +58,9 @@
 
             <br/>
             <button class="btn btn-primary" type="submit" name="submit" tabindex='1'>Post Comment</button>
-        </form>
+        </form>    
+    {% else %}
+        <h4>This thread is restricted to verified Scottish teachers only.</h4>
     {% endif %}
 
 </div>

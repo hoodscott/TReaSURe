@@ -12,7 +12,7 @@
 <div class="row-fluid hero-unit">
 
     <div class="span8">
-        <h2>{{ pack.name}}</h2>
+        <h2>{{ pack.name}} {% if pack.restricted == 1 %}&nbsp;<img alt="Restricted to scottish teachers" title="Restricted to scottish teachers" src="{% static 'images/small_scotland.png' %}"/>{% endif %}</h2>
         <h3><strong>{{ pack.summary }}</strong></h3>
         <h4>collated by {{ pack.author }}</h4>
         

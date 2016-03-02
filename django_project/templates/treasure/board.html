@@ -13,12 +13,9 @@
     {% if invalid %}
         <h4>No Board at this URL</h4>
         <a href="{% url 'forum' %}/">Return to the main forum</a>
-    {% elif board.restricted >= request.user.teacher.verified %}
-        <h4>This board is restricted to verified Scottish teachers only.</h4>
-    {% else %}
-        
+    {% elif board.restricted <= request.user.teacher.verified %}
         {% if resource %}
-            <h3>Discussions on: <a href="{% url 'resource_view' resource.id %}">{{ resource.name }}</a></h3>
+            <h3>Discussions on: <a href="{% url 'resource_view' resource.id %}">{{ resource.name }}</a>{% if board.restricted == 1 %}&nbsp;<img alt="Restricted to scottish teachers" title="Restricted to scottish teachers" src="{% static 'images/small_scotland.png' %}"/>{% endif %}</h3>
         {% else %}
             <h3>Discussions about: {{ title|capfirst }}</h3>
         {% endif %}
@@ -74,7 +71,9 @@
         {% else %}
         <h4>No Threads on this board</h4>
         {% endif %}
-    
+
+    {% else %}
+        <h4>This board is restricted to verified Scottish teachers only.</h4>
     {% endif %}
     
 </div>

@@ -11,7 +11,7 @@
         {% if resource.restricted <= request.user.teacher.verified %}
         <div class="hero-unit row-fluid" id="resource">
             <div class="span8">
-                <h2>{{ resource_name}}</h2>
+                <h2>{{ resource_name}}{% if resource.restricted == 1 %}&nbsp;<img alt="Restricted to scottish teachers" title="Restricted to scottish teachers" src="{% static 'images/small_scotland.png' %}"/>{% endif %}</h2>
                 <h3><strong>{{ resource.summary }}</strong></h3>
                 {% if web_resource %}
                     <h4>added by {{ author }}</h4>
