@@ -38,7 +38,7 @@
                        <span class="icon-bar"></span>
                        <span class="icon-bar"></span>
                    </button>
-                   <a href="{% url 'home' %}"><img class="brand"  src="{% static 'images/logo2.png' %}"/></a>
+                   <a href="{% url 'home' %}"><img class="brand"  src="{% static 'images/logo2.png' %}" alt="logo"/></a>
 
 				
                    <div class="nav-collapse collapse">
@@ -55,7 +55,7 @@
                        <ul class="nav">
                        {% if user.is_authenticated %}
                             <li id="searchbar-container">
-                                <form type='get' class="navbar-search pull-left" action="{% url 'resources' %}">
+                                <form class="navbar-search pull-left" action="{% url 'resources' %}">
                                     <input id='search' name='search' class="search-query span2" placeholder="Quick Search" type="text">
                                 </form>
                            </li>
@@ -89,7 +89,7 @@
                 <nav id="nav">
       							<ul>
       							{% if user.is_authenticated %}
-                    	  <li><a href="{% url 'notifications:unread' %}" id="home-link" class="skel-layers-ignoreHref"><span>Notifications {% live_notify_badge classes='badge small-notification' %}</span></a></li>
+                    	  <li><a href="{% url 'notifications:unread' %}" class="skel-layers-ignoreHref"><span>Notifications {% live_notify_badge classes='badge small-notification' %}</span></a></li>
                     		<li><a href="{% url 'my_homepage' %}#" id="home-link" class="skel-layers-ignoreHref"><span>My Page</span></a></li>
                     		<li><a href="{% url 'my_homepage' %}#myresources" class="skel-layers-ignoreHref"><span>My Resources</span></a></li>
                         <li><a href="{% url 'my_homepage' %}#mypacks" class="skel-layers-ignoreHref"><span>My Packs</span></a></li>
@@ -125,10 +125,6 @@
     				<!-- Main Page -->
     				<section id="MainPage">
                 <div class="container">
-                    <!--div class="hero-unit"><h2>This resource is not visible (hidden).<br>The author has chosen to hide it, sorry.</h2></div>
-                    <div class="hero-unit"><h2>This resource is not visible (restricted)<br>This resource is only for Scottish teachers, sorry.</h2></div>
-                    <div class="hero-unit"><h2>This pack is not visible (hidden)<br>The author has chosen to hide it, sorry.</h2></div>
-                    <div class="hero-unit"><h2>This pack is not visible (restricted)This pack is only for Scottish teachers, sorry.</h2></div-->
                     {% block body_block%}{% endblock%}
                 </div>
             </section>
@@ -145,6 +141,8 @@
         <script src="{% static 'js/bootstrap.min.js' %}"></script>
         <script src="{% static 'js/treasure.js' %}"></script>
         <script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
+        
+        <!-- notification script -->
         {% register_notify_callbacks callbacks='fill_notification_list,fill_notification_badge' %}
     </body>
 </html>
