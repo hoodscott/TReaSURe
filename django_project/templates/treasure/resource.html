@@ -36,14 +36,14 @@
                     <p>There are no tags.</p>
                 {% endif %}
             </div>
-            <div class="span3">
+            <div class="span4">
                 <span>
-                    <a href="./#resource">D:{{ download_count }}</a>&nbsp;
-                    <a href="./#feedback">R:{{ rating_count }}</a>&nbsp;
-                    <a href="./#forum">F:{{ forum_count }}</a>&nbsp;
-                    <a href="./#pack">P:{{ pack_count }}</a>&nbsp;
-                    <a href="./#want2talk">2:{{ 2talk_count }}</a>&nbsp;
-                    <a href="./#change">V:{{ version_count }}</a>&nbsp;
+                    <a href="./#resource" title="Total Downloads"><img src="{% static 'images/dlicon.png' %}"/>:{{ download_count }}</a>&thinsp;
+                    <a href="./#feedback"title="Total Feedback"><img src="{% static 'images/feedback.png' %}"/>:{{ rating_count }}</a>&thinsp;
+                    <a href="./#forum" title="Total Forum Posts"><img src="{% static 'images/forumicon.png' %}"/>:{{ forum_count }}</a>&thinsp;
+                    <a href="./#pack" title="Number of Packs this Resource is in"><img src="{% static 'images/packicon.png' %}"/>:{{ pack_count }}</a>&thinsp;
+                    <a href="./#want2talk" title="Number of People who want to Discuss this Resource"><img src="{% static 'images/2talkicon.png' %}"/>:{{ 2talk_count }}</a>&thinsp;
+                    <a href="./#change" title="Number of Previous Versions"><img src="{% static 'images/versionsicon.png' %}"/>:{{ version_count }}</a>
                 </span>
                 <hr>
                 
@@ -63,7 +63,7 @@
                 </ul>
                 <hr>
                 
-					                
+					      <div class="span10">          
                 {% if downloaded and not rating_exists %}<a class="btn btn-block btn-primary" href="{% url 'rate' resource.id %}">Rate</a>
                 {% elif not rating_exists %}<a class="btn btn-block btn-primary" href="{% url 'download' resource.id 'not' %}">Rate</a>{% endif %}
                 {% if label %}
@@ -75,6 +75,7 @@
                 {% if owned %}
                     <a class="btn btn-block btn-danger" href="{% url 'edit_resource' resource.id %}">Edit</a>
                 {% endif %}
+                </div>
                 <hr>
            </div>
         </div>
