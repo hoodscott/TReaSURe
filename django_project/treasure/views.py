@@ -43,6 +43,9 @@ def sidebar(request):
         
     except Teacher.DoesNotExist:
         pass
+        
+    # add help table to dictionary for every page
+    context_dict['all_help'] = Help.objects.all()
     
     return context_dict
 

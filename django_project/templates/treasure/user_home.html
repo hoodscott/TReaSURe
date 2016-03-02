@@ -28,7 +28,7 @@
 <div id="myresources" class="hero-unit panel panel-default">
 {% if MyResources %}
     <div class="panel-heading clearfix">
-        <h4>My Resources</h4>
+        <h4>My Created Resources<img alt="help text as title" title="{{ all_help.0.answer }}" src="{% static 'images/help.png' %}"/></a></h4>
     </div>
     <div class="panel-body">
         <div class="table-responsive">
@@ -62,7 +62,7 @@
 <div id="mypacks" class="hero-unit panel panel-default">
 {% if MyPacks %}
     <div class="panel-heading clearfix">
-        <h4>My Packs</h4>
+        <h4>My Curated Packs<img alt="help text as title" title="{{ all_help.0.answer }}" src="{% static 'images/help.png' %}"/></a></h4>
     </div>
     <div class="panel-body">
         <div class="table-responsive">
@@ -95,7 +95,7 @@
 <div id="myratings" class="hero-unit panel panel-default">
 {% if need2rate %}
     <div class="panel-heading clearfix">
-        <h4>Downloaded Resources Pending Rating</h4>
+        <h4>Downloaded Resources Pending Rating<img alt="help text as title" title="{{ all_help.0.answer }}" src="{% static 'images/help.png' %}"/></a></h4>
     </div>
     <div class="panel-body">
         <div class="table-responsive">
@@ -129,7 +129,7 @@
 {% if MyResources %}
 <div id="mytalk" class="hero-unit panel panel-default">
     <div class="panel-heading clearfix">
-        <h4>People Willing to talk about my Resources</h4>
+        <h4>People Willing to talk about my Resources<img alt="help text as title" title="{{ all_help.0.answer }}" src="{% static 'images/help.png' %}"/></a></h4>
     </div>
     {% if want2talkMine %}
         <div class="panel-body">
@@ -162,7 +162,7 @@
 
 <div id="mytalk" class="hero-unit panel panel-default">
     <div class="panel-heading clearfix">
-        <h4>Resources I am happy to talk about</h4>
+        <h4>Resources I am happy to talk about<img alt="help text as title" title="{{ all_help.0.answer }}" src="{% static 'images/help.png' %}"/></a></h4>
     </div>
     {% if want2talk %}
         <div class="panel-body">
@@ -178,8 +178,8 @@
                     <tbody>
                         {% for record in want2talk %}
                             <tr class="studentLabel">
-                                <td><a href="{% url 'resource_view' record.resource.id %}">{{record.resource.name}}</a>. <a href="{% url 'talk' record.resource.id 'no' 'random' %}">Remove</a></td>
-                                <td>{{record.resource.author}}</td>
+                                <td><a href="{% url 'resource_view' record.resource.id %}">{{ record.resource.name }}</a>. <a href="{% url 'talk' record.resource.id 'no' 'random' %}">Remove</a></td>
+                                <td>{{ record.resource.author }}</td>
                                 <td>{% ifequal record.disable 0 %}Active{% else%}Inactive{% endifequal%}</td>
                             </tr>
                         {% endfor %}
