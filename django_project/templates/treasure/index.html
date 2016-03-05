@@ -19,54 +19,59 @@
         
 <div class="span5 hero-unit">
 <hr>
+<div class="well">
+<li class="nav nav-tabs" style="margin-bottom:0px;"><strong><u>Latest</u></strong></li>
 <ul class="nav nav-tabs">
-    <li><strong>Latest:</strong></li>
     <li><a href="#LatestResources" data-toggle="tab">Resources<img alt="help text as title" title="{{ all_help.0.answer }}" src="{% static 'images/help.png' %}"/></a></li>
     <li><a href="#LatestFeedback" data-toggle="tab">Feedback<img alt="help text as title" title="{{ all_help.0.answer }}" src="{% static 'images/help.png' %}"/></a></li>
     <li><a href="#LatestPacks" data-toggle="tab">Packs<img alt="help text as title" title="{{ all_help.0.answer }}" src="{% static 'images/help.png' %}"/></a></li>
 </ul>
-<hr>
 <div class="tab-content" id="tabs">
     <div class="tab-pane" id="LatestPacks">
-        {% if new_packs %}<ol>
+        <ol>{% if new_packs %}<
         {% for p in new_packs %}
             <li><a href="{% url 'pack' p.id %}">{{ p }}</a></li>
         {% endfor %}
-        </ol><hr>{% else %} No Packs Created Yet<hr>{% endif %}</div>
+        <hr>{% else %} No Packs Created Yet<hr>{% endif %}</ol></div>
     <div class="tab-pane" id="LatestFeedback">
-        {% if new_ratings %}<ol>
+        <ol>{% if new_ratings %}
             {% for rating in new_ratings %}
                 <li>
-                    {{ rating.teacher.user.username }} rated <a href="{% url 'resource_view' rating.resource.id %}">
+                    {{ rating.teacher }} for <a href="{% url 'resource_view' rating.resource.id %}">
                     {{ rating.resource.name }}</a> {{ rating.measure1 }}, {{ rating.measure2 }}, {{ rating.measure3 }}
                 </li>
             {% endfor %}
-        </ol><hr>{% else %} No Feedback Given Yet<hr>{% endif %}</div>
+        <hr>{% else %} No Feedback Left Yet<hr>{% endif %}</ol></div>
     <div class="tab-pane" id="LatestResources">
-        {% if new_resources %}<ol>
+        <ol>{% if new_resources %}<
           {% for r in new_resources %}
               <li><a href="{% url 'resource_view' r.id %}">{{ r }}</a></li>
           {% endfor %}
-          </ol><hr>{% else %} No Resources Uploaded Yet <hr>{% endif %}
+          <hr>{% else %} No Resources Uploaded Yet <hr>{% endif %}</ol>
     </div>
 </div>
+</div>
+<hr>
     <div class="well" style="width:80%">
         <h5>{{ num_resources }} Resources;<br>{{ num_packs }} Packs;<br>{{ num_users }} Users.</h5>
     </div>
-    {% if top_resources %}
+
     <hr>
+    <div class="well">
     <div>
-      <h4>Most Downloaded Resources</h4>
+    <li class="nav nav-tabs"><strong><u>Most Downloaded Resources</u></strong></li>
         <ol>
+        {% if top_resources %}
         {% for r in top_resources %}
             <li><a href="{% url 'resource_view' r.id %}">{{ r }}; {{r.num_downloads}} Downloads</a></li>
-        {% endfor %}
+        {% endfor %}<hr>
+        {% else %} No Resources Uploaded Yet <hr>{% endif %}
+
         </ol>
-    <div>
+    </div>
 
-    {% endif %}
-
-</div>
+    </div>
+<hr>
 </div>
 
 <!-- script for table -->
