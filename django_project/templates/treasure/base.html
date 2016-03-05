@@ -57,14 +57,22 @@
                                 <form class="navbar-search pull-left" action="{% url 'resources' %}">
                                     <input id='search' name='search' class="search-query span2" placeholder="Quick Search" type="text">
                                 </form>
-                           </li>
-                           <li><a href="{% url 'forum' %}">Forum</a></li>
-                           <li><a href="{% url 'explore' %}">Explore</a></li>
-                           <li><a href="{% url 'resources' %}">Resources</a></li>
-                           <li><a href="{% url 'packs' %}">Packs</a></li>
-                           <li><a href="{% url 'tags' %}">Tags</a></li>
+                            </li>
+                            <li><a href="{% url 'forum' %}">Forum</a></li>
+                            <li><a href="{% url 'explore' %}">Explore</a></li>
+                            <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Resources <span class="caret"></span></a>
+                              <ul class="dropdown-menu">
+                                  <li><a href="{% url 'resources' %}">Search Resources</a></li>
+                                  <li role="seperator" class="divider"></li>
+                                  <li><a href="{% url 'add_file_resource' %}">Add File Resource</a></li>
+                                  <li><a href="{% url 'add_web_resource' %}">Add Web Resource</a></li>
+                              </ul>
+                            </li>
+                            <li><a href="{% url 'packs' %}">Packs</a></li>
+                            <li><a href="{% url 'tags' %}">Tags</a></li>
                        {% endif %}
-                           <li><a href="{% url 'about' %}">About</a></li>
+                            <li><a href="{% url 'about' %}">About</a></li>
                        </ul>
                    </div>
                    <!--/.nav-collapse -->
