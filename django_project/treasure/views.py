@@ -220,8 +220,9 @@ def index(request):
     want2talk=TeacherWantstoTalkResource.objects.all()
     context_dict['want2talk'] = want2talk.filter(teacher_id=this_teacher)
     
-    need2rate=TeacherDownloadsResource.objects.all().filter(teacher=this_teacher)
-    context_dict['need2rate'] = need2rate.filter(teacher=this_teacher)
+    iDownload=TeacherDownloadsResource.objects.all().filter(teacher=this_teacher)
+    context_dict['iDownload'] = iDownload
+    context_dict['need2rate'] = TeacherDownloadsResource.objects.all().filter(teacher=this_teacher, used=0)|TeacherDownloadsResource.objects.all().filter(teacher=this_teacher, rated=0)
     
     # return response object
     return render_to_response('treasure/user_home.html', context_dict, context)
