@@ -25,9 +25,9 @@
 
             <select id="mapCenter" class="span2" style="margin-top: 10px;">
                 <option value="Scotland" >Scotland</option>
+                <option value="Bounds">Best View</option>
                 <option value="User">MySchool</option>
                 <option value="UK">UK</option>
-                <option value="Bounds">Best View</option>
               </select>
           </ul>
         </div>
@@ -36,49 +36,51 @@
 		</div>
   
   <div id="legend" style="z-index: 0; position: absolute; top: 0px; left: 100px;">
-	  <b>Resources:</b> <img src="{% static 'images/dlicon.png' %}" alt="Downlaoded" /> Downloaded
+	  <b>Resources:</b> <img src="{% static 'images/dlicon.png' %}" alt="Downloaded" /> Downloaded
 	  <img src="{% static 'images/classicon.png' %}" alt="Used" /> Used
 	</div>
     </div>
     </div>
-    <script type="text/javascript">
-  var boundZoom=0;
-  var downloaded=[];
-  var used=[];
-  var rated=[];
-  var discuss=[];
-  var maxLat = -90;
-  var minLat = 90;
-  var maxLon = -180;
-  var minLon = 180;
-  {% for download in downloaded %}
-  pushNcheck("Downloaded",{{download.latitude}},{{download.longitude}});
-  {% endfor %}
-  {% for usage in used %}
-  pushNcheck("Used",{{usage.latitude}},{{usage.longitude}});
-  {% endfor %}
-  {% for rating in rated %}
-  pushNcheck("Rated",{{rating.latitude}},{{rating.longitude}});
-  {% endfor %}
-  {% for person in discuss %}
-  pushNcheck("Discuss",{{person.latitude}},{{person.longitude}});
-  {% endfor %}
+<script type="text/javascript" src="{% static 'js/track.js'%}">
+</script>
+<script type="text/javascript">
+var boundZoom=0;
+var downloaded=[];
+var used=[];
+var rated=[];
+var discuss=[];
+var maxLat = -90;
+var minLat = 90;
+var maxLon = -180;
+var minLon = 180;
+{% for download in downloaded %}
+pushNcheck("Downloaded",{{download.latitude}},{{download.longitude}});
+{% endfor %}
+{% for usage in used %}
+pushNcheck("Used",{{usage.latitude}},{{usage.longitude}});
+{% endfor %}
+{% for rating in rated %}
+pushNcheck("Rated",{{rating.latitude}},{{rating.longitude}});
+{% endfor %}
+{% for person in discuss %}
+pushNcheck("Discuss",{{person.latitude}},{{person.longitude}});
+{% endfor %}
 
-  var infoWindow = new google.maps.InfoWindow();
-  var UK = {lat: 54.53, lng: -4.17};
-  var Scotland = {lat: 57.63, lng: -4.25};
-  var User = {lat: {{lat}}, lng: {{lng}}};
-  var dlicon="{% static 'images/dlicon.png' %}";
-  var classicon="{% static 'images/classicon.png' %}";
-  var fbicon="{% static 'images/feedback.png' %}";
+var infoWindow = new google.maps.InfoWindow();
+var UK = {lat: 54.53, lng: -4.17};
+var Scotland = {lat: 57.63, lng: -4.25};
+var User = {lat: {{lat}}, lng: {{lng}}};
+var dlicon="{% static 'images/dlicon.png' %}";
+var classicon="{% static 'images/classicon.png' %}";
+var fbicon="{% static 'images/feedback.png' %}";
 
 
-  var markers={
-    "Downloaded": [],
-    "Used": [],
-    "Rated": [],
-    "Discuss": []
-  };
+var markers={
+  "Downloaded": [],
+  "Used": [],
+  "Rated": [],
+  "Discuss": []
+};
 
 var map = new google.maps.Map(document.getElementById('map'), {
   zoom: 4,
@@ -87,7 +89,7 @@ var map = new google.maps.Map(document.getElementById('map'), {
 });
 var infoWindow = new google.maps.InfoWindow();
 
-var loadingTime=14000;
+var loadingTime=11000;
 var delay= {{animationTimeout}};
 
 for (i = 0; i < downloaded.length; i++) {
@@ -123,102 +125,6 @@ var zoom1=0, zoom2=0;
     //use the most zoomed out of the two zoom levels
     boundZoom = Math.ceil((zoom1 < zoom2) ? zoom1 : zoom2);
 }
-
-function pushNcheck(markerType, pushLat,pushLon){
-    if (markerType=="Downloaded"){
-      downloaded.push({lat:pushLat, lng: pushLon });
-    }else if (markerType=="Used"){
-      used.push({lat:pushLat, lng: pushLon });
-    }else if (markerType=="Rated"){
-      rated.push({lat:pushLat, lng: pushLon });
-    }else if (markerType=="Discuss"){
-      discuss.push({lat:pushLat, lng: pushLon });
-    }
-    if (pushLat>maxLat) maxLat=pushLat;
-    if (pushLat<minLat) minLat=pushLat;
-    if (pushLon>maxLon) maxLon=pushLon;
-    if (pushLon<minLon) minLon=pushLon;
-
-}
-
-function instantBounds(){
-    var bounds = new google.maps.LatLngBounds();
-    var types= ["Downloaded", "Used", "Rated", "Discuss"];
-    var type='';
-    for (var j=0; j<4; j++) {
-        type=types[j];
-        for (var i = 0; i < markers[type].length; i++) {
-          var markerPosition =  markers[type][i].getPosition();
-          if (markers[type][i].getVisible()) {
-            bounds.extend(markerPosition);
-          }
-        }
-    }
-    return bounds
-}
-
-function addMarkerWithTimeout(array, index, timeout, icon, title) {
-  window.setTimeout(function(){addMarker(array, index,icon, title);}, timeout);
-}
-
-function addMarker(array, index, icon, title) {
-    var marker= new google.maps.Marker({
-      position: array[index],
-      map: map,
-      icon: icon,
-      animation: google.maps.Animation.DROP,
-      title: title,
-      zIndex: index+2
-    })
-    if (!markers[title]) markers[title] = [];
-    markers[title].push(marker);
-    var html = "<b>" + title + "</b> <br/>";
-    bindInfoWindow(marker, map, infoWindow, html);
-  }
-
-function toggleGroup(type) {
-  for (var i = 0; i < markers[type].length; i++) {
-    var marker = markers[type][i];
-    if (!marker.getVisible()) {
-      marker.setVisible(true);
-    } else {
-      marker.setVisible(false);
-    }
-  }
-}
-
-function center(spot) {
-  var location;
-  var zoom;
-  if (spot=='Scotland'){
-    location= Scotland;
-    zoom=6;
-  }else if (spot=='UK'){
-    location= UK;
-    zoom=5;
-  }else if (spot=='User'){
-    location= User;
-    zoom=6;
-  }else if (spot=='Bounds'){
-    location= boundCenter;
-    zoom=boundZoom-1;
-  }
-  map.setCenter(location);
-  map.setZoom(zoom);
-  if (spot=="Bounds"){
-    var ccenter=map.getCenter();
-    var zzoom=map.getZoom();
-    var stop=map.getZoom();
-  }
-}
-
-function bindInfoWindow(marker, map, infoWindow, html) {
-  google.maps.event.addListener(marker, 'click', function() {
-    infoWindow.setContent(html);
-    infoWindow.open(map, marker);
-
-  });
-}
 </script>
 <script>
   $('#mapCenter').change(function(){
@@ -233,6 +139,7 @@ function bindInfoWindow(marker, map, infoWindow, html) {
   {% endifequal %}
   toggleGroup('Discuss');
 </script>
+
 
 
 {% endblock %}
