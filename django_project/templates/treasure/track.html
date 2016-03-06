@@ -18,9 +18,9 @@
             <input style="margin-right: 30px;" id="FeedbackCheckbox" type="checkbox" onclick="toggleGroup('Rated')" {% ifequal timeline 'timeline'%}disabled="disabled" checked="checked"{% endifequal %} />People happy to discuss it
             <input style="margin-right: 30px;" id="DiscussionCheckbox" type="checkbox" onclick="toggleGroup('Discuss')" {% ifequal timeline 'timeline'%}disabled="disabled"{% endifequal %} />
                 {% ifequal timeline 'timeline' %}
-            <div class='btn' onclick='window.location.assign("../")'>Timeline Animation <input type="checkbox" checked="checked"/></div>
+            <div class='btn' onclick='window.location.assign("../")'>Timeline Animation<img alt="help text as title" title="{{ all_help.7.answer }}" src="{% static 'images/help.png' %}"/> <input type="checkbox" checked="checked"/></div>
             {% else %}
-            <div class='btn' onclick='window.location.assign("./timeline/")'>Timeline Animation <input type="checkbox"/></div>
+            <div class='btn' onclick='window.location.assign("./timeline/")'>Timeline Animation<img alt="help text as title" title="{{ all_help.7.answer }}" src="{% static 'images/help.png' %}"/> <input type="checkbox"/></div>
             {% endifequal%}
 
             <select id="mapCenter" class="span2" style="margin-top: 10px;">
@@ -89,7 +89,7 @@ var map = new google.maps.Map(document.getElementById('map'), {
 });
 var infoWindow = new google.maps.InfoWindow();
 
-var loadingTime=11000;
+var loadingTime=13000;
 var delay= {{animationTimeout}};
 
 for (i = 0; i < downloaded.length; i++) {
