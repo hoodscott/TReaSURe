@@ -9,26 +9,27 @@
 
 {% block body_block %}
 <div class="span5 hero-unit container panel panel-default">
+  <div class="well">
         <img class="pull-right" alt="logo" src="{% static 'images/index_logo.png'%}"/>
 
-            <div class="row panel-heading clearfix">
+        <div class="row panel-heading clearfix">
         <h4>PLAN C Sharing</h4></div>
-        <div class="well">PLAN C Sharing aims to support all kinds of sharing between computing teachers.  Sharing materials is one thing - but there's more to sharing than materials alone.  We hope that this site will encourage teachers to share their experiences of teaching using particular techniques and tools - their <i>pedagogical content knowledge</i> about computing teaching.  You might comment on particular materials you've used, offer to provide advice to others, or discuss more conceptual issues not relating to any particular activity.  You can also upload edited versions of activities, perhaps targeting a different language, or extending the activity in some way, or improving it.  The site has both an international and Scottish flavour.  Anyone can join and contribute.  But particular activities or discussions can be restricted to those who have been verified to be Scottish school teachers.
+        <div align="justify">PLAN C Sharing aims to support all kinds of sharing between computing teachers.  Sharing materials is one thing - but there's more to sharing than materials alone.  We hope that this site will encourage teachers to share their experiences of teaching using particular techniques and tools - their <i>pedagogical content knowledge</i> about computing teaching.  You might comment on particular materials you've used, offer to provide advice to others, or discuss more conceptual issues not relating to any particular activity.  You can also upload edited versions of activities, perhaps targeting a different language, or extending the activity in some way, or improving it.  The site has both an international and Scottish flavour.  Anyone can join and contribute.  But particular activities or discussions can be restricted to those who have been verified to be Scottish school teachers.
           Please give us feedback on how you find the site - what you'd like changed, added, or removed.</div>
+  </div>
 </div>
         
 <div class="span5 hero-unit">
-<hr>
 <div class="well">
 <li class="nav nav-tabs" style="margin-bottom:0px;"><strong><u>Latest</u></strong></li>
 <ul class="nav nav-tabs">
-    <li><a href="#LatestResources" data-toggle="tab">Resources<img alt="help text as title" title="{{ all_help.0.answer }}" src="{% static 'images/help.png' %}"/></a></li>
-    <li><a href="#LatestFeedback" data-toggle="tab">Feedback<img alt="help text as title" title="{{ all_help.0.answer }}" src="{% static 'images/help.png' %}"/></a></li>
-    <li><a href="#LatestPacks" data-toggle="tab">Packs<img alt="help text as title" title="{{ all_help.0.answer }}" src="{% static 'images/help.png' %}"/></a></li>
+    <li><a href="#LatestResources" data-toggle="tab">Resources<img alt="help text as title" title="{{ all_help.2.answer }}" src="{% static 'images/help.png' %}"/></a></li>
+    <li><a href="#LatestFeedback" data-toggle="tab">Feedback<img alt="help text as title" title="Feedback left for Resources" src="{% static 'images/help.png' %}"/></a></li>
+    <li><a href="#LatestPacks" data-toggle="tab">Packs<img alt="help text as title" title="{{ all_help.1.answer }}" src="{% static 'images/help.png' %}"/></a></li>
 </ul>
 <div class="tab-content" id="tabs">
     <div class="tab-pane" id="LatestPacks">
-        <ol>{% if new_packs %}<
+        <ol>{% if new_packs %}
         {% for p in new_packs %}
             <li><a href="{% url 'pack' p.id %}">{{ p }}</a></li>
         {% endfor %}
@@ -43,7 +44,7 @@
             {% endfor %}
         <hr>{% else %} No Feedback Left Yet<hr>{% endif %}</ol></div>
     <div class="tab-pane" id="LatestResources">
-        <ol>{% if new_resources %}<
+        <ol>{% if new_resources %}
           {% for r in new_resources %}
               <li><a href="{% url 'resource_view' r.id %}">{{ r }}</a></li>
           {% endfor %}
@@ -52,7 +53,7 @@
 </div>
 </div>
 <hr>
-    <div class="well" style="width:80%">
+    <div class="well" style="width:100%">
         <h5>{{ num_resources }} Resources;<br>{{ num_packs }} Packs;<br>{{ num_users }} Users.</h5>
     </div>
 
@@ -71,7 +72,6 @@
     </div>
 
     </div>
-<hr>
 </div>
 
 <!-- script for table -->
