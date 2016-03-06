@@ -571,7 +571,7 @@ def rate(request, resource_id):
             
             # create a thread on the resources board
             this_board = Board.objects.all().get(resource=this_resource)
-            thread = Thread(board = this_board, datetime = datetime.now(), author= this_teacher, title=this_teacher.firstname+' '+this_teacher.surname+' rated this resource', content=rating.comment, threadtype=0, rating=rating)
+            thread = Thread(board = this_board, datetime = datetime.now(), author= this_teacher, title=this_teacher.firstname+' '+this_teacher.surname+' rated this resource', content=rating.comment, threadtype=0, rating=rating, restricted=this_resource.restricted)
             thread.save()
             
             # update subscribers of the board
