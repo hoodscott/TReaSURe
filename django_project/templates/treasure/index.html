@@ -29,13 +29,13 @@
 </ul>
 <div class="tab-content" id="tabs">
     <div class="tab-pane" id="LatestPacks">
-        <ol>{% if new_packs %}
+        <ol class="bulletback">{% if new_packs %}
         {% for p in new_packs %}
             <li><a href="{% url 'pack' p.id %}">{{ p }}</a></li>
         {% endfor %}
         <hr>{% else %} No Packs Created Yet<hr>{% endif %}</ol></div>
     <div class="tab-pane" id="LatestFeedback">
-        <ol>{% if new_ratings %}
+        <ol class="bulletback">{% if new_ratings %}
             {% for rating in new_ratings %}
                 <li>
                     {{ rating.teacher }} for <a href="{% url 'resource_view' rating.resource.id %}">
@@ -44,7 +44,7 @@
             {% endfor %}
         <hr>{% else %} No Feedback Left Yet<hr>{% endif %}</ol></div>
     <div class="tab-pane" id="LatestResources">
-        <ol>{% if new_resources %}
+        <ol class="bulletback">{% if new_resources %}
           {% for r in new_resources %}
               <li><a href="{% url 'resource_view' r.id %}">{{ r }}</a></li>
           {% endfor %}
@@ -61,7 +61,7 @@
     <div class="well">
     <div>
     <li class="nav nav-tabs"><strong><u>Most Downloaded Resources</u></strong></li>
-        <ol>
+        <ol class="bulletback">
         {% if top_resources %}
         {% for r in top_resources %}
             <li><a href="{% url 'resource_view' r.id %}">{{ r }}; {{r.num_downloads}} Downloads</a></li>

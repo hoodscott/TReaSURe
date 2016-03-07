@@ -63,12 +63,12 @@
                 </ul>
                 <hr>
                 
-					      <div class="span10">          
+					      <div class="span10">
+                {% if label %}
+                    <a {% if files_resource %}download{% endif %} class="btn btn-block btn-large btn-primary" href="{% url 'download' resource.id %}"><img src="{% static 'images/dlicon.png' %}" alt="downloads"/>{% if downloaded %}Re-{% endif %}{{label}}</a>
+			          {% endif %}
                 {% if downloaded and not rating_exists %}<a class="btn btn-block btn-primary" href="{% url 'rate' resource.id %}">Rate</a>
                 {% elif not rating_exists %}<a class="btn btn-block btn-primary" href="{% url 'download' resource.id 'not' %}">Rate</a>{% endif %}
-                {% if label %}
-                    <a {% if files_resource %}download{% endif %} class="btn btn-block btn-primary" href="{% url 'download' resource.id %}">{% if downloaded %}Re-{% endif %}{{label}}</a>
-			          {% endif %}
                 <a class="btn btn-block btn-warning" href="{% url 'evolve' resource.id %}">Evolve</a>
                 <a class="btn btn-block btn-success" href="{% url 'track' resource.id %}" target="_blank">Track<img alt="help text as title" title="{{ all_help.6.answer }}" src="{% static 'images/help.png' %}"/></a>
                 <!-- todo: "make this page better" a class="btn btn-block btn-info" href="/resource/{{ resource.id }}/versions">View Versions</a-->
