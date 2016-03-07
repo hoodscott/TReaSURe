@@ -2194,7 +2194,7 @@ def download(request, resource_id, bypass=0):
             pass
         try:
             res = FilesResource.objects.get(resource = this_resource)
-            url='/plancsharing/plancsharing/secret/'+str(res.path)
+            url='/plancsharing/secret/'+str(res.path)
         except FilesResource.DoesNotExist:
             # Not a FilesResource
             pass
