@@ -926,7 +926,7 @@ def add_file_resource(request):
             create_notify(resource, request.user)
             
             # add file to object
-            files = FilesResource( path = request.FILES['path'])
+            files = FilesResource( request.FILES['path'])
             
             # associate file resource with parent resource
             files.resource = resource
@@ -2187,7 +2187,7 @@ def download(request, resource_id, bypass=0):
             pass
         try:
             res = FilesResource.objects.get(resource = this_resource)
-            url='plancsharing/secret/'+str(res.path)
+            url='/secret/'+str(res.path)
         except FilesResource.DoesNotExist:
             # Not a FilesResource
             pass
