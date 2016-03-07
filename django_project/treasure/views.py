@@ -2119,8 +2119,15 @@ def newpack_initial(request, resource_id):
                 # unverified teachers packs are always unrestricted
                 this_pack.restricted = 0
             
+            # if this is null, choose a default image
+            try:
+              this_pack.image = request.FILES['image']
+            except MultiValueDictKeyError:
+              pass #default image TODO
+            
             # add author
             this_pack.author = teacher
+            this_pack.datetime = datetime.now()
             
             # now save the pack in the database so tags can be added
             this_pack.save()
