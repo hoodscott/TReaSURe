@@ -926,7 +926,7 @@ def add_file_resource(request):
             create_notify(resource, request.user)
             
             # add file to object
-            files = FilesResource( request.FILES['path'])
+            files = FilesResource(path = request.FILES['path'])
             
             # associate file resource with parent resource
             files.resource = resource
