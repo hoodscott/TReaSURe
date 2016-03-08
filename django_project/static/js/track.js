@@ -79,11 +79,6 @@ function center(spot) {
   }
   map.setCenter(location);
   map.setZoom(zoom);
-  if (spot=="Bounds"){
-    var ccenter=map.getCenter();
-    var zzoom=map.getZoom();
-    var stop=map.getZoom();
-  }
 }
 
 function bindInfoWindow(marker, map, infoWindow, html) {

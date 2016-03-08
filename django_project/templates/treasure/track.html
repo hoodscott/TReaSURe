@@ -139,7 +139,14 @@ var zoom1=0, zoom2=0;
   {% endifequal %}
   toggleGroup('Discuss');
 </script>
-
+{% ifequal timeline 'timeline' %}
+<script type="text/javascript">
+  document.getElementById('mapCenter').selectedIndex=1;
+  $(window).bind("load", function() {
+    center(document.getElementById('mapCenter').value);
+  });
+</script>
+{% endifequal %}
 
 
 {% endblock %}
