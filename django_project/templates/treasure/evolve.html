@@ -12,14 +12,15 @@
         <h2>Evolve</h2>
         
         <ul class="nav nav-pills nav-justified">
-            <li {% if error == "file" %}class="active"{% endif %}><a data-toggle="tab" href="#file" tabindex='1'>Evolve with a File</a></li>
-            <li {% if error == "web" %}class="active"{% endif %}><a data-toggle="tab" href="#web" tabindex='1'>Evolve with a Link</a></li>
+            <li {% if error == "file" %}class="active"{% endif %}><a data-toggle="tab" href="#file" tabindex='1'>Evolve - File(s)</a></li>
+            <li {% if error == "web" %}class="active"{% endif %}><a data-toggle="tab" href="#web" tabindex='1'>Evolve - Link</a></li>
         </ul>
 
         <div class="tab-content">
         
             <div id="file" class="{% if error == "file" %}active{% endif %} tab-pane container">
-                <h3>File Evolve</h3>
+                <h3>Evolve - File(s)</h3>
+                <p>If you wish to upload more than one file, please combine them in a zipped, compressed, or archived folder/directory.</p>
                 <form class="span6" id="file_evolve" method="post" action="{% url 'evolve' resource_id %}" enctype="multipart/form-data">
                     {% csrf_token %}
                 
@@ -51,7 +52,7 @@
             </div>
             
             <div id="web" class="{% if error == "web" %}active{% endif %} tab-pane container">
-                <h3>Web Evolve</h3>
+                <h3>Evolve - Link</h3>
                 <form class="span6" id="web_evolve" method="post" action="{% url 'evolve' resource_id %}" enctype="multipart/form-data">
                     {% csrf_token %}
                 

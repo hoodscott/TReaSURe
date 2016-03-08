@@ -10,7 +10,8 @@
 {% block body_block %}
 
 <div class="hero-unit">
-    <h2>Upload a File Resource</h2>
+    <h2>Upload a Resource - File(s)</h2>
+    <p>If you wish to upload more than one file, please combine them in a zipped, compressed, or archived folder/directory.</p>
     <br/>
     <div class="container">
         <form class="span6" id="upload_form" method="post" action="{% url 'add_file_resource' %}" enctype="multipart/form-data">
@@ -23,7 +24,7 @@
 
             {% for field in resource_form.visible_fields %}
                 {{ field.errors }}
-                {{field.label}}{% render_help_text field %}
+                {{ field.label }}{% render_help_text field %}
                 {{ field }}
                 {% if field.label == "Other Tags" %}
                 <a class="btn btn-info pull-right" href="{% url 'add_tag' %}?file">Add Tag</a>
@@ -37,10 +38,13 @@
 
             {% for field in file_form.visible_fields %}
                 {{ field.errors }}
-                {{field.label}}{% render_help_text field %}<br/>
+                {{ field.label }}{% render_help_text field %}<br/>
+                <p>If you wish to upload more than one file, please combine them in a zipped, compressed, or archived folder/directory.</p>
                 {{ field }}
                 <br/>
             {% endfor %}
+            
+            {% lorem 10000 %}
 
             <br/>
             <button class="btn btn-primary" type="submit" name="submit" tabindex='1'>Upload Resource</button>

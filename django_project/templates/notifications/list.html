@@ -11,7 +11,8 @@
     <a class="btn btn-primary pull-right" href="{% url 'notifications:mark_all_as_read' %}">Mark all as Read</a>
     {% for notification in notifications %}
     <div class="post">
-    <p>{{ notification.timestamp }}</p>
+    <p>{{ notification.timestamp }} {% if notification.unread == True %}<a href="{% url 'notifications:mark_as_read' notification.slug %}"><i>Unread</i></a>{% else %}<i>Read</i>{% endif %}</i></a></p>
+    
     {% if notification.verb == "created" %}
         <p>You created a resource: <a href="{% url 'resource_view' notification.action_object.id %}">{{  notification.action_object.name }}</a></p>
     
@@ -52,7 +53,6 @@
         <p>{{notification.action_object}}{{notification.verb}}</p>
     {% endif %}
     </div>
-    <hr>
     {% endfor %}
 {% else %}
     <h2>No notifications at this time</h2>
