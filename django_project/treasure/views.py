@@ -47,6 +47,10 @@ def sidebar(request):
     # add help table to dictionary for every page
     context_dict['all_help'] = Help.objects.all()
     
+    # count up pending notifiactions for the admin
+    admin_notifications = pendingVerification.objects.filter(reviewed=None).count()
+    context_dict['admin_notifications'] = admin_notifications
+    
     return context_dict
 
 # convert a postcode to a lat,lon co-ordinate, returns -1 if not a valid postcode

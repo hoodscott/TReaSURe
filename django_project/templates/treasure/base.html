@@ -105,7 +105,7 @@
                     		<li><a href="{% url 'help' %}" class="skel-layers-ignoreHref"><span>Help</span></a></li>
                     		{% if user.is_superuser %}
                     		<li><br></li>
-                    		<li><a href="{% url 'review_list' %}" class="skel-layers-ignoreHref"><span>Pending Verifications</span></a></li>
+                    		<li><a href="{% url 'review_list' %}" class="skel-layers-ignoreHref"><span>Pending Verifications<span class="badge small-notification">{{ admin_notifications }}</span></span></a></li>
                     		{% endif %}
       							{% else %}
       							    <li><br></li>
