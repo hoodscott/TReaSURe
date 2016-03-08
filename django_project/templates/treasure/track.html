@@ -68,7 +68,7 @@ pushNcheck("Discuss",{{person.latitude}},{{person.longitude}});
 
 var infoWindow = new google.maps.InfoWindow();
 var UK = {lat: 54.53, lng: -4.17};
-var Scotland = {lat: 57.63, lng: -4.25};
+var Scotland = {lat: 57.83, lng: -4.25};
 var User = {lat: {{lat}}, lng: {{lng}}};
 var dlicon="{% static 'images/dlicon.png' %}";
 var classicon="{% static 'images/classicon.png' %}";
@@ -83,7 +83,7 @@ var markers={
 };
 
 var map = new google.maps.Map(document.getElementById('map'), {
-  zoom: 4,
+  zoom: 6,
   center: Scotland,
   zIndex: 1,
 });
