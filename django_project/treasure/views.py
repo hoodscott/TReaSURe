@@ -351,8 +351,8 @@ def edit_profile(request,soc=0):
 
             teacher.save()
             
-            # Update our variable to tell the template registration was successful.
-            updated = True
+            # return user to updated profile page
+            return redirect(reverse('profile'))
 
         # Invalid form or forms print problems to the terminal.
         else:
