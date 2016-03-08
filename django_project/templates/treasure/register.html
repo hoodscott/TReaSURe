@@ -48,9 +48,9 @@
                           {{field.label}}{% render_help_text field %}<br/>
                           {{ field }}
                           {% if field.label == "School" %}
-                          <a class="btn btn-info pull-right" href="{% url 'add_school' %}?editprofile">Add School</a>
+                          <a class="btn btn-info pull-right" href="{% url 'add_school' %}?register">Add School</a>
                           {% elif field.label == "Hubs" %}
-                          <a class="btn btn-info pull-right" href="{% url 'add_hub' %}?editprofile">Add Hub</a>              
+                          <a class="btn btn-info pull-right" href="{% url 'add_hub' %}?register">Add Hub</a>              
                           {% endif %}
                       {% endif %}
                     <br/>
