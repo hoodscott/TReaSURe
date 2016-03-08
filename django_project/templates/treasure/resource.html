@@ -43,7 +43,7 @@
                     <a href="./#forum" title="Total Threads on Forum"><img src="{% static 'images/forumicon.png' %}" alt="thread"/>:{{ forum_count }}</a>&thinsp;
                     <a href="./#pack" title="Number of Packs this Resource is in"><img src="{% static 'images/packicon.png' %}" alt="packs"/>:{{ pack_count }}</a>&thinsp;
                     <a href="./#want2talk" title="Number of People who want to Discuss this Resource"><img src="{% static 'images/2talkicon.png' %}" alt="want to talk"/>:{{ 2talk_count }}</a>&thinsp;
-                    <a href="./#change" title="Number of Previous Versions"><img src="{% static 'images/versionsicon.png' %}" alt="versions"/>:{{ version_count }}</a>
+                    <a href="./#change" title="Number of Versions in this Resources 'Family'"><img src="{% static 'images/versionsicon.png' %}" alt="versions"/>:{{ version_count }}</a>
                 </span>
                 <hr>
                 
@@ -230,7 +230,9 @@
         </div>
         
         <div class="hero-unit" id="change">
-            <h3>Changelog<img alt="help text as title" title="{{ all_help.0.answer }}" src="{% static 'images/help.png' %}"/></h3>
+            <h3>Versions<img alt="help text as title" title="{{ all_help.0.answer }}" src="{% static 'images/help.png' %}"/></h3>
+            {% if changelog|length > 0 %}
+            <h4>Previous Versions</h4>
             <ul>
                 {% for change in changelog %}
                     {% if change.1 == null %}
@@ -244,6 +246,23 @@
                     {% endif %}
                 {% endfor %}
             </ul>
+            {% else %}
+            <h5>This is a root resource</h5>
+            {% endif %}
+            
+            {% if future|length > 0 %}
+            <h4>Evolutions</h4>
+            <ul>
+                {% for resource in future %}
+                    <li><h4>&#9660;<a href="{% url 'resource_view' resource.id %}">{{ resource.name }}</a></h4></li>
+                    <li><p>&nbsp;&nbsp;{{ resource.summary }}</p></li>
+                    <li><p>&nbsp;&nbsp;Evolution Type: {{ resource.evo }}</p></li>
+                    <li><p>&nbsp;&nbsp;Reason for Change: {{ resource.evolution_explanation }}</p></li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <h5>This resource has no evolutions</h5>
+            {% endif %}
         </div>
 
         {% else %}
