@@ -98,13 +98,16 @@
       							<ul>
       							{% if user.is_authenticated %}
                     	  <li><a href="{% url 'notifications:unread' %}" class="skel-layers-ignoreHref"><span>Notifications {% live_notify_badge classes='badge small-notification' %}</span></a></li>
-                    		<li><a href="{% url 'my_homepage' %}#" id="home-link" class="skel-layers-ignoreHref"><span>My Page⦿</span></a></li>
-                    		<li><a href="{% url 'my_homepage' %}#myresources" class="skel-layers-ignoreHref"><span>-My Resources  </span></a></li>
-                        <li><a href="{% url 'my_homepage' %}#mypacks" class="skel-layers-ignoreHref"><span>-My Packs  </span></a></li>
                         <li><br></li>
-                    		<li><a href="{% url 'profile' %}" class="skel-layers-ignoreHref"><span>Profile⦿</span></a></li>
-                    		<li><a href="{% url 'contribution' %}" class="skel-layers-ignoreHref"><span>Contribution⦿</span></a></li>
-                    		<li><a href="{% url 'help' %}" class="skel-layers-ignoreHref"><span>Help⦿</span></a></li>
+                    		<li><a href="{% url 'my_homepage' %}#" id="home-link" class="skel-layers-ignoreHref"><span>My Page</span></a></li>
+                    		<li><a href="{% url 'my_homepage' %}#myresources" class="skel-layers-ignoreHref"><span>My Resources -</span></a></li>
+                        <li><a href="{% url 'my_homepage' %}#mypacks" class="skel-layers-ignoreHref"><span>My Packs -</span></a></li>
+                        <li><br></li>
+                    		<li><a href="{% url 'profile' %}" class="skel-layers-ignoreHref"><span>Profile</span></a></li>
+                        <li><br></li>
+                    		<li><a href="{% url 'contribution' %}" class="skel-layers-ignoreHref"><span>Contribution</span></a></li>
+                        <li><br></li>
+                    		<li><a href="{% url 'help' %}" class="skel-layers-ignoreHref"><span>Help</span></a></li>
                     		{% if user.is_superuser %}
                     		<li><br></li>
                     		<li><a href="{% url 'review_list' %}" class="skel-layers-ignoreHref"><span>Verifications <span class="badge small-notification">{{ admin_notifications }}</span></span></a></li>
