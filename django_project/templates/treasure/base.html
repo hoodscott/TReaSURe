@@ -66,8 +66,8 @@
                               <ul class="dropdown-menu">
                                   <li><a href="{% url 'resources' %}">Search Resources</a></li>
                                   <li role="seperator" class="divider"></li>
-                                  <li><a href="{% url 'add_file_resource' %}">Add File Resource</a></li>
-                                  <li><a href="{% url 'add_web_resource' %}">Add Web Resource</a></li>
+                                  <li><a href="{% url 'add_file_resource' %}">Upload a Resource</a></li>
+                                  <li><a href="{% url 'add_web_resource' %}">Link to Web Resource</a></li>
                               </ul>
                             </li>
                             <li><a href="{% url 'packs' %}">Packs</a></li>
@@ -107,7 +107,7 @@
                     		<li><a href="{% url 'help' %}" class="skel-layers-ignoreHref"><span>Help⦿</span></a></li>
                     		{% if user.is_superuser %}
                     		<li><br></li>
-                    		<li><a href="{% url 'review_list' %}" class="skel-layers-ignoreHref"><span>Verifications</span></a></li>
+                    		<li><a href="{% url 'review_list' %}" class="skel-layers-ignoreHref"><span>Verifications <span class="badge small-notification">{{ admin_notifications }}</span></span></a></li>
                     		{% endif %}
       							{% else %}
       							    <li><br></li>

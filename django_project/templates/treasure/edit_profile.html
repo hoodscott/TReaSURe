@@ -2,7 +2,6 @@
 
 {% load static %}
 {% load render_help %}
-{% block head_block %}{% if updated %}<meta http-equiv="refresh" content="2; url="{% url 'home' %}""/>{% endif %}{% endblock %}
 {% block title %}
     Edit Profile
 {% endblock %}
@@ -30,10 +29,6 @@
     <br/>
     <div class="container">
         <form class="span6" id="edit_teacher_form" method="post" action="{% url 'edit_profile' %}" enctype="multipart/form-data">
-          {% if updated %}
-              	<h4>Profile Successfuly Updated.</h4>
-              	<p>You are being redirected to the homepage. If nothing happens, <a href="{% url 'home' %}">click here</a></p>
-          {% else %}
   	
   				{% csrf_token %}
   			
@@ -73,7 +68,6 @@
   				<br/>
           <button class="btn btn-primary" type="submit" name="submit" tabindex='1'>Update Profile</button>
 			
-			    {% endif %}
       </form>
     </div>
 </div>

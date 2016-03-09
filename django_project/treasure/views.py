@@ -47,6 +47,10 @@ def sidebar(request):
     # add help table to dictionary for every page
     context_dict['all_help'] = Help.objects.all()
     
+    # count up pending notifiactions for the admin
+    admin_notifications = pendingVerification.objects.filter(reviewed=None).count()
+    context_dict['admin_notifications'] = admin_notifications
+    
     return context_dict
 
 # convert a postcode to a lat,lon co-ordinate, returns -1 if not a valid postcode
@@ -347,8 +351,8 @@ def edit_profile(request,soc=0):
 
             teacher.save()
             
-            # Update our variable to tell the template registration was successful.
-            updated = True
+            # return user to updated profile page
+            return redirect(reverse('profile'))
 
         # Invalid form or forms print problems to the terminal.
         else:
@@ -1257,27 +1261,49 @@ def resource_view(request, resource_id):
         want2talk=TeacherWantstoTalkResource.objects.all()
         context_dict['want2talk'] = want2talk.filter(resource_id=resource_id)
         
-        # get changelog
+        # get previous versions
         changelog = []
-        previous_versions = this_resource.tree.split()[0].split(",")# unicode (ew)
-        i = 0
+        this_tree = this_resource.tree
+        previous_versions = this_tree.split()[0].split(",")# unicode (ew)
 
-        while i<len(previous_versions)-1:
-            prev_resource = Resource.objects.get(id = previous_versions[i])
-            next_resource = Resource.objects.get(id = previous_versions[i+1])
+        prev_count = 0
+        
+        # loop through previous versions, and pull the required data from the database
+        while prev_count<len(previous_versions)-1:
+            prev_resource = Resource.objects.get(id = previous_versions[prev_count])
+            next_resource = Resource.objects.get(id = previous_versions[prev_count+1])
             evo_type = convert_to_evotype(next_resource.evolution_type)
-            changelog += [[previous_versions[i], prev_resource.name, evo_type, next_resource.evolution_explanation]]
-            i += 1
-        changelog += [previous_versions[-1]]
+            changelog += [[previous_versions[prev_count], prev_resource.name, evo_type, next_resource.evolution_explanation]]
+            prev_count += 1
+        changelog += [[previous_versions[-1]]]
         
         context_dict['changelog'] = changelog
+        
+        # get direct evolutions
+        future = []
+        
+        # get all future objects of this resource
+        fut_objects = Resource.objects.filter(tree__startswith = this_tree).extra(select={'length':'Length(tree)'}).order_by('length')
+        
+        # count up all future resource (-1 aa fut objects contains this resource)
+        fut_count = len(fut_objects) - 1
+        
+        # loop through objects and only return the direct descendants
+        for i in fut_objects:
+          print i.name, len(i.tree.split(',')), len(this_tree.split(','))
+          print i.tree, this_tree
+          if len(i.tree.split(','))==len(this_tree.split(','))+1:#only store direct descendants
+            i.evo = convert_to_evotype(i.evolution_type) #duck typing (y)
+            future += [i]       
+        
+        context_dict['future'] = future
         
         # count up occurences
         context_dict['download_count'] = TeacherDownloadsResource.objects.filter(resource = this_resource).count()
         context_dict['rating_count'] = TeacherRatesResource.objects.filter(resource = this_resource).count()
         context_dict['pack_count'] = this_resource.packs.count()
         context_dict['2talk_count'] = TeacherWantstoTalkResource.objects.filter(resource = this_resource).count()
-        context_dict['version_count'] = i
+        context_dict['version_count'] = prev_count + fut_count
         
         this_board = Board.objects.get(resource=this_resource)
         context_dict['forum_count'] = Thread.objects.filter(board = this_board).count()
