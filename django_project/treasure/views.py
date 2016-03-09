@@ -2086,6 +2086,7 @@ def track(request, resource_id, timeline=0):
     context_dict['lat']=teacher_school.latitude
     context_dict['lng']=teacher_school.longitude
     context_dict['timeline']=timeline
+    context_dict['this_resource']=this_resource
     markerCt=0
     animationTimeout=0
     #Track locations
