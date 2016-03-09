@@ -1383,7 +1383,7 @@ def resource_view(request, resource_id):
             prev_resource = Resource.objects.get(id = previous_versions[prev_count])
             next_resource = Resource.objects.get(id = previous_versions[prev_count+1])
             evo_type = convert_to_evotype(next_resource.evolution_type)
-            changelog += [[previous_versions[prev_count], prev_resource.name, evo_type, next_resource.evolution_explanation]]
+            changelog += [[previous_versions[prev_count], prev_resource.name, prev_resource.summary, evo_type, next_resource.evolution_explanation]]
             prev_count += 1
         changelog += [[previous_versions[-1]]]
         
@@ -1403,7 +1403,9 @@ def resource_view(request, resource_id):
           print i.name, len(i.tree.split(',')), len(this_tree.split(','))
           print i.tree, this_tree
           if len(i.tree.split(','))==len(this_tree.split(','))+1:#only store direct descendants
-            i.evo = convert_to_evotype(i.evolution_type) #duck typing (y)
+            i.evo = convert_to_evotype(i.evolution_type) #duck typing (yay")
+            # get count of evolutions after each descendant
+            i.num_evos = Resource.objects.filter(tree__startswith = i.tree).count() - 1 # -1 removes this resouce from count
             future += [i]       
         
         context_dict['future'] = future

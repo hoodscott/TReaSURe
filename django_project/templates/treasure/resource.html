@@ -231,33 +231,37 @@
         
         <div class="hero-unit" id="change">
             <h3>Versions<img alt="help text as title" title="{{ all_help.0.answer }}" src="{% static 'images/help.png' %}"/></h3>
-            {% if changelog|length > 0 %}
             <h4>Previous Versions</h4>
+            {% if changelog|length > 1 %}            
             <ul>
                 {% for change in changelog %}
                     {% if change.1 == null %}
-                        <li><h4>&#9658;This Resource</h4></li>
+                        {# do nothin #}
                     {% else %}
-                        <li><h4>&#9660;<a href="{% url 'resource_view' change.0 %}">{{ change.1 }}</a></h4></li>
-                        <li><p>&nbsp;&nbsp;Evolution Type: {{ change.2 }}</p></li>
+                        <li><h5>&#9662;<a href="{% url 'resource_view' change.0 %}">{{ change.1 }}</a> {% if forloop.first %}<i>Original/Root Resource</i>{% endif %}</h5></li>
+                        <li><p>&nbsp;&nbsp;Summary: {{ change.2 }}</p></li>
+                        <li><p>&nbsp;&nbsp;Evolution Type: {{ change.3 }}</p></li>
                         {% if change.3 != null  %}
-                        <li><p>&nbsp;&nbsp;Reason for Change: {{ change.3 }}</p></li>
+                        <li><p>&nbsp;&nbsp;Reason for Change: {{ change.4 }}</p></li>
                         {% endif %}
                     {% endif %}
                 {% endfor %}
             </ul>
             {% else %}
-            <h5>This is a root resource</h5>
+            <h5>This is a original/root resource; there are no previous versions.</h5>
             {% endif %}
             
-            {% if future|length > 0 %}
-            <h4>Evolutions</h4>
+            <br>
+            
+            <h4 id="evolutions">Direct Evolutions of this Resource</h4>
+            {% if future|length > 0 %}            
             <ul>
                 {% for resource in future %}
-                    <li><h4>&#9660;<a href="{% url 'resource_view' resource.id %}">{{ resource.name }}</a></h4></li>
-                    <li><p>&nbsp;&nbsp;{{ resource.summary }}</p></li>
+                    <li><h5>&#9656;<a href="{% url 'resource_view' resource.id %}">{{ resource.name }}</a></h5></li>
+                    <li><p>&nbsp;&nbsp;Summary: {{ resource.summary }}</p></li>
                     <li><p>&nbsp;&nbsp;Evolution Type: {{ resource.evo }}</p></li>
                     <li><p>&nbsp;&nbsp;Reason for Change: {{ resource.evolution_explanation }}</p></li>
+                    <li><p>&nbsp;&nbsp;Further Versions: {% if resource.num_evos > 0 %}<a href="{% url 'resource_view' resource.id %}#evolutions">{{ resource.num_evos }}</a>{% else %}This resource has no evolutions.{% endif %}</p></li>
                 {% endfor %}
             </ul>
             {% else %}
