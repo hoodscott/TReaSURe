@@ -221,9 +221,14 @@ def index(request):
     want2talkMine=TeacherWantstoTalkResource.objects.all()
     context_dict['want2talkMine'] = want2talkMine.filter(resource__author=this_teacher).filter(~Q(teacher_id = this_teacher))
 
+    want2talkMyPacks=TeacherWantstoTalkPack.objects.all()
+    context_dict['want2talkMyPacks'] = want2talkMyPacks.filter(pack__author=this_teacher).filter(~Q(teacher_id = this_teacher))
  
     want2talk=TeacherWantstoTalkResource.objects.all()
-    context_dict['want2talk'] = want2talk.filter(teacher_id=this_teacher)
+    context_dict['want2talk'] = want2talk.filter(teacher_id=this_teacher) 
+
+    want2talkPack=TeacherWantstoTalkPack.objects.all()
+    context_dict['want2talkPack'] = want2talkPack.filter(teacher_id=this_teacher)
     
     iDownload=TeacherDownloadsResource.objects.all().filter(teacher=this_teacher)
     context_dict['iDownload'] = iDownload
@@ -801,6 +806,18 @@ def talkHide(request, var):
     context_dict = sidebar(request)
     this_teacher = Teacher.objects.get(user=request.user)
     discuss=TeacherWantstoTalkResource.objects.all().filter(teacher=this_teacher)
+    if var=="yes":
+        discuss.update(disable=0)
+    elif var=="no":
+        discuss.update(disable=1)
+    return redirect(reverse('my_homepage'))
+
+def talkHidePack(request, var):
+    # get the context of request
+    context = RequestContext(request)
+    context_dict = sidebar(request)
+    this_teacher = Teacher.objects.get(user=request.user)
+    discuss=TeacherWantstoTalkPack.objects.all().filter(teacher=this_teacher)
     if var=="yes":
         discuss.update(disable=0)
     elif var=="no":
