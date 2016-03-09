@@ -36,13 +36,14 @@ rating= (('5','5'),('4','4'),('3','3'),('2','2'),('1','1'))
 class RatingForm(forms.Form):
     teacher = forms.CharField(widget = forms.HiddenInput(), required=False)
     resource = forms.CharField(widget = forms.HiddenInput(), required=False)
-    measure1 = forms.ChoiceField(label='Measure1*',help_text="Measure 1 Description", choices=rating)
-    measure2 = forms.ChoiceField(label='Measure2*',help_text="Measure 2 Description", choices=rating)
-    measure3 = forms.ChoiceField(label='Measure3*',help_text="Measure 3 Description", choices=rating)
+    measure1 = forms.ChoiceField(label='Engagement',help_text="How engaging was the material for the class?", choices=rating)
+    measure2 = forms.ChoiceField(label='Effectiveness',help_text="How effective was it? Did it achieve attainment of learning outcomes? Did students enjoy it? ", choices=rating)
+    measure3 = forms.ChoiceField(label='Ease of use',help_text="How easy was it to prepare the materials and use it in the classroom?", choices=rating)
     comment = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
                             max_length=128,
                             help_text="Feedback for the resource",
                             label='Feedback/Comment*')
+    captcha= CaptchaField(label='Captcha', help_text= 'Are we human, or are we dancers?')
 
 
 class ResourceForm(forms.ModelForm):
