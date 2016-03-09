@@ -243,28 +243,42 @@ class TeacherWantstoTalkResource(models.Model):
         return "%s %s" % (self.teacher, self.resource.name)
      
 ''' end of material relationship models '''
-
-''' start of discussion relationship models '''
-
-''' Don't know what this is
-# model to disucssions of a resource
-class TeacherRatesResource(models.Model):
-    owner = models.ForeignKey(Teacher)
-    resource = models.ForeignKey(Resource)
-    # many to many field for all teachers who participate in this discussion
-    attendees = models.ManyToManyField(Teacher)
-    # foreign key if discussion was at a hub (can be null if not at a hub)
-    hub = models.ForeignKey(Hub, null=True)
-    # if discussion was offline or online
-    physical = models.BooleanField()
-    # location of discussion
-    location = models.CharField(max_length=128)
-    # time of discussion
-    time = models.DateTimeField()
+        
+''' start of pack models
+# model to store a users rating of a pack
+class TeacherRatesPack(models.Model):
+    id = models.AutoField(primary_key=True)
+    teacher = models.ForeignKey(Teacher)
+    pack = models.ForeignKey(Pack)
+    # rating measures
+    measure1 = models.CharField(max_length=128)
+    measure2 = models.CharField(max_length=128)
+    measure3 = models.CharField(max_length=128)
+    # comment box
+    comment = models.TextField()
+    
+    datetime = models.DateTimeField()#todo
     
     def __unicode__(self):
-        return "%s %s" % (self.teacher.name, self.resource.name)
-'''
+        return "%s %s" % (self.teacher, self.resource.name)
+        
+# model to indicate if users want to talk about a pack
+class TeacherWantstoTalkPack(models.Model):
+    teacher = models.ForeignKey(Teacher)
+    pack = models.ForeignKey(Pack)
+    # comment box
+    comment = models.TextField()
+    # lat and long of where it was used
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    datetime = models.DateTimeField()
+    disable = models.IntegerField()
+    def __unicode__(self):
+        return "%s %s" % (self.teacher, self.resource.name)
+
+end of pack models'''
+
+''' start of discussion relationship models '''
 
 ''' end of discussion relationship models '''
 
