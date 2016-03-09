@@ -6,6 +6,7 @@
 <html>
     <head>
         <title>{% block title %}{% endblock %} - Plan C Sharing</title>
+        {% if user.is_authenticated %}{% if not user.teacher.school %}{% if not editingProfile %}<meta http-equiv="refresh" content="2; url={% url 'edit_profile' 'soc' %}" />{% endif %}{% endif %}{% endif %}
         {% block head_block%}{% endblock%}
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -97,15 +98,16 @@
       							<ul>
       							{% if user.is_authenticated %}
                     	  <li><a href="{% url 'notifications:unread' %}" class="skel-layers-ignoreHref"><span>Notifications {% live_notify_badge classes='badge small-notification' %}</span></a></li>
-                    		<li><a href="{% url 'my_homepage' %}#" id="home-link" class="skel-layers-ignoreHref"><span>My Page</span></a></li>
-                    		<li><a href="{% url 'my_homepage' %}#myresources" class="skel-layers-ignoreHref"><span>My Resources</span></a></li>
-                        <li><a href="{% url 'my_homepage' %}#mypacks" class="skel-layers-ignoreHref"><span>My Packs</span></a></li>
-                    		<li><a href="{% url 'profile' %}" class="skel-layers-ignoreHref"><span>My Profile</span></a></li>
-                    		<li><a href="{% url 'contribution' %}" class="skel-layers-ignoreHref"><span>My Contribution</span></a></li>
-                    		<li><a href="{% url 'help' %}" class="skel-layers-ignoreHref"><span>Help</span></a></li>
+                    		<li><a href="{% url 'my_homepage' %}#" id="home-link" class="skel-layers-ignoreHref"><span>My Page⦿</span></a></li>
+                    		<li><a href="{% url 'my_homepage' %}#myresources" class="skel-layers-ignoreHref"><span>-My Resources  </span></a></li>
+                        <li><a href="{% url 'my_homepage' %}#mypacks" class="skel-layers-ignoreHref"><span>-My Packs  </span></a></li>
+                        <li><br></li>
+                    		<li><a href="{% url 'profile' %}" class="skel-layers-ignoreHref"><span>Profile⦿</span></a></li>
+                    		<li><a href="{% url 'contribution' %}" class="skel-layers-ignoreHref"><span>Contribution⦿</span></a></li>
+                    		<li><a href="{% url 'help' %}" class="skel-layers-ignoreHref"><span>Help⦿</span></a></li>
                     		{% if user.is_superuser %}
                     		<li><br></li>
-                    		<li><a href="{% url 'review_list' %}" class="skel-layers-ignoreHref"><span>Pending Verifications</span></a></li>
+                    		<li><a href="{% url 'review_list' %}" class="skel-layers-ignoreHref"><span>Verifications</span></a></li>
                     		{% endif %}
       							{% else %}
       							    <li><br></li>
@@ -132,7 +134,12 @@
     				<!-- Main Page -->
     				<section id="MainPage">
                 <div class="container">
-                    {% block body_block%}{% endblock%}
+                    {% if user.is_authenticated and user.teacher.school == None and not editingProfile %}
+                        <br/><h4>   You have not yet added a school in your profile.</h4>
+                        <br/><h4>   You are being redirected to the Edit Profile Page..</h4>
+                    {% else %}
+                        {% block body_block%}{% endblock%}
+                    {% endif %}
                 </div>
             </section>
     

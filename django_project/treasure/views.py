@@ -374,6 +374,7 @@ def edit_profile(request,soc=0):
         # not in list
         pass
     
+    context_dict['editingProfile']='yes'
     # return response object
     return render_to_response('treasure/edit_profile.html', context_dict, context)
     
