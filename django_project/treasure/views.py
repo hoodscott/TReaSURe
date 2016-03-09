@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse,resolve
-from django.db.models import Count, Min, Max
+from django.db.models import Count, Min, Max, Q
 from django.db.models.signals import post_save
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, redirect, get_object_or_404
@@ -219,7 +219,8 @@ def index(request):
     context_dict['MyPacks'] = allpacks.filter(author=this_teacher)
     
     want2talkMine=TeacherWantstoTalkResource.objects.all()
-    context_dict['want2talkMine'] = want2talkMine.filter(resource__author=this_teacher)
+    context_dict['want2talkMine'] = want2talkMine.filter(resource__author=this_teacher).filter(~Q(teacher_id = this_teacher))
+
  
     want2talk=TeacherWantstoTalkResource.objects.all()
     context_dict['want2talk'] = want2talk.filter(teacher_id=this_teacher)
