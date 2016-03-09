@@ -542,6 +542,67 @@ def register(request):
     # Render the template depending on the context.
     return render_to_response('treasure/register.html', context_dict, context)
             
+# submit rating
+def ratePack(request, pack_id):
+    # get the context of request
+    context = RequestContext(request)
+    context_dict = sidebar(request)
+    this_teacher = Teacher.objects.get(user=request.user)
+    this_pack = Pack.objects.get(id=pack_id)
+    try:
+        condition = TeacherRatesPack.objects.get(teacher_id=this_teacher.id, pack_id=this_pack.id)
+        context_dict['condition'] = condition
+    except TeacherRatesPack.DoesNotExist:
+            # do nothing
+            pass
+  
+    rated = False
+
+    # If it's a HTTP POST, we're interested in processing form data.
+    if request.method == 'POST':
+        # Attempt to grab information from the raw form information.
+        rating_form = PackRatingForm(request.POST)
+        # If the form is valid..
+        if rating_form.is_valid():
+            # Save the rating to the database.
+            rating=TeacherRatesPack(teacher_id=this_teacher.id,pack_id=this_pack.id,measure1=rating_form.cleaned_data['measure1'],measure2=rating_form.cleaned_data['measure2'],measure3=rating_form.cleaned_data['measure3'],comment=rating_form.cleaned_data['comment'],datetime=datetime.now())
+            rating.save()
+            
+            # create a thread on the resources board
+            #this_board = Board.objects.all().get(resource=this_resource)
+            #thread = Thread(board = this_board, datetime = datetime.now(), author= this_teacher, title=this_teacher.firstname+' '+this_teacher.surname+' rated this resource', content=rating.comment, threadtype=0, rating=rating, restricted=this_resource.restricted)
+            #thread.save()
+            
+            # update subscribers of the board
+            #subscribers = TeacherSubbedToBoard.objects.filter(board = this_board)
+            for sub in subscribers:
+                rated_notify(thread, sub.teacher.user)
+                
+            # sub creator to the new thread
+            #new_sub = TeacherSubbedToThread(teacher = this_teacher, thread = thread)
+            #new_sub.save()
+            
+            # Update our variable to tell the template registration was successful.
+            rated = True
+
+        # Invalid form or forms print problems to the terminal.
+        else:
+            print "ERROR", rating_form.errors
+
+    # Not a HTTP POST, so we render our form using two ModelForm instances.
+    else:
+        rating_form=PackRatingForm()
+    
+    # create context dictionary
+    context_dict['this_pack'] = this_pack
+    context_dict['this_teacher'] = this_teacher
+    context_dict['rating_form'] = rating_form
+    context_dict['rated'] = rated
+
+    # Render the template depending on the context.
+    return render_to_response('treasure/rate_pack.html', context_dict, context)
+            
+
          
 # submit rating
 def rate(request, resource_id):
@@ -664,6 +725,37 @@ def talk(request, resource_id, var,red="res"):
         # link='/me/'
         return redirect(reverse('my_homepage'))
         
+def talkPack(request, pack_id, var,red="pack"):
+    # get the context of request
+    context = RequestContext(request)
+    context_dict = sidebar(request)
+    this_teacher = Teacher.objects.get(user=request.user)
+    this_pack = Pack.objects.get(id=pack_id)
+    teacher_school = School.objects.get(id=this_teacher.school_id)
+
+    if var=="yes":
+        talk=TeacherWantstoTalkPack(pack=this_pack, teacher=this_teacher,datetime=datetime.now(), latitude= teacher_school.latitude, longitude= teacher_school.longitude, disable=0)
+        talk.save()
+        
+        # notify other users that someone wants to talk
+        #talking_resource = TeacherWantstoTalkPack.objects.filter(pack=this_pack)
+        #for relation in talking_resource:
+        #    want2talk_notify(this_resource, relation.teacher.user)
+
+    elif var=="no":
+        try:
+            wanted = TeacherWantstoTalkPack.objects.get(teacher_id=this_teacher.id, pack_id=this_pack.id)
+            wanted.delete()
+        except TeacherWantstoTalkResource.DoesNotExist:
+            # This should never happen
+            pass
+
+    if red=='pack':
+        return redirect(reverse('pack', args=[this_pack.id]))
+    else:
+        # link='/me/'
+        return redirect(reverse('my_homepage'))
+
 def verify(request, request_id, var):
     # get the context of request
     context = RequestContext(request)
@@ -1596,7 +1688,7 @@ def pack(request, pack_id):
     
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
-    
+ 
     try:
         this_pack = Pack.objects.get(id=pack_id)
         
@@ -1620,6 +1712,12 @@ def pack(request, pack_id):
         if filtered_tags:
             context_dict['other_tags'] = get_list(filtered_tags)
 
+        try:
+            feedback= TeacherRatesPack.objects.all().filter(pack_id=this_pack.id)
+            context_dict['feedback']=feedback
+        except TeacherRatesPack.DoesNotExist:
+            pass
+
         # used to verify it exists
         context_dict['pack'] = this_pack
     except Pack.DoesNotExist:
@@ -1627,6 +1725,25 @@ def pack(request, pack_id):
         # Don't do anything - the template displays the "no tag" message for us.
         pass
     
+    try:
+        rating_exists = TeacherRatesPack.objects.get(teacher_id=request.user.teacher.id, pack_id=this_pack.id)
+        context_dict['rating_exists'] = rating_exists
+    except TeacherRatesPack.DoesNotExist:
+        # do nothing
+        pass
+    try:
+        iWant2Talk = TeacherWantstoTalkPack.objects.get(teacher_id=request.user.teacher.id, pack_id=this_pack.id)
+        context_dict['iWant2Talk'] = iWant2Talk
+    except TeacherWantstoTalkPack.DoesNotExist:
+        # do nothing
+        pass
+    try:
+        Want2Talk = TeacherWantstoTalkPack.objects.all().filter(pack_id=this_pack.id)
+        context_dict['want2talk'] = Want2Talk
+    except TeacherWantstoTalkPack.DoesNotExist:
+        # do nothing
+        pass
+
     # return response object
     return render_to_response('treasure/pack.html', context_dict, context)
 

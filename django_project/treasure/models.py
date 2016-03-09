@@ -244,7 +244,6 @@ class TeacherWantstoTalkResource(models.Model):
      
 ''' end of material relationship models '''
         
-''' start of pack models
 # model to store a users rating of a pack
 class TeacherRatesPack(models.Model):
     id = models.AutoField(primary_key=True)
@@ -276,7 +275,6 @@ class TeacherWantstoTalkPack(models.Model):
     def __unicode__(self):
         return "%s %s" % (self.teacher, self.resource.name)
 
-end of pack models'''
 
 ''' start of discussion relationship models '''
 

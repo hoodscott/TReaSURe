@@ -45,6 +45,18 @@ class RatingForm(forms.Form):
                             label='Feedback/Comment*')
     captcha= CaptchaField(label='Captcha', help_text= 'Are we human, or are we dancers?')
 
+class PackRatingForm(forms.Form):
+    teacher = forms.CharField(widget = forms.HiddenInput(), required=False)
+    resource = forms.CharField(widget = forms.HiddenInput(), required=False)
+    measure1 = forms.ChoiceField(label='Measure1',help_text="Measure1 Description", choices=rating)
+    measure2 = forms.ChoiceField(label='Measure2',help_text="Measure2 Description", choices=rating)
+    measure3 = forms.ChoiceField(label='Measure3',help_text="Measure3 Description", choices=rating)
+    comment = forms.CharField(widget = forms.TextInput(attrs={'tabindex':'1', 'autofocus':'autofocus'}),
+                            max_length=128,
+                            help_text="Feedback for the resource",
+                            label='Feedback/Comment*')
+    captcha= CaptchaField(label='Captcha', help_text= 'Are we human, or are we dancers?')
+
 
 class ResourceForm(forms.ModelForm):
         

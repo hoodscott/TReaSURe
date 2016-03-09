@@ -1,0 +1,39 @@
+{% extends 'treasure/base.html' %}
+
+{% load static %}
+{% load render_help %}
+{% block head_block%}{% if rated or condition %}<meta http-equiv="refresh" content="2; url={% url 'pack' this_pack.id %}" />{% endif %}{% endblock%}
+
+{% block title %}
+    Rate this_pack.name
+{% endblock %}
+
+{% block body_block %}
+<div class="hero-unit">
+    {% if rated %}
+        <h4>Thank you for the feedback, {{ request.user.teacher.firstname}}</h4>
+        <h4>You will be redirected back to the Pack, if not <a href="{% url 'pack' this_pack.id %}" tabindex='1'>click here.</a></h4>
+    {% else %}
+        {% if condition %}
+        <h4>You have already given feedback for this pack.</h4>
+        <h4>This should not have happened, I am sending you back to <a href="{% url 'pack' this_pack.id %}" tabindex='1'>the Pack</a>!</h4>
+        {% else %}
+        <h2>Rating {{ this_pack.name}}</h2>
+        <br/>
+        <div class="container">
+            <form class="span6" id="rating_form" method="post" action="{% url 'ratePack' this_pack.id %}" enctype="multipart/form-data">
+                {% csrf_token %}
+            
+                {% for field in rating_form.visible_fields %}
+                    {{ field.errors }}
+                    {{field.label}}{% render_help_text field %}<br/>
+                    {{ field }}<br/>
+                {% endfor %}
+                <br/>
+                <button class="btn btn-primary" type="submit" name="submit" tabindex='1'>Submit Rating</button>
+            </form>
+        </div>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}
