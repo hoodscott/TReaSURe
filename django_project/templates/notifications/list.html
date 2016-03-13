@@ -24,6 +24,9 @@
     
     {% elif notification.verb == 'want2talk' %}
         <p>Someone new wants to talk about: <a href="{% url 'resource_view' notification.action_object.id %}#want2talk">{{  notification.action_object.name }}</a></p>
+        
+    {% elif notification.verb == 'want2talkpack' %}
+        <p>Someone new wants to talk about: <a href="{% url 'pack' notification.action_object.id %}#want2talk">{{  notification.action_object.name }}</a></p>
     
     {% elif notification.verb == 'rated' %}
         <p>Someone has rated: <a href="{% url 'thread' 'resource' notification.action_object.board.resource.id notification.action_object.id %}">{{ notification.action_object.board.title }}</a></p>

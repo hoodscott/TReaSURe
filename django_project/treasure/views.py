@@ -196,6 +196,12 @@ def reply_notify(thread, user):
     #todo: notify when there is a post on a thread
     #todo: send a user in the target field once profile pages are made
     notify.send(thread, recipient=user, verb='replied', action_object=thread)
+
+# send a want2talk about a pack notification
+def want2talkpack_notify(pack, user):
+    #todo: send a user in the target field once profile pages are made
+    notify.send(pack, recipient=user, verb='want2talkpack', action_object=pack)
+
 ''' end of notification threads '''
 
 
@@ -225,7 +231,7 @@ def index(request):
     context_dict['want2talkMyPacks'] = want2talkMyPacks.filter(pack__author=this_teacher).filter(~Q(teacher_id = this_teacher))
  
     want2talk=TeacherWantstoTalkResource.objects.all()
-    context_dict['want2talk'] = want2talk.filter(teacher_id=this_teacher) 
+    context_dict['want2talk'] = want2talk.filter(teacher_id=this_teacher)
 
     want2talkPack=TeacherWantstoTalkPack.objects.all()
     context_dict['want2talkPack'] = want2talkPack.filter(teacher_id=this_teacher)
@@ -742,10 +748,10 @@ def talkPack(request, pack_id, var,red="pack"):
         talk=TeacherWantstoTalkPack(pack=this_pack, teacher=this_teacher,datetime=datetime.now(), latitude= teacher_school.latitude, longitude= teacher_school.longitude, disable=0)
         talk.save()
         
-        # notify other users that someone wants to talk
-        #talking_resource = TeacherWantstoTalkPack.objects.filter(pack=this_pack)
-        #for relation in talking_resource:
-        #    want2talk_notify(this_resource, relation.teacher.user)
+        # notify other users that someone wants to talk about this pack
+        talking_pack = TeacherWantstoTalkPack.objects.filter(pack=this_pack)
+        for relation in talking_pack:
+            want2talkpack_notify(this_pack, relation.teacher.user)
 
     elif var=="no":
         try:
@@ -1406,7 +1412,7 @@ def resource_view(request, resource_id):
             i.evo = convert_to_evotype(i.evolution_type) #duck typing (yay")
             # get count of evolutions after each descendant
             i.num_evos = Resource.objects.filter(tree__startswith = i.tree).count() - 1 # -1 removes this resouce from count
-            future += [i]       
+            future += [i]
         
         context_dict['future'] = future
         
