@@ -136,9 +136,15 @@ def getSubForum(board_type):
     return boards
 
 # get a sorted list of threads on a board
-def getThreads(this_resource):
-    # get the board corresponding to the resource
-    this_board = Board.objects.get(resource = this_resource)
+# this_reousrce is the object corresponding the the board
+# resource is a boolean - true if the object is a resource, false if it is a pack
+def getThreads(this_resource, resource):
+    if resource:
+        # get the board corresponding to the resource
+        this_board = Board.objects.get(resource = this_resource)
+    else:
+      # get the board corresponding to the pack
+      this_board = Board.objects.get(pack = this_resource)
     
     # get the threads on this board
     threads = Thread.objects.filter(board = this_board)
@@ -579,19 +585,19 @@ def ratePack(request, pack_id):
             rating=TeacherRatesPack(teacher_id=this_teacher.id,pack_id=this_pack.id,measure1=rating_form.cleaned_data['measure1'],measure2=rating_form.cleaned_data['measure2'],measure3=rating_form.cleaned_data['measure3'],comment=rating_form.cleaned_data['comment'],datetime=datetime.now())
             rating.save()
             
-            # create a thread on the resources board
-            #this_board = Board.objects.all().get(resource=this_resource)
-            #thread = Thread(board = this_board, datetime = datetime.now(), author= this_teacher, title=this_teacher.firstname+' '+this_teacher.surname+' rated this resource', content=rating.comment, threadtype=0, rating=rating, restricted=this_resource.restricted)
-            #thread.save()
+            # create a thread on the pack board
+            this_board = Board.objects.all().get(pack=this_pack)
+            thread = Thread(board = this_board, datetime = datetime.now(), author= this_teacher, title=this_teacher.firstname+' '+this_teacher.surname+' rated this pack', content=rating.comment, threadtype=0, rating_pack=rating, restricted=this_pack.restricted)
+            thread.save()
             
             # update subscribers of the board
-            #subscribers = TeacherSubbedToBoard.objects.filter(board = this_board)
+            subscribers = TeacherSubbedToBoard.objects.filter(board = this_board)
             for sub in subscribers:
                 rated_notify(thread, sub.teacher.user)
                 
             # sub creator to the new thread
-            #new_sub = TeacherSubbedToThread(teacher = this_teacher, thread = thread)
-            #new_sub.save()
+            new_sub = TeacherSubbedToThread(teacher = this_teacher, thread = thread)
+            new_sub.save()
             
             # Update our variable to tell the template registration was successful.
             rated = True
@@ -1421,7 +1427,7 @@ def resource_view(request, resource_id):
         context_dict['forum_count'] = Thread.objects.filter(board = this_board).count()
         
         # get last five forum posts
-        context_dict['threads'] = getThreads(this_resource)[:5]
+        context_dict['threads'] = getThreads(this_resource, True)[:5]
         
         # used to verify it exists
         context_dict['resource'] = this_resource
@@ -1736,31 +1742,34 @@ def pack(request, pack_id):
             context_dict['feedback']=feedback
         except TeacherRatesPack.DoesNotExist:
             pass
+          
+        try:
+            rating_exists = TeacherRatesPack.objects.get(teacher_id=request.user.teacher.id, pack_id=this_pack.id)
+            context_dict['rating_exists'] = rating_exists
+        except TeacherRatesPack.DoesNotExist:
+            # do nothing
+            pass
+        try:
+            iWant2Talk = TeacherWantstoTalkPack.objects.get(teacher_id=request.user.teacher.id, pack_id=this_pack.id)
+            context_dict['iWant2Talk'] = iWant2Talk
+        except TeacherWantstoTalkPack.DoesNotExist:
+            # do nothing
+            pass
+        try:
+            Want2Talk = TeacherWantstoTalkPack.objects.all().filter(pack_id=this_pack.id)
+            context_dict['want2talk'] = Want2Talk
+        except TeacherWantstoTalkPack.DoesNotExist:
+            # do nothing
+            pass
+          
+        # get last five forum posts
+        context_dict['threads'] = getThreads(this_pack, False)[:5]
 
         # used to verify it exists
         context_dict['pack'] = this_pack
     except Pack.DoesNotExist:
-        # We get here if we didn't find the specified tag.
-        # Don't do anything - the template displays the "no tag" message for us.
-        pass
-    
-    try:
-        rating_exists = TeacherRatesPack.objects.get(teacher_id=request.user.teacher.id, pack_id=this_pack.id)
-        context_dict['rating_exists'] = rating_exists
-    except TeacherRatesPack.DoesNotExist:
-        # do nothing
-        pass
-    try:
-        iWant2Talk = TeacherWantstoTalkPack.objects.get(teacher_id=request.user.teacher.id, pack_id=this_pack.id)
-        context_dict['iWant2Talk'] = iWant2Talk
-    except TeacherWantstoTalkPack.DoesNotExist:
-        # do nothing
-        pass
-    try:
-        Want2Talk = TeacherWantstoTalkPack.objects.all().filter(pack_id=this_pack.id)
-        context_dict['want2talk'] = Want2Talk
-    except TeacherWantstoTalkPack.DoesNotExist:
-        # do nothing
+        # We get here if we didn't find the specified pack.
+        # Don't do anything - the template displays the "no pack" message for us.
         pass
 
     # return response object
@@ -2220,6 +2229,14 @@ def newpack(request):
                 
             # save again
             this_pack.save()
+            
+            # create board for this pack
+            board = Board(pack=pack, title=this_pack.name, boardtype='pack', restricted=this_pack.restricted)
+            board.save()
+            
+            # sub creator to the new board
+            new_sub = TeacherSubbedToBoard(teacher = teacher, board = board)
+            new_sub.save()
                         
             # Now show the new pack page
             return redirect(reverse('pack', args=[this_pack.id]))
@@ -2309,6 +2326,14 @@ def newpack_initial(request, resource_id):
             # add resource to pack
             this_resource.packs.add(this_pack)
             this_resource.save()
+            
+            # create board for this pack
+            board = Board(pack=this_pack, title=this_pack.name, boardtype='pack', restricted=this_pack.restricted)
+            board.save()
+            
+            # sub creator to the new board
+            new_sub = TeacherSubbedToBoard(teacher = teacher, board = board)
+            new_sub.save()
                         
             # Now show the new pack page
             return redirect(reverse('pack', args=[this_pack.id]))

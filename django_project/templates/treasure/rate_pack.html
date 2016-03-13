@@ -5,7 +5,7 @@
 {% block head_block%}{% if rated or condition %}<meta http-equiv="refresh" content="2; url={% url 'pack' this_pack.id %}" />{% endif %}{% endblock%}
 
 {% block title %}
-    Rate this_pack.name
+    Rate {{ this_pack.name }}
 {% endblock %}
 
 {% block body_block %}

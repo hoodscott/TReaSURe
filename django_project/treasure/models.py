@@ -324,6 +324,9 @@ class Board(models.Model):
     # can be null if board is not attached to any resource
     resource = models.ForeignKey(Resource, null=True, blank=True)
     
+    # can be null if board is not attached to any pack
+    pack = models.ForeignKey(Pack, null=True, blank=True)
+    
     # title of the board (the resource name for boards relating to resources)
     title = models.CharField(max_length=128)
     
@@ -364,8 +367,11 @@ class Thread(models.Model):
     )
     threadtype = models.CharField(max_length=1, choices=THREADTYPES)
     
-    # optional rating attached
+    # optional resource rating attached
     rating = models.OneToOneField(TeacherRatesResource, null=True, blank=True)
+    
+    # optional pack rating attached
+    rating_pack = models.OneToOneField(TeacherRatesPack, null=True, blank=True)
     
     # is this thread restricted to scottish teachers
     restricted = models.IntegerField()
@@ -402,6 +408,7 @@ class TeacherSubbedToThread(models.Model):
 
 ''' end of subscription models '''
 
+''' start of help model '''
 # model for help texts
 class Help(models.Model):
     question = models.CharField(max_length=128)
@@ -409,3 +416,5 @@ class Help(models.Model):
 
     def __unicode__(self):
         return self.question
+        
+''' end of help model '''
