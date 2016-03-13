@@ -13,10 +13,7 @@
     <div class="post">
     <p>{{ notification.timestamp }} {% if notification.unread == True %}<a href="{% url 'notifications:mark_as_read' notification.slug %}"><i>Unread</i></a>{% else %}<i>Read</i>{% endif %}</i></a></p>
     
-    {% if notification.verb == "created" %}
-        <p>You created a resource: <a href="{% url 'resource_view' notification.action_object.id %}">{{  notification.action_object.name }}</a></p>
-    
-    {% elif notification.verb == "evolved" %}
+    {% if notification.verb == "evolved" %}
         <p>Your resource (<a href="{% url 'resource_view' notification.target.id %}">{{  notification.target.name }}</a>) has been {{ notification.verb }}: <a href="{% url 'resource_view' notification.action_object.id %}">{{  notification.action_object.name }}</a></p>
     
     {% elif notification.verb == 'downloaded' %}

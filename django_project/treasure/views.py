@@ -157,9 +157,9 @@ def getThreads(this_resource):
 ''' end of helper functions '''
 
 ''' notification threads '''
-# send a "create" notification
-def create_notify(resource, user):
-    notify.send(resource, recipient=user, verb='created', action_object=resource, description=u'', level='')
+
+# notification are of the form
+# notify.send(object, recipient=user, verb='created', action_object=resource, description=u'', level='')
 
 # send a "evolve" notification
 def evolve_notify(resource, user, target):
@@ -937,9 +937,6 @@ def add_web_resource(request):
             resource.tree = resource.id
             
             resource.save()
-            
-            # send notification
-            create_notify(resource, request.user)
 
             # delay saving the relationship model until we're ready
             # to avoid integrity problems
@@ -1042,9 +1039,6 @@ def add_file_resource(request):
             resource.tree = resource.id
             
             resource.save()
-            
-            # send notification
-            create_notify(resource, request.user)
             
             # add file to object
             files = FilesResource(path = request.FILES['path'])
@@ -1965,9 +1959,6 @@ def evolve(request, parent_id):
                 # save the instance
                 files.save()
                 
-                # send create notification
-                create_notify(resource, request.user)
-                
                 # send evolve notification
                 evolve_notify(resource, parent_resource.author.user, parent_resource)
                 
@@ -2037,9 +2028,6 @@ def evolve(request, parent_id):
                 
                 # save the instance
                 web.save()
-                
-                # send create notification
-                create_notify(resource, request.user)
                   
                 # send evolve notification
                 evolve_notify(resource, parent_resource.author.user, parent_resource)
