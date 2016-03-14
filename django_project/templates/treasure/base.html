@@ -6,7 +6,11 @@
 <html>
     <head>
         <title>{% block title %}{% endblock %} - Plan C Sharing</title>
-        {% if user.is_authenticated %}{% if not user.teacher.school %}{% if not editingProfile %}<meta http-equiv="refresh" content="2; url={% url 'edit_profile' 'soc' %}" />{% endif %}{% endif %}{% endif %}
+        {% if user.is_authenticated %}
+          {% if not user.teacher %}{% if not creating_profile %}<meta http-equiv="refresh" content="1; url={% url 'register' %}" />{% endif %}
+          {% elif not user.teacher.school %}{% if not editingProfile %}<meta http-equiv="refresh" content="2; url={% url 'edit_profile' 'soc' %}" />{% endif %}{% endif %}
+        {% endif %}
+        
         {% block head_block%}{% endblock%}
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0">

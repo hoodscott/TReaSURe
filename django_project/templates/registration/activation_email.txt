@@ -1,9 +1,9 @@
-You have {{ expiration_days }} from receiving this email to register your account at {{site}}
+You have {{ expiration_days }} from receiving this email to register your account at Plan C Sharing
 
 If you did not create an account at this site, please ignore this email.
 
 To verify this is your email and to register an account please go to this address:
 
-trace.dcs.gla.ac.uk/plancsharing/accounts/activate/{{ activation_key }}
+http://trace.dcs.gla.ac.uk/plancsharing/accounts/activate/{{ activation_key }}
 
 Plan C - Sharing
