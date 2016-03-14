@@ -7,7 +7,7 @@
     <head>
         <title>{% block title %}{% endblock %} - Plan C Sharing</title>
         {% if user.is_authenticated %}
-          {% if not user.teacher %}{% if not creating_profile %}<meta http-equiv="refresh" content="1; url={% url 'register' %}" />{% endif %}
+          {% if not user.teacher %}{% if not creating_profile %}<meta http-equiv="refresh" content="0; url={% url 'register' %}" />{% endif %}
           {% elif not user.teacher.school %}{% if not editingProfile %}<meta http-equiv="refresh" content="2; url={% url 'edit_profile' 'soc' %}" />{% endif %}{% endif %}
         {% endif %}
         
