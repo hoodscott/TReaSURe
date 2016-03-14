@@ -9,8 +9,8 @@
 {% block body_block %}
 {% if tag %}
     <div class="hero-unit">
-    <h2>{{ tag.name }} {% if tag.type = "0" %}(<a href="{% url 'tags' %}#leveltags">Level</a>)
-        {% elif tag.type == "1" %}(<a href="{% url 'tags' %}#topictags">Topic</a>)
+    <h2>{{ tag.name }} {% if tag.tagtype = "0" %}(<a href="{% url 'tags' %}#leveltags">Level</a>)
+        {% elif tag.tagtype == "1" %}(<a href="{% url 'tags' %}#topictags">Topic</a>)
         {% else %}(<a href="{% url 'tags' %}#othertags">Other Tag</a>)
         {% endif %}</h2>
     </div>
