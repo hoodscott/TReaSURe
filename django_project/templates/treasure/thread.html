@@ -24,7 +24,11 @@
         <a class="btn btn-success pull-right" href="{% url 'sub_thread' board_type board_url thread.id %}">Subscribe to Thread</a>
         {% endif %}
         {% if thread.threadtype == '0' %}
-        <p>Measure1: {{ thread.rating.measure1 }}, Measure2: {{ thread.rating.measure2 }}, Measure3: {{  thread.rating.measure1 }}</p>
+        {% if board_type == 'resource' %}
+        <p>Engagement: {{ thread.rating.measure1 }}, Effectiveness: {{ thread.rating.measure2 }}, Ease of Use: {{  thread.rating.measure1 }}</p>
+        {% elif board_type == 'pack' %}
+        <p>Engagement: {{ thread.rating_pack.measure1 }}, Effectiveness: {{ thread.rating_pack.measure2 }}, Ease of Use: {{  thread.rating_pack.measure1 }}</p>
+        {% endif %}
         {%  endif  %}
         <p>{{ thread.content }}<p>
         <hr>
@@ -58,7 +62,7 @@
 
             <br/>
             <button class="btn btn-primary" type="submit" name="submit" tabindex='1'>Post Comment</button>
-        </form>    
+        </form>
     {% else %}
         <h4>This thread is restricted to verified Scottish teachers only.</h4>
     {% endif %}

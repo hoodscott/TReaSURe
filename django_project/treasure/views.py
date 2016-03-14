@@ -143,8 +143,8 @@ def getThreads(this_resource, resource):
         # get the board corresponding to the resource
         this_board = Board.objects.get(resource = this_resource)
     else:
-      # get the board corresponding to the pack
-      this_board = Board.objects.get(pack = this_resource)
+        # get the board corresponding to the pack
+        this_board = Board.objects.get(pack = this_resource)
     
     # get the threads on this board
     threads = Thread.objects.filter(board = this_board)
@@ -2492,6 +2492,7 @@ def forum(request):
     context_dict['level_boards'] = getSubForum('level')[:10][::-1]
     context_dict['general_boards'] = getSubForum('general')[:10][::-1]
     context_dict['resource_boards'] = getSubForum('resource')[:10][::-1]
+    context_dict['pack_boards'] = getSubForum('pack')[:10][::-1]
     
     # set main forum flag so we can reuse the template
     context_dict['main_forum'] = True
@@ -2504,6 +2505,8 @@ def forum(request):
 def forum_type(request, board_type):
     # get context of request
     context = RequestContext(request)
+    
+    print board_type
 
     # create dictionary to pass data to templates
     context_dict = sidebar(request)
@@ -2513,6 +2516,7 @@ def forum_type(request, board_type):
     
     # put some boards in the dict with the above key
     context_dict[string_for_template] = getSubForum(board_type)
+    print string_for_template
     
     # concatenate the type of board with
     datatable_string = board_type + 'BoardTable'
@@ -2540,13 +2544,33 @@ def board(request, board_type, board_url):
     userid = request.user.id
     teacher = Teacher.objects.get(user = userid)
     
-    #determine if other or resourceboard
+    #determine if other or resourceboard or pack board
     if board_type == 'resource':
         try:
             # check resource has a forum attached
-            this_resource = Resource.objects.all().get(id=board_url)
+            this_resource = Resource.objects.get(id=board_url)
             context_dict['resource'] = this_resource
             this_board = Board.objects.all().get(resource = this_resource)
+            if TeacherSubbedToBoard.objects.filter(board=this_board, teacher = teacher).first():
+                context_dict['subscribed'] = True
+            try:
+                # get the threads on the forum, along with the count of posts and time of last post for each thread
+                board = Thread.objects.filter(board = this_board).annotate(num_posts = Count('post'), last_post = Max('post__datetime'))
+                context_dict['board'] = board
+
+            except Thread.DoesNotExist:
+                # do not pass a board object to template as there are no threads
+                print "no threads", board_url
+                pass
+        except Resource.DoesNotExist:
+             # no board here
+            context_dict['invalid'] = True
+    elif board_type == 'pack':
+        try:
+            # check board has a forum attached
+            this_pack = Pack.objects.get(id=board_url)
+            context_dict['pack'] = this_pack
+            this_board = Board.objects.all().get(pack = this_pack)
             if TeacherSubbedToBoard.objects.filter(board=this_board, teacher = teacher).first():
                 context_dict['subscribed'] = True
             try:
@@ -2558,7 +2582,7 @@ def board(request, board_type, board_url):
                 # do not pass a board object to template as there are no threads
                 print "no threads", board_url
                 pass
-        except Resource.DoesNotExist:
+        except Pack.DoesNotExist:
              # no board here
             context_dict['invalid'] = True
     else:
@@ -2602,9 +2626,14 @@ def new_thread(request, board_type, board_url):
         try:
             # if url is number, get board relating to that object
             this_board = Board.objects.all().get(resource = Resource.objects.all().get(id=board_url))
-            
-            
         except (Board.DoesNotExist, Resource.DoesNotExist) as e:
+            # no board at this url
+            context_dict['invalid'] = "invalid"
+    elif board_type == 'pack':
+        try:
+            # if url is number, get board relating to that object
+            this_board = Board.objects.all().get(pack = Pack.objects.all().get(id=board_url))
+        except (Board.DoesNotExist, Pack.DoesNotExist) as e:
             # no board at this url
             context_dict['invalid'] = "invalid"
     else:
@@ -2635,6 +2664,13 @@ def new_thread(request, board_type, board_url):
                 try:
                     # if url is number, get board relating to that object
                     this_board = Board.objects.all().get(resource = Resource.objects.all().get(id=board_url))
+                except Board.DoesNotExist:
+                    # no board at this url
+                    context_dict['invalid'] = 'invalid'
+            if board_type == 'pack':
+                try:
+                    # if url is number, get board relating to that object
+                    this_board = Board.objects.all().get(pack = Pack.objects.all().get(id=board_url))
                 except Board.DoesNotExist:
                     # no board at this url
                     context_dict['invalid'] = 'invalid'
@@ -2732,8 +2768,15 @@ def thread(request, board_type, board_url, thread_id):
     if board_type == "resource":
         try:
             # if url is number, get board relating to that object
-            this_board = Board.objects.all().get(resource = Resource.objects.all().get(id=board_url))
+            this_board = Board.objects.all().get(resource = Resource.objects.get(id=board_url))
         except (Board.DoesNotExist, Resource.DoesNotExist) as e:
+            # no board at this url
+            context_dict['invalid'] = "invalid"
+    elif board_type == "pack":
+        try:
+            # if url is number, get board relating to that object
+            this_board = Board.objects.all().get(pack = Pack.objects.get(id=board_url))
+        except (Board.DoesNotExist, Pack.DoesNotExist) as e:
             # no board at this url
             context_dict['invalid'] = "invalid"
     else:
@@ -2806,13 +2849,12 @@ def sub_board(request, board_type, board_url):
     userid = request.user.id
     teacher = Teacher.objects.get(user = userid)
     
-    #determine if other or resourceboard
+    #determine if other or resourceboard or packboard
     if board_type == 'resource':
         try:
             # check resource has a forum attached
             this_resource = Resource.objects.all().get(id=board_url)
             this_board = Board.objects.all().get(resource = this_resource)
-            
             
             # check if poster is already subbed
             if not TeacherSubbedToBoard.objects.filter(board=this_board, teacher = teacher).first():
@@ -2823,6 +2865,23 @@ def sub_board(request, board_type, board_url):
                 print 'already subbed error'
             
         except Resource.DoesNotExist:
+            # no board to sub to
+            print "no board to sub to"
+    elif board_type == 'pack':
+        try:
+            # check pack has a forum attached
+            this_pack = Pack.objects.all().get(id=board_url)
+            this_board = Board.objects.all().get(pack = this_pack)
+            
+            # check if poster is already subbed
+            if not TeacherSubbedToBoard.objects.filter(board=this_board, teacher = teacher).first():
+                # sub user to the board
+                new_sub = TeacherSubbedToBoard(teacher = teacher, board = this_board)
+                new_sub.save()
+            else:
+                print 'already subbed error'
+            
+        except Pack.DoesNotExist:
             # no board to sub to
             print "no board to sub to"
     else:
@@ -2851,7 +2910,7 @@ def unsub_board(request, board_type, board_url):
     userid = request.user.id
     teacher = Teacher.objects.get(user = userid)
     
-    #determine if other or resourceboard
+    #determine if other or resourceboard or packboard
     if board_type == 'resource':
         try:
             # check resource has a forum attached
@@ -2863,6 +2922,19 @@ def unsub_board(request, board_type, board_url):
                 old_sub.delete()
             
         except Resource.DoesNotExist:
+            # no board to sub to
+            print "noboard to sub to"
+    elif board_type == 'pack':
+        try:
+            # check pack has a forum attached
+            this_pack = Pack.objects.all().get(id=board_url)
+            this_board = Board.objects.all().get(pack = this_pack)
+            
+            old_sub = TeacherSubbedToBoard.objects.filter(teacher = teacher, board = this_board).first()
+            if old_sub:
+                old_sub.delete()
+            
+        except Pack.DoesNotExist:
             # no board to sub to
             print "noboard to sub to"
     else:

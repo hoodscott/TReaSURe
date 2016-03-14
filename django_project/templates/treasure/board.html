@@ -16,6 +16,8 @@
     {% elif board.restricted <= request.user.teacher.verified %}
         {% if resource %}
             <h3>Discussions on: <a href="{% url 'resource_view' resource.id %}">{{ resource.name }}</a>{% if board.restricted == 1 %}&nbsp;<img alt="Restricted to scottish teachers" title="Restricted to scottish teachers" src="{% static 'images/small_scotland.png' %}"/>{% endif %}</h3>
+        {% elif pack %}
+            <h3>Discussions on: <a href="{% url 'pack' pack.id %}">{{ pack.name }}</a>{% if board.restricted == 1 %}&nbsp;<img alt="Restricted to scottish teachers" title="Restricted to scottish teachers" src="{% static 'images/small_scotland.png' %}"/>{% endif %}</h3>
         {% else %}
             <h3>Discussions about: {{ title|capfirst }}</h3>
         {% endif %}
