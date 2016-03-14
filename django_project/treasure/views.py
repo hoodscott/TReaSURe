@@ -1117,6 +1117,7 @@ def add_hub(request):
     
     context_dict['form']  = form
     context_dict['creating_profile'] = True
+    context_dict['editingProfile']='yes'
     
     # Render the form depending on context
     return render_to_response('treasure/add_hub.html', context_dict, context)
@@ -1163,6 +1164,7 @@ def add_school(request):
     
     context_dict['form'] = form
     context_dict['creating_profile'] = True
+    context_dict['editingProfile']='yes'
     
     # Render the form to template with context
     return render_to_response('treasure/add_school.html', context_dict, context)
@@ -2416,6 +2418,8 @@ def newSocialAuthentication(request):
     except Teacher.DoesNotExist:
             # Not a WebResource
             pass
+            
+    context_dict['creating_profile'] = True
 
     # Render the template updating the context dictionary.
     return redirect(reverse('edit_profile', args=['soc']))
