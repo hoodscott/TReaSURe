@@ -11,15 +11,25 @@
 <div class="hero-unit">
     
     {% if invalid %}
+        <ul class="breadcrumb">
+            <li><a href="{% url 'forum' %}">Forum</a> <span class="divider">/</span></li>
+            <li><a href="{% url 'forum_type' board_type %}">Forum: {{ board_type|capfirst }}</a> <span class="divider">/</span></li>
+            <li class="active">Board: Invalid</li>
+        </ul>
         <h4>No Board at this URL</h4>
         <a href="{% url 'forum' %}/">Return to the main forum</a>
     {% elif board.restricted <= request.user.teacher.verified %}
+        <ul class="breadcrumb">
+            <li><a href="{% url 'forum' %}">Forum</a> <span class="divider">/</span></li>
+            <li><a href="{% url 'forum_type' board_type %}">Forum: {{ board_type|capfirst }}</a> <span class="divider">/</span></li>
+            <li class="active">Board: {{ board.title|capfirst }}</li>
+        </ul>
         {% if resource %}
             <h3>Discussions on: <a href="{% url 'resource_view' resource.id %}">{{ resource.name }}</a>{% if board.restricted == 1 %}&nbsp;<img alt="Restricted to scottish teachers" title="Restricted to scottish teachers" src="{% static 'images/small_scotland.png' %}"/>{% endif %}</h3>
         {% elif pack %}
             <h3>Discussions on: <a href="{% url 'pack' pack.id %}">{{ pack.name }}</a>{% if board.restricted == 1 %}&nbsp;<img alt="Restricted to scottish teachers" title="Restricted to scottish teachers" src="{% static 'images/small_scotland.png' %}"/>{% endif %}</h3>
         {% else %}
-            <h3>Discussions about: {{ title|capfirst }}</h3>
+            <h3>Discussions about: {{ board.name|capfirst }}</h3>
         {% endif %}
                 
         <a class="btn btn-primary" href="{% url 'new_thread' board_type board_url %}">New Thread</a>
@@ -30,7 +40,7 @@
         {% endif %}
         <br><br>
         
-        {% if board %}
+        {% if threads %}
         <div class="row panel-body">
             <div class="span10 table-responsive" style="margin-left:0px">
                 <table id="threadTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
@@ -45,7 +55,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {% for thread in board %}
+                    {% for thread in threads %}
                         {% if thread.restricted <= request.user.teacher.verified %}
                         <tr>
                             <td><a href="{% url 'thread' board_type board_url thread.id %}">{{ thread.title }}</a></td>
@@ -75,6 +85,11 @@
         {% endif %}
 
     {% else %}
+        <ul class="breadcrumb">
+            <li><a href="{% url 'forum' %}">Forum</a> <span class="divider">/</span></li>
+            <li><a href="{% url 'forum_type' board_type %}">Forum: {{ board_type|capfirst }}</a> <span class="divider">/</span></li>
+            <li class="active">Board: Restricted</li>
+        </ul>
         <h4>This board is restricted to verified Scottish teachers only.</h4>
     {% endif %}
     

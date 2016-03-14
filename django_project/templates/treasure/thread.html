@@ -12,10 +12,22 @@
 <div class="hero-unit container">
 
     {% if invalid %}
+        <ul class="breadcrumb">
+            <li><a href="{% url 'forum' %}">Forum</a> <span class="divider">/</span></li>
+            <li><a href="{% url 'forum_type' board_type %}">Forum: {{ board_type|capfirst }}</a> <span class="divider">/</span></li>
+            <li><a href="{% url 'board' board_type board_url %}">Board: {{ board_title|capfirst }}</a> <span class="divider">/</span></li>
+            <li class="active">Thread: Invalid</li>
+        </ul>
         <h3>Malformed url</h3>
         <a href="{% url 'home' %}">Return to Homepage</a>
         <a href="{% url 'forum' %}">Return to Forum</a>
     {% elif thread.restricted <= request.user.teacher.verified %}
+        <ul class="breadcrumb">
+            <li><a href="{% url 'forum' %}">Forum</a> <span class="divider">/</span></li>
+            <li><a href="{% url 'forum_type' board_type %}">Forum: {{ board_type|capfirst }}</a> <span class="divider">/</span></li>
+            <li><a href="{% url 'board' board_type board_url%}">Board: {{ board_title|capfirst }}</a> <span class="divider">/</span></li>
+            <li class="active">Thread: {{ thread.title|capfirst }}</li>
+        </ul>
         <h2>{{ thread.title }}{% if thread.restricted == 1 %}&nbsp;<img alt="Restricted to scottish teachers" title="Restricted to scottish teachers" src="{% static 'images/small_scotland.png' %}"/>{% endif %}</h2>
         <h4>{{ thread.author }}@{{  thread.datetime  }}</h4>
         {% if subscribed %}
@@ -64,6 +76,12 @@
             <button class="btn btn-primary" type="submit" name="submit" tabindex='1'>Post Comment</button>
         </form>
     {% else %}
+        <ul class="breadcrumb">
+            <li><a href="{% url 'forum' %}">Forum</a> <span class="divider">/</span></li>
+            <li><a href="{% url 'forum_type' board_type %}">Forum: {{ board_type|capfirst }}</a> <span class="divider">/</span></li>
+            <li><a href="{% url 'board' board_type board_url%}">Board: {{ board_title|capfirst }}</a> <span class="divider">/</span></li>
+            <li class="active">Thread: Restricted</li>
+        </ul>
         <h4>This thread is restricted to verified Scottish teachers only.</h4>
     {% endif %}
 

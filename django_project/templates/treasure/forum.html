@@ -11,10 +11,25 @@
 {% else %}<div class="hero-unit"><h4>No Boards in Forum</h4></div>
 {% endif %}
 
+{% if main_forum %}
+<div class="hero-unit">
+    <ul class="breadcrumb">
+        <li class="active">Forum</li>
+    </ul>
+    <h2>Main Forum</h2>
+    <p>The Boards on this forum are split into the following sections:</p>
+</div>
+{% endif %}
+
 {% if level_boards %}
 <div class="hero-unit">
-    {% if main_forum %}<h3><a href="{% url 'forum_type' 'level' %}">Level Forum</a></h3>
-    {% else %}<h3>Level Forum</h3>
+    {% if main_forum %}<h3><a href="{% url 'forum_type' 'level' %}">Forum: Level</a></h3>
+    {% else %}
+    <ul class="breadcrumb">
+        <li><a href="{% url 'forum' %}">Forum</a> <span class="divider">/</span></li>
+        <li class="active">Forum: Level</li>
+    </ul>
+    <h3>Level Forum</h3>
     {% endif %}
     
     <div class="row panel-body">
@@ -48,8 +63,13 @@
 
 {% if general_boards %}
 <div class="hero-unit">
-    {% if main_forum %}<h3><a href="{% url 'forum_type' 'general' %}">General Forum</a></h3>
-    {% else %}<h3>General Forum</h3>
+    {% if main_forum %}<h3><a href="{% url 'forum_type' 'general' %}">Forum: General</a></h3>
+    {% else %}
+    <ul class="breadcrumb">
+        <li><a href="{% url 'forum' %}">Forum</a> <span class="divider">/</span></li>
+        <li class="active">Forum: General</li>
+    </ul>
+    <h3>General Forum</h3>
     {% endif %}
     
     <div class="row panel-body">
@@ -83,8 +103,13 @@
 
 {% if resource_boards %}
 <div class="hero-unit">
-    {% if main_forum %}<h3><a href="{% url 'forum_type' 'resource' %}">Resource Forum</a></h3>
-    {% else %}<h3>Resource Forum</h3>
+    {% if main_forum %}<h3><a href="{% url 'forum_type' 'resource' %}">Forum: Resource</a></h3>
+    {% else %}
+    <ul class="breadcrumb">
+        <li><a href="{% url 'forum' %}">Forum</a> <span class="divider">/</span></li>
+        <li class="active">Forum: Resource</li>
+    </ul>
+    <h3>Resource Forum</h3>
     {% endif %}
     
     <div class="row panel-body">
@@ -118,8 +143,13 @@
 
 {% if pack_boards %}
 <div class="hero-unit">
-    {% if main_forum %}<h3><a href="{% url 'forum_type' 'pack' %}">Pack Forum</a></h3>
-    {% else %}<h3>Pack Forum</h3>
+    {% if main_forum %}<h3><a href="{% url 'forum_type' 'pack' %}">Forum: Pack</a></h3>
+    {% else %}
+    <ul class="breadcrumb">
+        <li><a href="{% url 'forum' %}">Forum</a> <span class="divider">/</span></li>
+        <li class="active">Forum: Pack</li>
+    </ul>
+    <h3>Pack Forum</h3>
     {% endif %}
     
     <div class="row panel-body">

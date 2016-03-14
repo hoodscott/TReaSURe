@@ -2551,12 +2551,13 @@ def board(request, board_type, board_url):
             this_resource = Resource.objects.get(id=board_url)
             context_dict['resource'] = this_resource
             this_board = Board.objects.all().get(resource = this_resource)
+            context_dict['board'] = this_board
             if TeacherSubbedToBoard.objects.filter(board=this_board, teacher = teacher).first():
                 context_dict['subscribed'] = True
             try:
                 # get the threads on the forum, along with the count of posts and time of last post for each thread
                 board = Thread.objects.filter(board = this_board).annotate(num_posts = Count('post'), last_post = Max('post__datetime'))
-                context_dict['board'] = board
+                context_dict['threads'] = board
 
             except Thread.DoesNotExist:
                 # do not pass a board object to template as there are no threads
@@ -2571,12 +2572,13 @@ def board(request, board_type, board_url):
             this_pack = Pack.objects.get(id=board_url)
             context_dict['pack'] = this_pack
             this_board = Board.objects.all().get(pack = this_pack)
+            context_dict['board'] = this_board
             if TeacherSubbedToBoard.objects.filter(board=this_board, teacher = teacher).first():
                 context_dict['subscribed'] = True
             try:
                 # get the threads on the forum, along with the count of posts and time of last post for each thread
                 board = Thread.objects.all().filter(board = this_board).annotate(num_posts = Count('post'), last_post = Max('post__datetime'))
-                context_dict['board'] = board
+                context_dict['threads'] = board
 
             except Thread.DoesNotExist:
                 # do not pass a board object to template as there are no threads
@@ -2589,13 +2591,14 @@ def board(request, board_type, board_url):
         try:
             # check the word has a url attached
             this_board = Board.objects.all().get(id=board_url)
+            context_dict['board'] = this_board
             context_dict['title'] = this_board.title
             if TeacherSubbedToBoard.objects.filter(board=this_board, teacher = teacher).first():
                 context_dict['subscribed'] = True
             try:
                 # get the threads on the forum, along with the count of posts and time of last post for each thread
                 board = Thread.objects.all().filter(board = this_board).annotate(num_posts = Count('post'), last_post = Max('post__datetime'))
-                context_dict['board'] = board
+                context_dict['threads'] = board
             except Thread.DoesNotExist:
                 # do not pass a board object to template as there are no threads
                 print "no threads", board_url
@@ -2754,41 +2757,45 @@ def thread(request, board_type, board_url, thread_id):
         # check if user is subbed
         if TeacherSubbedToThread.objects.filter(thread=this_thread, teacher = teacher).first():
             context_dict['subscribed'] = True
+            
+        # add posts to contextdict
+        the_posts = Post.objects.all().filter(thread = this_thread)
+        context_dict['posts'] = the_posts
+        
+        # check url is properly formed
+        # (thread id belongs to the object pointed to by board_url)
+        # first get board from url
+        if board_type == "resource":
+            try:
+                # if url is number, get board relating to that object
+                this_board = Board.objects.all().get(resource = Resource.objects.get(id=board_url))
+            except (Board.DoesNotExist, Resource.DoesNotExist) as e:
+                # no board at this url
+                context_dict['invalid'] = "invalid"
+        elif board_type == "pack":
+            try:
+                # if url is number, get board relating to that object
+                this_board = Board.objects.all().get(pack = Pack.objects.get(id=board_url))
+            except (Board.DoesNotExist, Pack.DoesNotExist) as e:
+                # no board at this url
+                context_dict['invalid'] = "invalid"
+        else:
+            try:
+                # otherwise get board associated with the id
+                this_board = Board.objects.all().get(id=board_url)
+            except Board.DoesNotExist:
+                # no board at this url
+                context_dict['invalid'] = "invalid"
+        # then check that thread is part of this board
+        if this_thread.board != this_board:
+            context_dict['invalid'] = "invalid"
+            
+        # get title of board for breadcrumbs
+        context_dict['board_title'] = this_board.title
     except Thread.DoesNotExist:
         # do not pass a thread object to the template
-        pass
-    
-    # add posts to contextdict
-    the_posts = Post.objects.all().filter(thread = this_thread)
-    context_dict['posts'] = the_posts
-    
-    # check url is properly formed
-    # (thread id belongs to the object pointed to by board_url)
-    # first get board from url
-    if board_type == "resource":
-        try:
-            # if url is number, get board relating to that object
-            this_board = Board.objects.all().get(resource = Resource.objects.get(id=board_url))
-        except (Board.DoesNotExist, Resource.DoesNotExist) as e:
-            # no board at this url
-            context_dict['invalid'] = "invalid"
-    elif board_type == "pack":
-        try:
-            # if url is number, get board relating to that object
-            this_board = Board.objects.all().get(pack = Pack.objects.get(id=board_url))
-        except (Board.DoesNotExist, Pack.DoesNotExist) as e:
-            # no board at this url
-            context_dict['invalid'] = "invalid"
-    else:
-        try:
-            # otherwise get board associated with the id
-            this_board = Board.objects.all().get(id=board_url)
-        except Board.DoesNotExist:
-            # no board at this url
-            context_dict['invalid'] = "invalid"
-    # then check that thread is part of this board
-    if this_thread.board != this_board:
-        context_dict['invalid'] = "invalid"
+        context_dict['board_title'] = "this"
+        
     
     # If it's a HTTP POST, we're interested in processing form data.
     if request.method == 'POST':
