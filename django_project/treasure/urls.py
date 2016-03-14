@@ -10,7 +10,6 @@ urlpatterns = patterns('',
         url(r'^me/$', views.index, name='my_homepage'),
         url(r'^help/$', views.help, name='help'),
         
-        url(r'^register/$', views.register, name='register'),
         url(r'^login/$', views.user_login, name='login'),
         url(r'^logout/$', views.user_logout, name='logout'),
         url(r'^password_reset/$', 'django.contrib.auth.views.password_reset',
