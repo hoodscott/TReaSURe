@@ -235,11 +235,14 @@ class TeacherForm(forms.ModelForm):
                                             help_text="Are you a registered teacher in Scotland?",
                                             required=False,
                                             label="Registered Scottish Teacher?")
+                                            
     
     evidence =  forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
                             help_text="Provide evidence that you are a scottish teacher. This can be with the phone number or email address of your school or with a website link that proves that you are a teacher in a scottish school.",
                             required=False,
                             label='If you are, please provide evidence with a phone number, email adress, or website link of a school, ')
+                            
+    captcha= CaptchaField(label='Captcha', help_text= 'Are we human, or are we dancers?')
 
     def __init__(self,*args,**kwargs):
         super(TeacherForm, self).__init__(*args,**kwargs)
