@@ -6,7 +6,11 @@
 <html>
     <head>
         <title>{% block title %}{% endblock %} - Plan C Sharing</title>
-        {% if user.is_authenticated %}{% if not user.teacher.school %}{% if not editingProfile %}<meta http-equiv="refresh" content="2; url={% url 'edit_profile' 'soc' %}" />{% endif %}{% endif %}{% endif %}
+        {% if user.is_authenticated %}
+          {% if not user.teacher %}{% if not creating_profile %}<meta http-equiv="refresh" content="0; url={% url 'register' %}" />{% endif %}
+          {% elif not user.teacher.school %}{% if not editingProfile %}<meta http-equiv="refresh" content="2; url={% url 'edit_profile' 'soc' %}" />{% endif %}{% endif %}
+        {% endif %}
+        
         {% block head_block%}{% endblock%}
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,7 +52,7 @@
                                 <li><a href="{% url 'logout' %}">Logout</a></li>
                             {% else %}
                             	<li><a href="{% url 'login' %}">Login</a></li>
-                              <li><a href="{% url 'register' %}">Register</a></li>
+                              <li><a href="{% url 'registration_register' %}">Register</a></li>
                               <li><a href="{% url 'home' %}auth/login/google-oauth2">Login with Google</a></li>
                             {% endif %}
                        </ul>
@@ -115,7 +119,7 @@
       							{% else %}
       							    <li><br></li>
                         <li><a href="{% url 'login' %}" class="skel-layers-ignoreHref"><span>Login</span></a></li>
-                        <li><a href="{% url 'register' %}" class="skel-layers-ignoreHref"><span>Register</span></a></li>
+                        <li><a href="{% url 'registration_register' %}" class="skel-layers-ignoreHref"><span>Register</span></a></li>
                         <li><a href="{% url 'home' %}auth/login/google-oauth2"><span>Login with Google</span></a></li>
       							{% endif %}
       							</ul>

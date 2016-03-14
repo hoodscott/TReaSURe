@@ -3,39 +3,22 @@
 {% load static %}
 {% load render_help %}
 
-{% block head_block %}{% if registered %}<meta http-equiv="refresh" content="2; url={% url 'login' %}" />{% endif %}{% endblock %}
-
 {% block title %}
-    Register
+    Register Teacher
 {% endblock %}
 
 {% block body_block %}
 
 <div class="hero-unit">
-    {% if registered %}
-        <h3>Thank you for registering</h3>
-        <h4>You are being automatically redirected to the login page. If nothing happens, please <a href="{% url 'login' %}" tabindex='1'>click here</a>!</h4>
-    {% else %}
         <h2>Teacher Registration</h2>
+        <h5>Before using the site, please register with your details.</h5>
         <br/>
         <div class="container">
-            <form class="span6" id="register_teacher_form" method="post" action="{% url 'register' %}" enctype="multipart/form-data">
+            <form class="span6" id="register_teacher_form" method="post" action="{% url 'register' %}">
 	
                 {% csrf_token %}
                 
                 {{ teacher_form.non_field_errors }}
-            
-                {% for hidden in user_form.hidden_fields %}
-                    {{ hidden }}
-                {% endfor %}
-
-                {% for field in user_form.visible_fields %}
-                {% if field.label != "Captcha" %}
-                    {{ field.errors }}
-                    {{ field.label }}{% render_help_text field %}<br/>
-                    {{ field }}<br/>
-                {% endif%}
-                {% endfor %}
                 
                 {% for hidden in teacher_form.hidden_fields %}
                     {{ hidden }}
@@ -71,7 +54,6 @@
                 <button class="btn btn-primary" type="submit" name="submit" tabindex='1'>Register</button>
             </form>
         </div>
-    {% endif %}
 </div>
 
 <script type="text/javascript">
