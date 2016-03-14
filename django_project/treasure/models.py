@@ -60,6 +60,7 @@ class pendingVerification(models.Model):
     reviewed= models.IntegerField(null=True, blank=True)
     datetimeOfRequest = models.DateTimeField()
     datetimeOfReview = models.DateTimeField( null=True, blank=True)
+    evidence = models.TextField(default="no evidence given")
     reviewer= models.IntegerField(null=True, blank=True)
 
     def __unicode__(self):

@@ -529,7 +529,8 @@ def register(request):
             # Now we save the UserProfile model instance.
             teacher.save()
             if teacher_form.cleaned_data['scottishTeacher']:
-                pending_verification= pendingVerification(teacher=teacher, datetimeOfRequest=datetime.now())
+                evidence = teacher_form.cleaned_data['evidence']
+                pending_verification= pendingVerification(teacher=teacher, datetimeOfRequest=datetime.now(), evidence=evidence)
                 pending_verification.save()
 
             # save the hubs the user has selected

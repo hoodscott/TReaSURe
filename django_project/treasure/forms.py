@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from treasure.widgets import *
 from django.utils.safestring import mark_safe
 from captcha.fields import CaptchaField
+from django.core.exceptions import ValidationError
 
 #define values for hidden
 HIDDEN = (
@@ -234,6 +235,11 @@ class TeacherForm(forms.ModelForm):
                                             help_text="Are you a registered teacher in Scotland?",
                                             required=False,
                                             label="Registered Scottish Teacher?")
+    
+    evidence =  forms.CharField(widget = forms.Textarea(attrs={'tabindex':'1'}),
+                            help_text="Provide evidence that you are a scottish teacher. This can be with the phone number or email address of your school or with a website link that proves that you are a teacher in a scottish school.",
+                            required=False,
+                            label='If you are, please provide evidence with a phone number, email adress, or website link of a school, ')
 
     def __init__(self,*args,**kwargs):
         super(TeacherForm, self).__init__(*args,**kwargs)
@@ -242,6 +248,19 @@ class TeacherForm(forms.ModelForm):
         
 
         self.fields['hubs'].queryset=Hub.objects.all().order_by('name')
+        
+        
+    def clean(self):
+        cleaned_data = super(TeacherForm, self).clean()
+        scottish_teach = cleaned_data.get("scottishTeacher")
+        evidence = cleaned_data.get("evidence")
+        
+        # if scottish teacher box has been checked, but no evidence has been given
+        if scottish_teach and not evidence:
+            raise forms.ValidationError(
+                "You must provide evidence that you are a scottish teacher "
+                "in the box provided below."
+            )
         
     class Meta:
         model = Teacher

@@ -23,15 +23,17 @@
                         <th>Teacher</th>
                         <th>School</th>
                         <th>Request Time</th>
+                        <th>Evidence</th>
                         <th>Verify?</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for review in reviews %}
                         <tr class="reviewlabel">
-                            <td>{{review.teacher.firstname}} {{review.teacher.surname}}</td>
-                            <td>{{review.teacher.school.name}}</td>
-                            <td>{{review.datetimeOfRequest}}</td>
+                            <td>{{ review.teacher.firstname }} {{ review.teacher.surname }}</td>
+                            <td>{{ review.teacher.school.name }}</td>
+                            <td>{{ review.datetimeOfRequest }}</td>
+                            <td>{{ review.evidence }}</td>
                             <td><a href="{% url 'verify' review.id 'yes' %}">Yes</a> <a href="{% url 'verify' review.id 'no' %}">No</a></td>
                         </tr>
 
@@ -50,7 +52,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
   $('#Reviews').DataTable();
-})        
+})
 </script>
 
 {% endblock %}

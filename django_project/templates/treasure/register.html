@@ -22,6 +22,8 @@
             <form class="span6" id="register_teacher_form" method="post" action="{% url 'register' %}" enctype="multipart/form-data">
 	
                 {% csrf_token %}
+                
+                {{ teacher_form.non_field_errors }}
             
                 {% for hidden in user_form.hidden_fields %}
                     {{ hidden }}
@@ -43,14 +45,14 @@
                       {% if field.label == "Registered Scottish Teacher?" %}
                           {{ field.errors }}
                           {{ field }}{{ field.label }}{% render_help_text field %}
-		                  {% else %}		            
+		                  {% else %}
                           {{ field.errors }}
                           {{field.label}}{% render_help_text field %}<br/>
                           {{ field }}
                           {% if field.label == "School" %}
                           <a class="btn btn-info pull-right" href="{% url 'add_school' %}?register">Add School</a>
                           {% elif field.label == "Hubs" %}
-                          <a class="btn btn-info pull-right" href="{% url 'add_hub' %}?register">Add Hub</a>              
+                          <a class="btn btn-info pull-right" href="{% url 'add_hub' %}?register">Add Hub</a>
                           {% endif %}
                       {% endif %}
                     <br/>
