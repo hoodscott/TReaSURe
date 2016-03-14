@@ -21,6 +21,5 @@ urlpatterns = patterns('',
     url('', include('treasure.urls')),
     
     url('^notifications/', include('notifications.urls', namespace='notifications')),
-    url(r'^accounts/', include('registration.backends.hmac.urls')),
 
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

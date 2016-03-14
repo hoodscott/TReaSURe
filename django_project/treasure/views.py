@@ -495,23 +495,33 @@ def user_history(request):
     # return response object
     return render_to_response('treasure/user_history.html', context_dict, context)# view for the user's history (list of all actions) page
     
-# register teacher
+# register user
 def register(request):
     # get the context of request
     context = RequestContext(request)
 
+    registered = False
+
     # If it's a HTTP POST, we're interested in processing form data.
     if request.method == 'POST':
         # Attempt to grab information from the raw form information.
+        user_form = UserForm(data=request.POST)
         teacher_form = TeacherForm(data=request.POST)
 
         # If the two forms are valid...
-        if teacher_form.is_valid():
+        if user_form.is_valid() and teacher_form.is_valid():
+            # Save the user's form data to the database.
+            user = user_form.save()
+
+            # Now we hash the password with the set_password method.
+            # Once hashed, we can update the user object.
+            user.set_password(user.password)
+            user.save()
             
             # Since we need to set the user attribute ourselves, we set commit=False.
             # This delays saving the model until we're ready to avoid integrity problems.
             teacher = teacher_form.save(commit=False)
-            teacher.user = request.user
+            teacher.user = user
             
             teacher.verified = 0
             teacher.datetime = datetime.now()
@@ -529,21 +539,23 @@ def register(request):
                 teacher.hubs.add(hub)
             teacher.save()
             
-            #return user to homepage fter they have created a teacher object
-            return redirect(reverse('home'))
+            # Update our variable to tell the template registration was successful.
+            registered = True
 
         # Invalid form or forms print problems to the terminal.
         else:
-            print "ERROR", teacher_form.errors
+            print "ERROR", user_form.errors, teacher_form.errors
 
     # Not a HTTP POST, so we render our form using two ModelForm instances.
     else:
+        user_form = UserForm()
         teacher_form = TeacherForm()
     
     # create context dictionary
     context_dict = sidebar(request)
+    context_dict['user_form'] = user_form
     context_dict['teacher_form'] = teacher_form
-    context_dict['creating_profile'] = True
+    context_dict['registered'] = registered
 
     # Render the template depending on the context.
     return render_to_response('treasure/register.html', context_dict, context)
@@ -1117,8 +1129,6 @@ def add_hub(request):
         form = HubForm()
     
     context_dict['form']  = form
-    context_dict['creating_profile'] = True
-    context_dict['editingProfile']='yes'
     
     # Render the form depending on context
     return render_to_response('treasure/add_hub.html', context_dict, context)
@@ -1164,8 +1174,6 @@ def add_school(request):
         form = SchoolForm()
     
     context_dict['form'] = form
-    context_dict['creating_profile'] = True
-    context_dict['editingProfile']='yes'
     
     # Render the form to template with context
     return render_to_response('treasure/add_school.html', context_dict, context)
@@ -2419,8 +2427,6 @@ def newSocialAuthentication(request):
     except Teacher.DoesNotExist:
             # Not a WebResource
             pass
-            
-    context_dict['creating_profile'] = True
 
     # Render the template updating the context dictionary.
     return redirect(reverse('edit_profile', args=['soc']))

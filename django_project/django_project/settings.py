@@ -257,6 +257,3 @@ LOGGING = {
         },
     }
 }
-
-# registration settings
-ACCOUNT_ACTIVATION_DAYS = 14 # Two-week activation window
