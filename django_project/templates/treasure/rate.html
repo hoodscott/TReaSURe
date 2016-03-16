@@ -5,7 +5,7 @@
 {% block head_block%}{% if rated or condition %}<meta http-equiv="refresh" content="2; url={% url 'resource_view' this_resource.id %}" />{% endif %}{% endblock%}
 
 {% block title %}
-    Rate this_resource.name
+    Rate {{ this_resource.name }}
 {% endblock %}
 
 {% block body_block %}
