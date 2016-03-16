@@ -2232,7 +2232,7 @@ def newpack(request):
             this_pack.save()
             
             # create board for this pack
-            board = Board(pack=pack, title=this_pack.name, boardtype='pack', restricted=this_pack.restricted)
+            board = Board(pack=this_pack, title=this_pack.name, boardtype='pack', restricted=this_pack.restricted)
             board.save()
             
             # sub creator to the new board
