@@ -44,7 +44,7 @@ class RatingForm(forms.Form):
                             max_length=128,
                             help_text="Feedback for the resource",
                             label='Feedback/Comment*')
-    captcha= CaptchaField(label='Captcha', help_text= 'Are we human, or are we dancers?')
+    captcha= CaptchaField(label='Type in the characters you see below', help_text= 'Are we human, or are we dancers?')
 
 class PackRatingForm(forms.Form):
     teacher = forms.CharField(widget = forms.HiddenInput(), required=False)
@@ -56,7 +56,7 @@ class PackRatingForm(forms.Form):
                             max_length=128,
                             help_text="Feedback for the pack",
                             label='Feedback/Comment*')
-    captcha= CaptchaField(label='Captcha', help_text= 'Are we human, or are we dancers?')
+    captcha= CaptchaField(label='Type in the characters you see below', help_text= 'Are we human, or are we dancers?')
 
 
 class ResourceForm(forms.ModelForm):
@@ -188,7 +188,7 @@ class UserForm(forms.ModelForm):
     password = forms.CharField(widget = forms.PasswordInput(attrs={'tabindex':'1'}),
                             help_text = "The account password.",
                             label='Password*')
-    captcha= CaptchaField(label='Captcha', help_text= 'Are we human, or are we dancers?')
+    captcha= CaptchaField(label='Type in the characters you see below', help_text= 'Are we human, or are we dancers?')
 
     class Meta:
         model = User
@@ -242,7 +242,7 @@ class TeacherForm(forms.ModelForm):
                             required=False,
                             label='If you are, please provide evidence with a phone number, email adress, or website link of a school, ')
                             
-    captcha= CaptchaField(label='Captcha', help_text= 'Are we human, or are we dancers?')
+    captcha= CaptchaField(label='Type in the characters you see below', help_text= 'Are we human, or are we dancers?')
 
     def __init__(self,*args,**kwargs):
         super(TeacherForm, self).__init__(*args,**kwargs)

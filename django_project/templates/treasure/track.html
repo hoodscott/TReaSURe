@@ -10,50 +10,30 @@
 <h4>{{this_resource.name}} Resource Activity</h4>
 <div style="height:480px; width:640px">
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDudWkR_tpJ06lIarBZm3qIngNAae1RXNw&scale=1&signed_in=true"></script>
-
         <div>
           <ul style="margin: 0;">
             Downloads
-            <input style="margin-right: 5px;" id="DownloadsCheckbox" type="checkbox" onclick="toggleGroup('Downloaded')" {% ifequal timeline 'timeline'%}disabled="disabled"{% endifequal %} checked="checked" />Usage
-            <input style="margin-right: 5px;"  id="UsageCheckbox" type="checkbox" onclick="toggleGroup('Used')" {% ifequal timeline 'timeline'%}disabled="disabled" checked="checked"{% endifequal %} />Feedback
-            <input style="margin-right: 30px;" id="FeedbackCheckbox" type="checkbox" onclick="toggleGroup('Rated')" {% ifequal timeline 'timeline'%}disabled="disabled" checked="checked"{% endifequal %} />People happy to discuss it
-            <input style="margin-right: 30px;" id="DiscussionCheckbox" type="checkbox" onclick="toggleGroup('Discuss')" {% ifequal timeline 'timeline'%}disabled="disabled"{% endifequal %} />
-                {% ifequal timeline 'timeline' %}
-            <div class='btn' onclick='window.location.assign("../")'>Timeline Animation<img alt="help text as title" title="{{ all_help.7.answer }}" src="{% static 'images/help.png' %}"/> <input type="checkbox" checked="checked"/></div>
-            {% else %}
-            <div class='btn' onclick='window.location.assign("./timeline/")'>Timeline Animation<img alt="help text as title" title="{{ all_help.7.answer }}" src="{% static 'images/help.png' %}"/> <input type="checkbox"/></div>
-            {% endifequal%}
-
-            <select id="mapCenter" class="span2" style="margin-top: 10px;">
-                <option value="Scotland" >Scotland</option>
-                <option value="Bounds">Best View</option>
-                <option value="User">MySchool</option>
-                <option value="UK">UK</option>
-              </select>
+            <input style="margin-right: 5px;" id="DownloadsCheckbox" type="checkbox" onclick="toggleGroup('Downloaded')" checked="checked"/>Usage
+            <input style="margin-right: 5px;"  id="UsageCheckbox" type="checkbox" onclick="toggleGroup('Used')"/>Feedback
+            <input style="margin-right: 30px;" id="FeedbackCheckbox" type="checkbox" onclick="toggleGroup('Rated')"/>People happy to discuss it
+            <input style="margin-right: 30px;" id="DiscussionCheckbox" type="checkbox" onclick="toggleGroup('Discuss')"/>
+            <div class='btn' onclick='animate()'>Timeline Animation<img alt="help text as title" title="{{ all_help.7.answer }}" src="{% static 'images/help.png' %}"/></div>
           </ul>
         </div>
         <div id="map" style="height: 100%; min-height: 480px; width: 100%"><div style="text-align:center;">
 			<span style="color:Gray;">Loading map...</span>
 		</div>
-  
-  <div id="legend" style="z-index: 0; position: absolute; top: 0px; left: 100px;">
-	  <b>Resources:</b> <img src="{% static 'images/dlicon.png' %}" alt="Downloaded" /> Downloaded
-	  <img src="{% static 'images/classicon.png' %}" alt="Used" /> Used
-	</div>
+
     </div>
+<div class="mapDiv"><label>Map View:</label><select class="mapSel" id="mapCenter"><option value="Scotland" >Scotland</option>
+                <option value="Bounds">Best View</option>
+                <option value="User">MySchool</option>
+                <option value="UK">UK</option>
+              </select>
+</div>
     </div>
-<script type="text/javascript" src="{% static 'js/track.js'%}">
-</script>
+<script type="text/javascript" src="{% static 'js/track.js'%}"></script>
 <script type="text/javascript">
-var boundZoom=0;
-var downloaded=[];
-var used=[];
-var rated=[];
-var discuss=[];
-var maxLat = -90;
-var minLat = 90;
-var maxLon = -180;
-var minLon = 180;
 {% for download in downloaded %}
 pushNcheck("Downloaded",{{download.latitude}},{{download.longitude}});
 {% endfor %}
@@ -67,87 +47,17 @@ pushNcheck("Rated",{{rating.latitude}},{{rating.longitude}});
 pushNcheck("Discuss",{{person.latitude}},{{person.longitude}});
 {% endfor %}
 
-var infoWindow = new google.maps.InfoWindow();
-var UK = {lat: 54.53, lng: -4.17};
-var Scotland = {lat: 57.83, lng: -4.25};
 var User = {lat: {{lat}}, lng: {{lng}}};
 var dlicon="{% static 'images/dlicon.png' %}";
-var classicon="{% static 'images/classicon.png' %}";
+var classicon="{% static 'images/2talkicon.png' %}";
 var fbicon="{% static 'images/feedback.png' %}";
-
-
-var markers={
-  "Downloaded": [],
-  "Used": [],
-  "Rated": [],
-  "Discuss": []
-};
-
-var map = new google.maps.Map(document.getElementById('map'), {
-  zoom: 6,
-  center: Scotland,
-  zIndex: 1,
-});
-var infoWindow = new google.maps.InfoWindow();
-
-var loadingTime=13000;
-var delay= {{animationTimeout}};
-
-for (i = 0; i < downloaded.length; i++) {
-  {% ifequal timeline 'timeline' %}addMarkerWithTimeout(downloaded, i, (loadingTime+i*delay), dlicon, "Downloaded");{% else %}addMarker(downloaded, i, dlicon, "Downloaded");{% endifequal %}
-}
-
-for (i = 0; i < used.length; i++) {
-  {% ifequal timeline 'timeline' %}addMarkerWithTimeout(used, i, (loadingTime+i*delay), classicon, "Used");{% else %}addMarker(used, i, classicon, "Used");{% endifequal %}
-}
-
-for (i = 0; i < rated.length; i++) {
-  {% ifequal timeline 'timeline' %}addMarkerWithTimeout(rated, i, (loadingTime+i*delay), fbicon, "Rated");{% else %}addMarker(rated, i, fbicon, "Rated");{% endifequal %}
-}
-
-for (i = 0; i < discuss.length; i++) {
-  {% ifequal timeline 'timeline' %}addMarkerWithTimeout(discuss, i, (loadingTime+i*delay), fbicon, "Happy to talk about it!");{% else %}addMarker(rated, i, fbicon, "Discuss");{% endifequal %}
-}
-
-{% ifequal timeline 'timeline' %}toggleGroup("Discuss");{% endifequal %}
-var tmpLat=((maxLat + minLat)/2.0);
-var tmpLon=((maxLon + minLon)/2.0);
-var boundCenter= {lat: tmpLat, lng:tmpLon};
-var zoom1=0, zoom2=0;
-
-//Determine the best zoom level based on the map scale and bounding coordinate information
-
-{
-    //best zoom level based on map width
-    zoom1 = Math.log(360.0 / 256.0 * (640-20) / (maxLon - minLon)) / Math.log(2);
-    //best zoom level based on map height
-    zoom2 = Math.log(180.0 / 256.0 * (480-20) / (maxLat - minLat)) / Math.log(2);
-
-    //use the most zoomed out of the two zoom levels
-    boundZoom = Math.ceil((zoom1 < zoom2) ? zoom1 : zoom2);
-}
+var talkicon="{% static 'images/discuss.png' %}";
 </script>
+<script type="text/javascript" src="{% static 'js/track2.js'%}"></script>
 <script>
   $('#mapCenter').change(function(){
     var location = $(this).find('option:selected').attr('value');
     center(location);
 });
 </script>
-<script async defer type="text/javascript">
-  {% ifequal timeline 0 %}
-  toggleGroup('Rated');
-  toggleGroup('Used');
-  {% endifequal %}
-  toggleGroup('Discuss');
-</script>
-{% ifequal timeline 'timeline' %}
-<script type="text/javascript">
-  document.getElementById('mapCenter').selectedIndex=1;
-  $(window).bind("load", function() {
-    center(document.getElementById('mapCenter').value);
-  });
-</script>
-{% endifequal %}
-
-
 {% endblock %}

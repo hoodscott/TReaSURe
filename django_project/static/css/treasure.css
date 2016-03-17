@@ -18,6 +18,21 @@ form input[type="text"], form input[type="email"], form input[type="password"], 
     height: auto !important;
 }
 
+a[href^="http://maps.google.com/maps"]{display:none !important}
+a[href^="https://maps.google.com/maps"]{display:none !important}
+
+.gmnoprint a, .gmnoprint span, .gm-style-cc {
+    display:none;
+}
+.mapDiv {
+    position: absolute;
+    margin-top: -62px;
+    margin-left:10px;
+}
+
+.mapSel {
+    width:100px;
+}
 /* set error message colour */
 .errorlist{
     color:firebrick !important;

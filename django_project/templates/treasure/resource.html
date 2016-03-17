@@ -12,20 +12,20 @@
         <div class="hero-unit row-fluid" id="resource">
             <div class="span8">
                 <h2>{{ resource_name}}{% if resource.restricted == 1 %}&nbsp;<img alt="Restricted to scottish teachers" title="Restricted to scottish teachers" src="{% static 'images/small_scotland.png' %}"/>{% endif %}</h2>
-                <h3><strong>{{ resource.summary }}</strong></h3>
+                <h4 align="justify"><strong>"{{ resource.summary }}"</strong></h4>
                 {% if web_resource %}
-                    <h4>added by {{ author }}</h4>
+                    <h5 class="pull-right">added by {{ author }}</h5>
                 {% elif files_resource %}
-                    <h4>uploaded by {{ author }}</h4>
+                    <h5 class="pull-right">uploaded by {{ author }}</h5>
                 {% else %}
-                    <h4>by {{ author }}</h4>
+                    <h5 class="pull-right">by {{ author }}</h5>
                 {% endif %}
                 
                 <br>
                 
                 {% if description %}
                     <h4><strong>Description:</strong></h4>
-                    <p>{{ description }}</p><br>
+                    <p align="justify">{{ description }}</p><br>
                 {% endif %}
                 <h4><strong>Tags<img alt="help text as title" title="{{ all_help.4.answer }}" src="{% static 'images/help.png' %}"/></strong></h4>
                 {% if other_tags %}
@@ -39,10 +39,10 @@
             <div class="span4">
                 <span>
                     <a href="./#resource" title="Total Downloads" alt=""><img src="{% static 'images/dlicon.png' %}" height="25" width="25" alt="downloads"/>:{{ download_count }}</a>&thinsp;
-                    <a href="./#feedback"title="Total Feedback"><img src="{% static 'images/feedback.png' %}" height="25" width="25" alt="feedback"/>:{{ rating_count }}</a>&thinsp;
+                    <a href="./#feedback"title="Total Feedback"><img src="{% static 'images/feedback.png' %}" height="25" width="25" alt="feedback"/>:{{ rating_count }}</a>&thinsp;                    
+                    <a href="./#want2talk" title="Number of People who want to Discuss this Resource"><img src="{% static 'images/discuss.png' %}" height="25" width="25" alt="want to talk"/>:{{ 2talk_count }}</a>&thinsp;
                     <a href="./#forum" title="Total Threads on Forum"><img src="{% static 'images/forumicon.png' %}" height="25" width="25" alt="thread"/>:{{ forum_count }}</a>&thinsp;
                     <a href="./#pack" title="Number of Packs this Resource is in"><img src="{% static 'images/packicon.png' %}" height="25" width="25" alt="packs"/>:{{ pack_count }}</a>&thinsp;
-                    <a href="./#want2talk" title="Number of People who want to Discuss this Resource"><img src="{% static 'images/2talkicon.png' %}" height="25" width="25" alt="want to talk"/>:{{ 2talk_count }}</a>&thinsp;
                     <a href="./#change" title="Number of Versions in this Resources 'Family'"><img src="{% static 'images/versionsicon.png' %}" height="25" width="25" alt="versions"/>:{{ version_count }}</a>
                 </span>
                 <hr>
@@ -70,7 +70,7 @@
                 {% if downloaded and not rating_exists %}<a class="btn btn-block btn-primary" href="{% url 'rate' resource.id %}">Rate</a>
                 {% elif not rating_exists %}<a class="btn btn-block btn-primary" href="{% url 'download' resource.id 'not' %}">Rate</a>{% endif %}
                 <a class="btn btn-block btn-warning" href="{% url 'evolve' resource.id %}">Evolve</a>
-                <a class="btn btn-block btn-success" href="{% url 'track' resource.id %}" target="_blank">Track<img alt="help text as title" title="{{ all_help.6.answer }}" src="{% static 'images/help.png' %}"/></a>
+                {% ifnotequal download_count 0 %}<a class="btn btn-block btn-success" href="{% url 'track' resource.id %}" target="_blank">Track<img alt="help text as title" title="{{ all_help.6.answer }}" src="{% static 'images/help.png' %}"/></a>{% endifnotequal %}
                 <!-- todo: "make this page better" a class="btn btn-block btn-info" href="/resource/{{ resource.id }}/versions">View Versions</a-->
                 {% if owned %}
                     <a class="btn btn-block btn-danger" href="{% url 'edit_resource' resource.id %}">Edit</a>
@@ -80,7 +80,7 @@
         </div>
         
         <div class="hero-unit" id="forum">
-            <h3>Forum<img alt="help text as title" title="{{ all_help.0.answer }}" src="{% static 'images/help.png' %}"/></h3>
+            <h3><u>Forum<img alt="help text as title" title="{{ all_help.0.answer }}" src="{% static 'images/help.png' %}"/></u></h3>
             
             {% if threads %}
                 <div class="row panel-body">
@@ -125,13 +125,13 @@
             {% else %}
                 <h4>No Threads on this board</h4>
             {% endif %}
-            
-            <a class="btn btn-primary" href="{% url 'board' 'resource' resource.id %}">See all Threads</a>
+            <hr>
+            <a class="btn btn-primary pull-right" href="{% url 'board' 'resource' resource.id %}">See all Threads</a>
             <a class="btn btn-primary pull-right" href="{% url 'new_thread' 'resource' resource.id %}">Create a Thread</a>
         </div>
         
         <div class="hero-unit" id="pack">
-            <h3>Packs<img alt="help text as title" title="{{ all_help.1.answer }}" src="{% static 'images/help.png' %}"/></h3>
+            <h3><u>Packs</u><img alt="help text as title" title="{{ all_help.1.answer }}" src="{% static 'images/help.png' %}"/></h3>
             {% if partofpacks %}
                 <div class="table-responsive">
                     <table id="Packs" class="table table-striped table-bordered" cellspacing="0" width="100%">
@@ -158,31 +158,32 @@
             {% else %}
                 <div>This resource is part of no packs</div>
             {% endif %}
-            <a class="btn btn-primary pull-right" href="{% url 'addtopack' resource.id %}">Add to a Pack</a>
+            <hr>
+            <a class="btn btn-primary pull-right" href="{% url 'addtopack' resource.id %}">Add to a Pack<span class="icon-plus-sign"/></a>
         </div>
 
         <div class="hero-unit" id="want2talk">
-            <h3>Discuss {{resource_name}}<img alt="help text as title" title="{{ all_help.0.answer }}" src="{% static 'images/help.png' %}"/></h3>
+            <h3><u>Discuss {{resource_name}}<img alt="help text as title" title="{{ all_help.0.answer }}" src="{% static 'images/help.png' %}"/></u></h3>
             {% if want2talk %}
             <div class="table-responsive">
                 <table id="wanttotalk" class="table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
                         <tr>
                             <th>Teacher</th>
-                            <!--<th>Comment</th>-->
+                            <th>Email</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for record in want2talk %}
-                            <tr class="teacherLabel">
-                                <td>{{record.teacher}}. {% ifequal record.teacher user_teacher%}<a href="{% url 'talk' resource.id 'no' %}">Remove</a>{%endifequal%}</td>
-                                <!--<td>{{record.comment}}</td>-->
+                            <tr>
+                                <td>{{record.teacher}} {% ifequal record.teacher user_teacher%}<a class="btn btn-sml btn-danger pull-right" href="{% url 'talk' resource.id 'no' %}">Remove<span class="icon-minus-sign"/></a>{%endifequal%}</td>
+                                <td><a class="btn btn-block" href="mailto:{{record.teacher.user.email}}"><span class="icon-envelope"/></a></td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
-            {% if not iWant2Talk %}<a class="btn btn-primary pull-right" href="{% url 'talk' resource.id 'yes' %}">I am happy to talk</a>{% endif %}
+            {% if not iWant2Talk %}<hr><a class="btn btn-primary pull-right" href="{% url 'talk' resource.id 'yes' %}">I am happy to talk<span class="icon-plus-sign"/></a>{% endif %}
             {% else %}
             <p><a href="{% url 'talk' resource.id 'yes' %}">I am happy to discuss about it.</a></p>
             {% endif %}
@@ -191,7 +192,7 @@
         
         <div class="hero-unit" id="rating">
         {% if feedback %}
-            <h3>Feedback<img alt="help text as title" title="{{ all_help.0.answer }}" src="{% static 'images/help.png' %}"/></h3>
+            <h3><u>Feedback</u><img alt="help text as title" title="{{ all_help.0.answer }}" src="{% static 'images/help.png' %}"/></h3>
             <div class="table-responsive">
                 <table id="feedback" class="table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
@@ -214,8 +215,8 @@
                             </tr>
                         {% endfor %}
                         {% if downloaded and not rating_exists %}
-                        <tr class="teacherLabel">
-                            <td><a href="{% url 'rate' resource.id %}">Rate Resource</a></td>
+                        <tr>
+                            <td><a href="{% url 'rate' resource.id %}">Leave<span class="icon-pencil"/></a></td>
                         </tr>
                         {% endif %}
                     </tbody>
@@ -230,7 +231,7 @@
         </div>
         
         <div class="hero-unit" id="change">
-            <h3>Versions<img alt="help text as title" title="{{ all_help.0.answer }}" src="{% static 'images/help.png' %}"/></h3>
+            <h3><u>Versions</u><img alt="help text as title" title="{{ all_help.0.answer }}" src="{% static 'images/help.png' %}"/></h3>
             <h4>Previous Versions</h4>
             {% if changelog|length > 1 %}            
             <ul>
@@ -277,4 +278,19 @@
         <div class="hero-unit"><h2>No Resource At This URL.</h2></div>
     {% endif %}
 
+<!-- script for tables -->
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#threadTable').DataTable();
+});
+$(document).ready(function(){
+    $('#Packs').DataTable();
+});
+$(document).ready(function(){
+    $('#feedback').DataTable();
+});
+$(document).ready(function(){
+    $('#wanttotalk').DataTable();
+});
+</script>
 {% endblock %}

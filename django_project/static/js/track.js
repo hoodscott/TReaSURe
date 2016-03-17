@@ -1,18 +1,14 @@
-function pushNcheck(markerType, pushLat,pushLon){
-    if (markerType=="Downloaded"){
-      downloaded.push({lat:pushLat, lng: pushLon });
-    }else if (markerType=="Used"){
-      used.push({lat:pushLat, lng: pushLon });
-    }else if (markerType=="Rated"){
-      rated.push({lat:pushLat, lng: pushLon });
-    }else if (markerType=="Discuss"){
-      discuss.push({lat:pushLat, lng: pushLon });
-    }
-    if (pushLat>maxLat) maxLat=pushLat;
-    if (pushLat<minLat) minLat=pushLat;
-    if (pushLon>maxLon) maxLon=pushLon;
-    if (pushLon<minLon) minLon=pushLon;
+var animMarkers=[];
+var downloaded=[];
+var used=[];
+var rated=[];
+var discuss=[];
 
+function pushNcheck(markerType, pushLat,pushLon){
+    if (markerType=="Downloaded") downloaded.push({lat:pushLat, lng: pushLon });
+    else if (markerType=="Used") used.push({lat:pushLat, lng: pushLon });
+    else if (markerType=="Rated") rated.push({lat:pushLat, lng: pushLon });
+    else if (markerType=="Discuss") discuss.push({lat:pushLat, lng: pushLon });
 }
 
 function instantBounds(){
@@ -31,8 +27,45 @@ function instantBounds(){
     return bounds
 }
 
-function addMarkerWithTimeout(array, index, timeout, icon, title) {
-  window.setTimeout(function(){addMarker(array, index,icon, title);}, timeout);
+function animate(){
+  markersLen=animMarkers.length;
+  if (markersLen>5) duration=10000;
+  else duration=markersLen*2000;
+  waitBeforeAnimation=1000;
+  delay=duration/markersLen;
+  center('Bounds');
+  disableCheckboxes(true);
+  toggleSpecific('Rated',false);
+  toggleSpecific('Downloaded',false);
+  toggleSpecific('Used',false);
+  toggleSpecific('Discuss',false);
+  for (var i = 0; i <markersLen; i++) {
+    animMarkers[i].setVisible(false);
+    animMarkers[i].setAnimation(google.maps.Animation.DROP);
+  }
+  for (var i = 0; i <markersLen; i++) {
+    confTimeout(animMarkers[i], waitBeforeAnimation+i*delay);
+  }
+  window.setTimeout(function(){disableCheckboxes(false)}, duration+waitBeforeAnimation);
+  window.setTimeout(function(){toggleCheckAll()}, duration+waitBeforeAnimation*2);
+}
+
+function confTimeout(marker, time){
+  window.setTimeout(function(){marker.setVisible(true)}, time);
+}
+
+function disableCheckboxes(cond){
+  document.getElementById('FeedbackCheckbox').disabled=cond;
+  document.getElementById('DownloadsCheckbox').disabled=cond;
+  document.getElementById('UsageCheckbox').disabled=cond;
+  document.getElementById('DiscussionCheckbox').disabled=cond;
+}
+
+function checkCheckboxes(){
+  document.getElementById('FeedbackCheckbox').checked='checked';
+  document.getElementById('DownloadsCheckbox').checked='checked';
+  document.getElementById('UsageCheckbox').checked='checked';
+  document.getElementById('DiscussionCheckbox').checked=false;
 }
 
 function addMarker(array, index, icon, title) {
@@ -48,6 +81,7 @@ function addMarker(array, index, icon, title) {
     markers[title].push(marker);
     var html = "<b>" + title + "</b> <br/>";
     bindInfoWindow(marker, map, infoWindow, html);
+    if (title!='Discuss') animMarkers.push(marker)
   }
 
 function toggleGroup(type) {
@@ -61,24 +95,34 @@ function toggleGroup(type) {
   }
 }
 
-function center(spot) {
-  var location;
-  var zoom;
-  if (spot=='Scotland'){
-    location= Scotland;
-    zoom=6;
-  }else if (spot=='UK'){
-    location= UK;
-    zoom=5;
-  }else if (spot=='User'){
-    location= User;
-    zoom=10;
-  }else if (spot=='Bounds'){
-    location= boundCenter;
-    zoom=boundZoom-1;
+function toggleSpecific(type, cond) {
+  for (var i = 0; i < markers[type].length; i++) {
+    var marker = markers[type][i];
+    marker.setVisible(cond);
+    }
+}
+
+
+function toggleCheckAll(){
+  toggleGroupCheckbox('Rated');
+  toggleGroupCheckbox('Downloaded');
+  toggleGroupCheckbox('Used');
+  toggleGroupCheckbox('Discuss');
+  center(document.getElementById('mapCenter').value);
+}
+
+function toggleGroupCheckbox(type) {
+  if (type=='Rated') checkbox='FeedbackCheckbox'
+  else if (type=='Downloaded') checkbox='DownloadsCheckbox';
+  else if (type=='Used') checkbox='UsageCheckbox';
+  else if (type=='Discuss') checkbox='DiscussionCheckbox';
+  cond=document.getElementById(checkbox).checked;
+  for (var i = 0; i < markers[type].length; i++) {
+    var marker = markers[type][i];
+    if (cond!=marker.getVisible()) {
+      marker.setVisible(cond);
+    }
   }
-  map.setCenter(location);
-  map.setZoom(zoom);
 }
 
 function bindInfoWindow(marker, map, infoWindow, html) {

@@ -2080,7 +2080,7 @@ def evolve(request, parent_id):
     
 # view to track a resource
 @login_required
-def track(request, resource_id, timeline=0):
+def track(request, resource_id):
     # Request the context of the request.
     context = RequestContext(request)
     
@@ -2091,24 +2091,15 @@ def track(request, resource_id, timeline=0):
     teacher_school = School.objects.get(id=this_teacher.school_id)
     context_dict['lat']=teacher_school.latitude
     context_dict['lng']=teacher_school.longitude
-    context_dict['timeline']=timeline
     context_dict['this_resource']=this_resource
-    markerCt=0
-    animationTimeout=0
     #Track locations
     try:
         downloaded=TeacherDownloadsResource.objects.all().filter(resource=this_resource).order_by('datetime')
-        if timeline!=0:
-            downloaded=downloaded.filter(used=0)
-            markerCt=markerCt+downloaded.count()
         context_dict['downloaded']=downloaded
     except TeacherDownloadsResource.DoesNotExist:
         pass
     try:
         used=TeacherDownloadsResource.objects.all().filter(resource=this_resource, used=1).order_by('datetime')
-        if timeline!=0:
-            used=used.filter(rated=0)
-            markerCt=markerCt+used.count()
         context_dict['used']=used
     except TeacherDownloadsResource.DoesNotExist:
         pass
@@ -2122,9 +2113,6 @@ def track(request, resource_id, timeline=0):
         context_dict['discuss']=discuss
     except TeacherWantstoTalkResource.DoesNotExist:
         pass
-    if timeline=='timeline':
-        animationTimeout=10000/markerCt
-    context_dict['animationTimeout']=animationTimeout
     # Render the template depending on the context.
     return render_to_response('treasure/track.html', context_dict, context)
     
