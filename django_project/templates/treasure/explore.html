@@ -19,7 +19,7 @@
 			              <li class="span4">
 						    {% endif %}
                     <button class="thumbnail" onclick="location.href ='{% url 'pack' pack.id %}';">
-                        <img src="{{pack.image}}" style="width: 300px; height: 200px;" data-src="holder.js/300x200" alt="pack cover image">
+                        <img src="/secret/{{pack.image}}" style="width: 300px; height: 200px;" data-src="holder.js/300x200" alt="pack cover image">
                         <div class="caption">
                             <h3>{{pack.name}}</h3>
                             <p>{{pack.summary}}</p>

@@ -188,8 +188,6 @@ class UserForm(forms.ModelForm):
     password = forms.CharField(widget = forms.PasswordInput(attrs={'tabindex':'1'}),
                             help_text = "The account password.",
                             label='Password*')
-    captcha= CaptchaField(label='Type in the characters you see below', help_text= 'Are we human, or are we dancers?')
-
     class Meta:
         model = User
         fields = ('username', 'email', 'password')
